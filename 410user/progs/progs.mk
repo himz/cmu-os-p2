@@ -1,0 +1,15 @@
+410UPROGS = $(patsubst %,$(410UDIR)/$(UPROGDIR)/%,$(410REQPROGS) $(410TESTS))
+STUUPROGS = $(patsubst %,$(STUUDIR)/$(UPROGDIR)/%,$(STUDENTREQPROGS) $(STUDENTTESTS))
+410UBINPROGS = $(patsubst %,$(410UDIR)/$(UPROGDIR)/%,$(410REQBINPROGS))
+
+410UCLEANS += $(410UPROGS) $(410UBINPROGS)
+
+$(410UBINPROGS): %: %.bin
+	cp $< $@
+
+ULIBS=$(410ULIBS_EARLY) $(STUULIBS_EARLY) $(410ULIBS_LATE) $(STUULIBS_LATE)
+$(410UPROGS) $(EXTRA_410_PROGS): %: %.o $(CRT0) $(ULIBS) $(CRTN)
+	ld $(LDFLAGS) -o $@ $< $(CRT0) --start-group $(ULIBS) $(CRTN) --end-group
+
+$(STUUPROGS): %: %.o $(CRT0) $(ULIBS) $(CRTN)
+	ld $(LDFLAGS) -o $@ $< $(CRT0) --start-group $(ULIBS) $(CRTN) --end-group
