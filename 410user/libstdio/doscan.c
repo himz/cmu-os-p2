@@ -50,6 +50,7 @@ _doscan(const char *fmt, va_list vp,
 	register	int c;
 	boolean_t	neg;
 	boolean_t	discard;
+	boolean_t invalid;
 	int		vals = 0;
 
 	while ((c = *fmt++) != 0) {
@@ -58,6 +59,7 @@ _doscan(const char *fmt, va_list vp,
 	        if (isspace(c))
 		{
 			while (isspace(c = getc(getc_arg)));
+			if (c == 0) break;
 			ungetc(c, getc_arg);
 			continue;
 		}
@@ -68,18 +70,19 @@ _doscan(const char *fmt, va_list vp,
 	    }
 
 	    discard = 0;
+			invalid = 1;
 
 	more_fmt:
 
-	    c = *fmt++;
+			c = getc(getc_arg);
+			if (c == 0)
+				break; /* end of input */
 
-	    switch (c) {
+	    switch (*fmt++) {
 
 	    case 'd':
 	    {
 		long n = 0;
-
-		c = getc(getc_arg);
 
 		neg =  c == '-';
 		if (neg) c = getc(getc_arg);
@@ -87,6 +90,7 @@ _doscan(const char *fmt, va_list vp,
 		while (c >= '0' && c <= '9') {
 		    n = n * 10 + (c - '0');
 		    c = getc(getc_arg);
+		    invalid = 0;
 		}
 		ungetc(c, getc_arg);
 
@@ -106,8 +110,6 @@ _doscan(const char *fmt, va_list vp,
 	    {
 		long n = 0;
 
-		c = getc(getc_arg);
-
 		neg =  c == '-';
 		if (neg) c = getc(getc_arg);
 
@@ -122,6 +124,7 @@ _doscan(const char *fmt, va_list vp,
 		    else
 			break;
 		    c = getc(getc_arg);
+				invalid = 0;
 		}
 		ungetc(c, getc_arg);	/* retract lookahead */
 
@@ -144,12 +147,12 @@ _doscan(const char *fmt, va_list vp,
 		if (!discard)
 			buf = va_arg(vp, char *);
 
-		c = getc(getc_arg);
-		while (!isspace(c))
+		while (c && !isspace(c))
 		{
 		    if (!discard)
 		    	*buf++ = c;
 		    c = getc(getc_arg);
+				invalid = 0;
 		}
 		ungetc(c, getc_arg);	/* retract lookahead */
 
@@ -167,8 +170,10 @@ _doscan(const char *fmt, va_list vp,
 	        break;
 	    }
 
-	    if (!discard)
-		vals++;
+		if (invalid)
+			break;
+		else if (!discard)
+			vals++;
 	}
 
 	return vals;

@@ -42,22 +42,23 @@ unchar(c, arg)
 	(*(unsigned char**)arg)--;
 }
 
-void vsscanf(s, fmt, args)
+int vsscanf(s, fmt, args)
 	char *s;
 	char *fmt;
 	va_list args;
 {
-	_doscan(fmt, args, readchar, unchar, &s);
+	return _doscan(fmt, args, readchar, unchar, &s);
 }
 
 int sscanf(char *s, char *fmt, ...)
 {
 	va_list	args;
+	int vals;
 
 	va_start(args, fmt);
-	vsscanf(s, fmt, args);
+	vals = vsscanf(s, fmt, args);
 	va_end(args);
 
-	return 0;/*XXX*/
+	return vals;
 }
 

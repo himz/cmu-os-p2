@@ -1,3 +1,27 @@
-45212141 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
-84044320649 udbg: [APP_main],  after thr_init  rc = 0
+45353995 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
+36763320129 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
+
+36763320966 udbg: [DBG_thr_init], Enter
+
+36763324731 udbg: [APP_main],  after thr_init  rc = 0, thread_run: 0x01000000
+
+36763325708 udbg: [DBG_thr_create], Enter
+
+36763329556 udbg: [DBG_thr_int_allocate_stack], Allocate page at 0xffff4000
+
+36763334391 udbg: [DBG_thr_create], B4 create_tcb
+
+36763335568 udbg: [DBG_thr_create], After create_tcb
+
+36763339428 udbg: [DBG_thr_int_fork_c_wrapper], Child stack_hi: 0xffff4ffc 
+
+36763363727 udbg: [DBG_thr_int_fork_c_wrapper], in Parent conext, sp: 0xffffef7c, bp: 0xffffef98
+
+36763364574 udbg: [DBG_thr_create], Exit
+
+36763366047 udbg: [APP_main],  after thr_create  tid = 1
+
+36764603269 udbg: [DBG_thr_int_fork_c_wrapper], in child conext, func: 0x01000000, arg: 0xffffefe8
+
+36764604341 udbg: Inside thread_run, input: 1
 

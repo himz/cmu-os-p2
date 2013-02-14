@@ -4,6 +4,7 @@
 /*
  * Exposed utility APIs.
  */
-void* util_get_esp();
+char* util_get_esp();
+char* util_get_ebp();
 
 #endif

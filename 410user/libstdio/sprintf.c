@@ -66,7 +66,7 @@ int vsprintf(char *s, const char *fmt, va_list args)
 int vsnprintf(char *s, int size, const char *fmt, va_list args)
 {
 	struct sprintf_state state;
-	state.max = size;
+	state.max = size - 1;
 	state.len = 0;
 	state.buf = s;
 

@@ -193,25 +193,15 @@ STUUPROGS_DEPS = $(STUUPROGS:%=%.dep)
 ############## UPDATE RULES #####################
 
 update:
+	@rm -f Makefile.orig
 	./update.sh $(UPDATE_METHOD)
 
 query_update:
 	./update.sh $(UPDATE_METHOD) query
 
 ################### GENERIC RULES ######################
-%.$(DEP_SUFFIX): %.S
-	$(CC) $(CFLAGS) -DASSEMBLER $(INCLUDES) -M -MP -MF $@ -MT $(<:.S=.o) $<
-
-%.$(DEP_SUFFIX): %.s
-	@echo "You should use the .S file extension rather than .s"
-	@echo ".s does not support precompiler directives (like #include)"
-	@false
-
-%.$(DEP_SUFFIX): %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -M -MP -MF $@ -MT $(<:.c=.o) $<
-
 %.o: %.S
-	$(CC) $(CFLAGS) -DASSEMBLER $(INCLUDES) -c -o $@ $<
+	$(CC) $(CFLAGS) -DASSEMBLER $(INCLUDES) -c -MD -MP -MF $(@:.o=.$(DEP_SUFFIX)) -MT $@ -o $@ $<
 	$(OBJCOPY) -R .comment -R .note $@ $@
 
 %.o: %.s
@@ -220,7 +210,7 @@ query_update:
 	@false
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -c -MD -MP -MF $(@:.o=.$(DEP_SUFFIX)) -MT $@ -o $@ $<
 	$(OBJCOPY) -R .comment -R .note $@ $@
 
 %.a:

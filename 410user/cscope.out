@@ -1,2005 +1,5 @@
-cscope 15 $HOME/Desktop/studies/15410/P2/p2 -q 0000004796 0000441630
-	@410kern/boot/multiboot.h
-
-21 #i‚de‡
-_FLUX_X86_MULTIBOOT_H_
-
-
-22 
-	#_FLUX_X86_MULTIBOOT_H_
-
-
-	)
-
-24 
-	~<ty≥s.h
->
-
-28 
-	smu…iboŸ_hódî
-
-
-31 
-	mmagic
-;
-
-34 
-	mÊags
-;
-
-37 
-	mchecksum
-;
-
-40 
-vm_off£t_t
- 
-	mhódî_addr
-;
-
-41 
-vm_off£t_t
- 
-	mlﬂd_addr
-;
-
-42 
-vm_off£t_t
- 
-	mlﬂd_íd_addr
-;
-
-43 
-vm_off£t_t
- 
-	mbss_íd_addr
-;
-
-44 
-vm_off£t_t
- 
-	míåy
-;
-
-49 
-	#MULTIBOOT_SEARCH
- 8192
-
-	)
-
-52 
-	#MULTIBOOT_MAGIC
- 0x1badb002
-
-	)
-
-57 
-	#MULTIBOOT_MUSTKNOW
- 0x0000ffff
-
-	)
-
-60 
-	#MULTIBOOT_PAGE_ALIGN
- 0x00000001
-
-	)
-
-63 
-	#MULTIBOOT_MEMORY_INFO
- 0x00000002
-
-	)
-
-69 
-	#MULTIBOOT_AOUT_KLUDGE
- 0x00010000
-
-	)
-
-73 
-	#MULTIBOOT_VALID
- 0x2badb002
-
-	)
-
-77 
-	smu…iboŸ_öfo
-
-
-81 
-	mÊags
-;
-
-85 
-vm_size_t
- 
-	mmem_lowî
-;
-
-86 
-vm_size_t
- 
-	mmem_uµî
-;
-
-90 
-	mboŸ_devi˚
-[4];
-
-94 
-vm_off£t_t
- 
-	mcmdlöe
-;
-
-98 
-	mmods_cou¡
-;
-
-99 
-vm_off£t_t
- 
-	mmods_addr
-;
-
-108 
-vm_size_t
- 
-	mèbsize
-;
-
-109 
-vm_size_t
- 
-	m°rsize
-;
-
-110 
-vm_off£t_t
- 
-	maddr
-;
-
-111 
-	mª£rved
-;
-
-112 } 
-	ma
-;
-
-118 
-	mnum
-;
-
-119 
-vm_size_t
- 
-	msize
-;
-
-120 
-vm_off£t_t
- 
-	maddr
-;
-
-121 
-	mshndx
-;
-
-122 } 
-	me
-;
-
-123 } 
-	msyms
-;
-
-127 
-vm_size_t
- 
-	mmm≠_cou¡
-;
-
-128 
-vm_off£t_t
- 
-	mmm≠_addr
-;
-
-131 
-mu…iboŸ_öfo
- 
-	tmböfo_t
-;
-
-133 
-	#MULTIBOOT_MEMORY
- (1L<<0)
-
-	)
-
-134 
-	#MULTIBOOT_BOOT_DEVICE
- (1L<<1)
-
-	)
-
-135 
-	#MULTIBOOT_CMDLINE
- (1L<<2)
-
-	)
-
-136 
-	#MULTIBOOT_MODS
- (1L<<3)
-
-	)
-
-137 
-	#MULTIBOOT_AOUT_SYMS
- (1L<<4)
-
-	)
-
-138 
-	#MULTIBOOT_ELF_SHDR
- (1L<<5)
-
-	)
-
-139 
-	#MULTIBOOT_MEM_MAP
- (1L<<6)
-
-	)
-
-142 
-	#MULTIBOOT_FLAGS_FORMAT
- \
-
-143 "\20\1MEMORY\2BOOT_DEVICE\3CMDLINE\4MODS\5AOUT_SYMS\6ELF_SHDR\7MEM_MAP"
-
-	)
-
-147 
-	smu…iboŸ_moduÀ
-
-
-150 
-vm_off£t_t
- 
-	mmod_°¨t
-;
-
-151 
-vm_off£t_t
- 
-	mmod_íd
-;
-
-154 
-vm_off£t_t
- 
-	m°rög
-;
-
-157 
-	mª£rved
-;
-
-165 
-	sAddrR™geDesc
-
-
-167 
-	msize
-;
-
-168 
-	mBa£AddrLow
-;
-
-169 
-	mBa£AddrHigh
-;
-
-170 
-	mLígthLow
-;
-
-171 
-	mLígthHigh
-;
-
-172 
-	mTy≥
-;
-
-178 
-	#MB_ARD_MEMORY
- 1
-
-	)
-
-	@410kern/boot/util.h
-
-1 #i‚de‡
-_410KERN_MULTIBOOT_UTILS_H_
-
-
-2 
-	#_410KERN_MULTIBOOT_UTILS_H_
-
-
-	)
-
-4 
-	~<boŸ/mu…iboŸ.h
->
-
-5 
-	~<lmm/lmm.h
->
-
-7 
-mb_utû_cmdlöe
-(
-mböfo_t
- *, *, ***, ***);
-
-8 
-mb_utû_lmm
-(
-mböfo_t
- *, 
-lmm_t
- *);
-
-	@410kern/boot/util_cmdline.c
-
-22 
-	~<boŸ/mu…iboŸ.h
->
-
-23 
-	~<boŸ/utû.h
->
-
-24 
-	~<kvmphys.h
->
-
-25 
-	~<°dlib/˘y≥.h
->
-
-26 
-	~<°dlib/°dlib.h
->
-
-27 
-	~<°rög/°rög.h
->
-
-28 
-	~<mÆloc/mÆloc_öã∫Æ.h
->
-
-36 
-	g¥og_«me
-[] = "kernel";
-
-37 *
-	gnuŒ_¨gs
-[2] = {
-¥og_«me
-, 0};
-
-39 c⁄° 
-	gdñim
-[] = " \f\n\r\t\v";
-
-41 
-	$mb_utû_cmdlöe
-(
-mböfo_t
- *
-mbi
-, *
-¨gc
-, ***
-¨gv
-, ***
-ívp
-)
-
-44 i‡(
-mbi
-->
-Êags
- & 
-MULTIBOOT_CMDLINE
-)
-
-46 *
-˛
- = (*)
-	`phy°okv
-(
-mbi
-->
-cmdlöe
-);
-
-47 
-˛Àn
- = 
-	`°æí
-(
-˛
-);
-
-48 *
-èrg
-[1 + 
-˛Àn
-], *
-tv¨
-[cllen];
-
-49 
-«rg
- = 0, 
-nv¨
- = 0;
-
-50 *
-tok
-;
-
-54 
-tok
- = 
-	`°πok
-(
-˛
-, 
-dñim
-);Åok;Åok = strtok(0, delim))
-
-56 i‡(
-	`°rchr
-(
-tok
-, '='))
-
-57 
-tv¨
-[
-nv¨
-++] = 
-tok
-;
-
-59 
-èrg
-[
-«rg
-++] = 
-tok
-;
-
-63 *
-¨gv
- = 
-	`_mÆloc
-((*Ë* (
-«rg
- + 
-nv¨
- + 2));
-
-64 i‡(!*
-¨gv
-Ë
-	`∑nic
-("No memoryÅoÖarse commandÜine");
-
-66 
-	`mem˝y
-(*
-¨gv
-, 
-èrg
-, (*Ë* 
-«rg
-);
-
-67 *
-¨gv
-[
-«rg
-] = 0;
-
-68 *
-¨gc
- = 
-«rg
-;
-
-70 *
-ívp
- = &*
-¨gv
-[
-«rg
-+1];
-
-71 
-	`mem˝y
-(*
-ívp
-, 
-tv¨
-, (*Ë* 
-nv¨
-);
-
-72 *
-ívp
-[
-nv¨
-] = 0;
-
-77 *
-¨gc
- = 1;
-
-78 *
-¨gv
- = 
-nuŒ_¨gs
-;
-
-79 *
-ívp
- = 
-nuŒ_¨gs
- + 1;
-
-81 
-	}
-}
-
-	@410kern/boot/util_lmm.c
-
-22 
-	~<boŸ/mu…iboŸ.h
->
-
-23 
-	~<°rög/°rög.h
->
-
-24 
-	~<mÆloc/mÆloc_öã∫Æ.h
->
-
-25 
-	~<kvmphys.h
->
-
-26 
-	~<lmm/lmm_ty≥s.h
->
-
-42 
-	#LMM_PRI_1MB
- -2
-
-	)
-
-43 
-	#LMM_PRI_16MB
- -1
-
-	)
-
-44 
-	#LMM_PRI_HIGH
- 0
-
-	)
-
-51 
-	#LMMF_1MB
- 0x01
-
-	)
-
-52 
-	#LMMF_16MB
- 0x02
-
-	)
-
-54 
-lmm_ªgi⁄
- 
-	gªg1mb
-, 
-	gªg16mb
-, 
-	gªghigh
-;
-
-56 
-	#skù
-(
-hﬁe_mö
-, 
-hﬁe_max
-) \
-
-57 i‡((
-max
- > (
-hﬁe_mö
-)Ë&& (
-mö
- < (
-hﬁe_max
-))) \
-
-59 i‡(
-mö
- < (
-hﬁe_mö
-)Ë
-max
- = (hole_min); \
-
-60 { 
-mö
- = (
-hﬁe_max
-); 
-ªåy
-; } \
-
-61 }
-
-	)
-
-63 
-	$mb_utû_lmm
- (
-mböfo_t
- *
-mbi
-, 
-lmm_t
- *
-lmm
-)
-
-65 
-vm_off£t_t
- 
-mö
-;
-
-66 
-_°¨t
-[], 
-íd
-[];
-
-69 
-vm_off£t_t
- 
-cmdlöe_°¨t_∑
- = 
-mbi
-->
-Êags
- & 
-MULTIBOOT_CMDLINE
-
-
-70 ? 
-mbi
-->
-cmdlöe
- : 0;
-
-71 
-vm_off£t_t
- 
-cmdlöe_íd_∑
- = 
-cmdlöe_°¨t_∑
-
-
-72 ? 
-cmdlöe_°¨t_∑
-+
-	`°æí
-((*)
-	`phy°okv
-(cmdline_start_pa))+1
-
-77 
-	`lmm_öô
-(
-lmm
-);
-
-80 
-	`lmm_add_ªgi⁄
-(&
-mÆloc_lmm
-, &
-ªg1mb
-,
-
-81 (*)
-	`phy°okv
-(0x00000000), 0x00100000,
-
-82 
-LMMF_1MB
- | 
-LMMF_16MB
-, 
-LMM_PRI_1MB
-);
-
-83 
-	`lmm_add_ªgi⁄
-(&
-mÆloc_lmm
-, &
-ªg16mb
-,
-
-84 (*)
-	`phy°okv
-(0x00100000), 0x00f00000,
-
-85 
-LMMF_16MB
-, 
-LMM_PRI_16MB
-);
-
-86 
-	`lmm_add_ªgi⁄
-(&
-mÆloc_lmm
-, &
-ªghigh
-,
-
-87 (*)
-	`phy°okv
-(0x01000000), 0xfeffffff,
-
-88 0, 
-LMM_PRI_HIGH
-);
-
-94 
-mö
- = 0x500;
-
-97 
-vm_off£t_t
- 
-max
- = 0xffffffff;
-
-100 
-	`skù
-(
-mbi
-->
-mem_lowî
- * 1024, 0x100000);
-
-103 
-	`skù
-(0x100000 + 
-mbi
-->
-mem_uµî
- * 1024, 0xffffffff);
-
-106 
-	`skù
-(
-	`kvt›hys
-(
-_°¨t
-), kvt›hys(
-íd
-));
-
-109 
-__kimg_°¨t
-[];
-
-110 
-	`skù
-(
-	`kvt›hys
-(
-__kimg_°¨t
-), kvt›hys(
-íd
-));
-
-113 
-	`skù
-(
-cmdlöe_°¨t_∑
-, 
-cmdlöe_íd_∑
-);
-
-114 i‡((
-mbi
-->
-Êags
- & 
-MULTIBOOT_MODS
-)
-
-115 && (
-mbi
-->
-mods_cou¡
- > 0))
-
-117 
-mu…iboŸ_moduÀ
- *
-m
- = (multiboot_module*)
-
-118 
-	`phy°okv
-(
-mbi
-->
-mods_addr
-);
-
-119 
-i
-;
-
-121 
-	`skù
-(
-mbi
-->
-mods_addr
-,
-
-122 
-mbi
-->
-mods_addr
- +
-
-123 
-mbi
-->
-mods_cou¡
- * (*
-m
-));
-
-124 
-i
- = 0; i < 
-mbi
-->
-mods_cou¡
-; i++)
-
-126 i‡(
-m
-[
-i
-].
-°rög
- != 0)
-
-128 *
-s
- = (*)
-	`phy°okv
-(
-m
-[
-i
-].
-°rög
-);
-
-129 
-Àn
- = 
-	`°æí
-(
-s
-);
-
-130 
-	`skù
-(
-m
-[
-i
-].
-°rög
-, m[i].°rög+
-Àn
-+1);
-
-132 
-	`skù
-(
-m
-[
-i
-].
-mod_°¨t
-, m[i].
-mod_íd
-);
-
-139 
-	`lmm_add_‰ì
-(&
-mÆloc_lmm
-, (*Ë
-mö
-, 
-max
- - min);
-
-142 
-mö
- = 
-max
-;
-
-146 
-ªåy
-:;
-
-148 
-mö
- < 0xffffffff);
-
-149 
-	}
-}
-
-	@410kern/inc/asm_style.h
-
-26 #i‚de‡
-_ASM_STYLE_H_
-
-
-27 
-	#_ASM_STYLE_H_
-
-
-	)
-
-30 #i‚de‡
-HAVE_P2ALIGN
-
-
-31 
-	#HAVE_P2ALIGN
-
-
-	)
-
-33 #i‚de‡
-__ELF__
-
-
-34 
-	#__ELF__
-
-
-	)
-
-39 
-	#IODELAY
- 
-pushl
- %
-óx
-; 
-öb
- 
-$0x80
-,%
-Æ
-; inb $0x80,%Æ; 
-p›l
- %
-	)
-óx
-
-41 
-	#S_ARG0
- 4(%
-e•
-)
-
-	)
-
-42 
-	#S_ARG1
- 8(%
-e•
-)
-
-	)
-
-43 
-	#S_ARG2
- 12(%
-e•
-)
-
-	)
-
-44 
-	#S_ARG3
- 16(%
-e•
-)
-
-	)
-
-46 
-	#FRAME
- 
-pushl
- %
-ebp
-; 
-movl
- %
-e•
-, %
-	)
-ebp
-
-47 
-	#EMARF
- 
-Àave
-
-
-	)
-
-49 
-	#B_ARG0
- 8(%
-ebp
-)
-
-	)
-
-50 
-	#B_ARG1
- 12(%
-ebp
-)
-
-	)
-
-51 
-	#B_ARG2
- 16(%
-ebp
-)
-
-	)
-
-52 
-	#B_ARG3
- 20(%
-ebp
-)
-
-	)
-
-54 #ifde‡
-i486
-
-
-55 
-	#TEXT_ALIGN
- 4
-
-	)
-
-57 
-	#TEXT_ALIGN
- 2
-
-	)
-
-59 
-	#DATA_ALIGN
- 2
-
-	)
-
-60 
-	#ALIGN
- 
-TEXT_ALIGN
-
-
-	)
-
-67 #i‡
-deföed
-(
-HAVE_P2ALIGN
-)
-
-68 
-	#P2ALIGN
-(
-p2
-Ë.
-p2Æign
- 
-	)
-p2
-
-69 #ñi‡
-deföed
-(
-__ELF__
-)
-
-70 
-	#P2ALIGN
-(
-p2
-Ë.
-	`Æign
- (1<<’2))
-
-	)
-
-72 
-	#P2ALIGN
-(
-p2
-Ë.
-Æign
- 
-	)
-p2
-
-75 
-	#LCL
-(
-x
-Ë
-	)
-x
-
-77 
-	#LB
-(
-x
-,
-n
-Ë
-	)
-n
-
-78 #i‚de‡
-__ELF__
-
-
-79 
-	#EXT
-(
-x
-Ë
-_
- ## 
-	)
-x
-
-80 
-	#LEXT
-(
-x
-Ë
-_
- ## x ## :
-
-	)
-
-81 
-	#SEXT
-(
-x
-Ë"_"#x
-
-	)
-
-83 
-	#EXT
-(
-x
-Ë
-	)
-x
-
-84 
-	#LEXT
-(
-x
-Ëx ## :
-
-	)
-
-85 
-	#SEXT
-(
-x
-Ë#x
-
-	)
-
-87 
-	#GLEXT
-(
-x
-Ë.
-globl
- 
-	`EXT
-(x); 
-	`LEXT
-(x)
-
-	)
-
-88 
-	#LCLL
-(
-x
-Ëx ## :
-
-	)
-
-89 
-	#gLB
-(
-n
-Ë¿## :
-
-	)
-
-90 
-	#LBb
-(
-x
-,
-n
-Ë¿## 
-b
-
-
-	)
-
-91 
-	#LBf
-(
-x
-,
-n
-Ë¿## 
-f
-
-
-	)
-
-95 #ifde‡
-__ELF__
-
-
-96 
-	#FUNCSYM
-(
-x
-Ë.
-ty≥
- x,@
-fun˘i⁄
-
-
-	)
-
-98 
-	#FUNCSYM
-(
-x
-Ë
-
-	)
-
-102 #ifde‡
-GPROF
-
-
-104 
-	#MCOUNT
- .
-d©a
-; 
-	`gLB
-(9Ë.0; .
-ãxt
-; 
-Àa
- 
-	`LBb
-(
-x
-, 9),%
-edx
-; 
-ˇŒ
- 
-mcou¡
-
-
-	)
-
-105 
-	#ENTRY
-(
-x
-Ë.
-globl
- 
-	`EXT
-(x); 
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`LEXT
-(x) ; \
-
-106 
-pushl
- %
-ebp
-; 
-movl
- %
-e•
-, %ebp; 
-MCOUNT
-; 
-p›l
- %ebp;
-
-	)
-
-107 
-	#ENTRY2
-(
-x
-,
-y
-Ë.
-globl
- 
-	`EXT
-(x); .globl EXT(y); \
-
-108 
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`LEXT
-(
-x
-ËLEXT(
-y
-)
-
-	)
-
-109 
-	#ASENTRY
-(
-x
-Ë.
-globl
- x; 
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`gLB
-(x) ; \
-
-110 
-pushl
- %
-ebp
-; 
-movl
- %
-e•
-, %ebp; 
-MCOUNT
-; 
-p›l
- %ebp;
-
-	)
-
-114 
-	#MCOUNT
-
-
-	)
-
-115 
-	#ENTRY
-(
-x
-Ë
-	`FUNCSYM
-(x); .
-globl
- 
-	`EXT
-(x); 
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`LEXT
-(x)
-
-	)
-
-116 
-	#ENTRY2
-(
-x
-,
-y
-Ë.
-globl
- 
-	`EXT
-(x); .globl EXT(y); \
-
-117 
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`LEXT
-(
-x
-ËLEXT(
-y
-)
-
-	)
-
-118 
-	#ASENTRY
-(
-x
-Ë.
-globl
- x; 
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`gLB
-(x)
-
-	)
-
-123 
-	#E¡ry
-(
-x
-Ë
-	`P2ALIGN
-(
-TEXT_ALIGN
-); 
-	`GLEXT
-(x)
-
-	)
-
-124 
-	#DATA
-(
-x
-Ë
-	`P2ALIGN
-(
-DATA_ALIGN
-); 
-	`GLEXT
-(x)
-
-	)
-
-	@410kern/inc/assert.h
-
-23 #i‚de‡
-_ASSERT_H_
-
-
-24 
-	#_ASSERT_H_
-
-
-	)
-
-26 
-∑nic
-(c⁄° *
-f‹m©
-, ...);
-
-28 
-	#as£π
-(
-ex¥essi⁄
-) \
-
-29 (()((
-ex¥essi⁄
-Ë? 0 : (
-	`∑nic
-("%s:%u: failedássertion `%s'", \
-
-30 
-__FILE__
-, 
-__LINE__
-, #ex¥essi⁄), 0)))
-
-	)
-
-	@410kern/inc/exec2obj.h
-
-10 #i‚de‡
-_EXEC2OBJ_H
-
-
-11 
-	#_EXEC2OBJ_H
-
-
-	)
-
-13 
-	#MAX_EXECNAME_LEN
- 256
-
-	)
-
-14 
-	#MAX_NUM_APP_ENTRIES
- 128
-
-	)
-
-18 c⁄° 
-	mexe˙ame
-[
-MAX_EXECNAME_LEN
-];
-
-19 c⁄° * 
-	mexecbyãs
-;
-
-20 
-	mexe˛í
-;
-
-21 } 
-	texec2obj_u£øµ_TOC_íåy
-;
-
-24 c⁄° 
-	gexec2obj_u£øµ_cou¡
-;
-
-27 c⁄° 
-exec2obj_u£øµ_TOC_íåy
- 
-	gexec2obj_u£øµ_TOC
-[
-MAX_NUM_APP_ENTRIES
-];
-
-	@410kern/inc/kvmphys.h
-
-25 #i‚def 
-_FLUX_X86_BASE_VM_H_
-
-
-26 
-	#_FLUX_X86_BASE_VM_H_
-
-
-	)
-
-28 
-	~<ty≥s.h
->
-
-37 
-vm_off£t_t
- 
-phys_mem_va
-;
-
-40 
-	#phy°okv
-(
-∑
-Ë((
-vm_off£t_t
-)’aË+ 
-phys_mem_va
-)
-
-	)
-
-45 
-	#kvt›hys
-(
-va
-Ë((
-vm_off£t_t
-)(vaË- 
-phys_mem_va
-)
-
-	)
-
-	@410kern/inc/malloc.h
-
-1 
-	~<°dlib.h
->
-
-2 
-	~<ty≥s.h
->
-
-4 #i‚de‡
-_MALLOC_WRAPPERS_H_
-
-
-5 
-	#_MALLOC_WRAPPERS_H_
-
-
-	)
-
-7 *
-mÆloc
-(
-size_t
- 
-size
-);
-
-8 *
-memÆign
-(
-size_t
- 
-Æignmít
-, size_à
-size
-);
-
-9 *
-ˇŒoc
-(
-size_t
- 
-√…
-, size_à
-ñtsize
-);
-
-10 *
-ªÆloc
-(*
-buf
-, 
-size_t
- 
-√w_size
-);
-
-11 
-‰ì
-(*
-buf
-);
-
-12 *
-smÆloc
-(
-size_t
- 
-size
-);
-
-13 *
-smemÆign
-(
-size_t
- 
-Æignmít
-, size_à
-size
-);
-
-14 
-s‰ì
-(*
-buf
-, 
-size_t
- 
-size
-);
-
-	@410kern/inc/stdarg.h
-
-1 #i‚de‡
-_STDARG_H_
-
-
-2 
-	#_STDARG_H_
-
-
-	)
-
-8 #ifde‡
-__GNUC__
-
-
-9 
-__buûtö_va_li°
- 
-	tva_li°
-;
-
-10 
-	#va_°¨t
-(
-v
-,
-l
-Ë
-	`__buûtö_va_°¨t
-(v,l)
-
-	)
-
-11 
-	#va_íd
-(
-v
-Ë
-	`__buûtö_va_íd
-(v)
-
-	)
-
-12 
-	#va_¨g
-(
-v
-,
-l
-Ë
-	`__buûtö_va_¨g
-(v,l)
-
-	)
-
-13 
-	#va_c›y
-(
-d
-,
-s
-Ë
-	`__buûtö_va_c›y
-(d,s)
-
-	)
-
-	@410kern/inc/stddef.h
-
-1 #i‚de‡
-_STDDEF_H_
-
-
-2 
-	#_STDDEF_H_
-
-
-	)
-
-4 
-	~<ty≥s.h
->
-
-6 #i‚de‡
-NULL
-
-
-7 
-	#NULL
- ((*)0)
-
-	)
-
-10 
-	#off£tof
-(
-°y≥
-,
-fõld
-Ë((
-size_t
-)(&((°y≥*)
-NULL
-)->fõld))
-
-	)
-
-	@410kern/inc/stdint.h
-
-6 #i‚de‡
-LIB_STDINT_H
-
-
-7 
-	#LIB_STDINT_H
-
-
-	)
-
-9 #i‚de‡
-ASSEMBLER
-
-
-11 
-	tuöt8_t
-;
-
-12 
-	tuöt16_t
-;
-
-13 
-	tuöt32_t
-;
-
-14 
-	tuöt64_t
-;
-
-16 sig√d 
-	töt8_t
-;
-
-17 sig√d 
-	töt16_t
-;
-
-18 sig√d 
-	töt32_t
-;
-
-19 sig√d 
-	töt64_t
-;
-
-21 
-	töçå_t
-;
-
-22 
-	tuöçå_t
-;
-
-	@410kern/inc/types.h
-
-7 #i‚de‡
-LIB_TYPES_H
-
-
-8 
-	#LIB_TYPES_H
-
-
-	)
-
-10 
-	tsize_t
-;
-
-11 
-	t±rdiff_t
-;
-
-15 
-	tvm_off£t_t
-;
-
-16 
-	tvm_size_t
-;
-
-19 
-	mFALSE
- = 0,
-
-20 
-	mTRUE
-
-
-21 } 
-	tboﬁón_t
-;
-
-	@410user/crt0.c
+cscope 15 $HOME/Desktop/studies/15410/P2/p2/410user -q 0000004429 0000407103
+	@crt0.c
 
 8 
 	~<°dlib.h
@@ -2063,7 +63,7 @@ maö
 	}
 }
 
-	@410user/exec2obj.c
+	@exec2obj.c
 
 1 
 	~"410kîn/öc/exec2obj.h
@@ -2699,7 +699,7 @@ fûe_ôî
 	}
 }
 
-	@410user/inc/410_tests.h
+	@inc/410_tests.h
 
 5 #i‚de‡
 _410_TESTS_H_
@@ -2907,7 +907,7 @@ i
 
 	)
 
-	@410user/inc/asm_style.h
+	@inc/asm_style.h
 
 26 #i‚de‡
 _ASM_STYLE_H_
@@ -2955,7 +955,7 @@ $0x80
 p›l
  %
 	)
-óx
+eax
 
 41 
 	#S_ARG0
@@ -3479,7 +1479,7 @@ DATA_ALIGN
 
 	)
 
-	@410user/inc/assert.h
+	@inc/assert.h
 
 23 #i‚de‡
 _ASSERT_H_
@@ -3517,7 +1517,7 @@ __LINE__
 
 	)
 
-	@410user/inc/cond.h
+	@inc/cond.h
 
 5 #i‚de‡
 COND_H
@@ -3581,7 +1581,7 @@ c⁄d_t
 cv
  );
 
-	@410user/inc/malloc.h
+	@inc/malloc.h
 
 1 
 	~<°dlib.h
@@ -3669,7 +1669,7 @@ _‰ì
 buf
 );
 
-	@410user/inc/mutex.h
+	@inc/mutex.h
 
 5 #i‚de‡
 MUTEX_H
@@ -3717,7 +1717,7 @@ muãx_t
 mp
  );
 
-	@410user/inc/rand.h
+	@inc/rand.h
 
 29 #i‚de‡
 _RAND_H
@@ -3737,7 +1737,7 @@ sgíønd
 gíønd
 ();
 
-	@410user/inc/rwlock.h
+	@inc/rwlock.h
 
 5 #i‚de‡
 RWLOCK_H
@@ -3807,7 +1807,7 @@ rwlock_t
 rwlock
 );
 
-	@410user/inc/sem.h
+	@inc/sem.h
 
 5 #i‚de‡
 SEM_H
@@ -3857,7 +1857,7 @@ cou¡
 £m
  );
 
-	@410user/inc/stdarg.h
+	@inc/stdarg.h
 
 1 #i‚de‡
 _STDARG_H_
@@ -3925,7 +1925,7 @@ s
 
 	)
 
-	@410user/inc/stddef.h
+	@inc/stddef.h
 
 1 #i‚de‡
 _STDDEF_H_
@@ -3965,7 +1965,7 @@ NULL
 
 	)
 
-	@410user/inc/stdint.h
+	@inc/stdint.h
 
 6 #i‚de‡
 LIB_STDINT_H
@@ -4021,7 +2021,7 @@ ASSEMBLER
 	tuöçå_t
 ;
 
-	@410user/inc/thread.h
+	@inc/thread.h
 
 13 #i‚de‡
 THREAD_H
@@ -4075,7 +2075,7 @@ thr_yõld
 tid
  );
 
-	@410user/inc/types.h
+	@inc/types.h
 
 7 #i‚de‡
 LIB_TYPES_H
@@ -4115,7 +2115,7 @@ LIB_TYPES_H
 	tboﬁón_t
 ;
 
-	@410user/libRNG/mt19937int.c
+	@libRNG/mt19937int.c
 
 32 
 	#N
@@ -4405,7 +2405,7 @@ y
 	}
 }
 
-	@410user/libmalloc/malloc.c
+	@libmalloc/malloc.c
 
 7 
 	~"mm_mÆloc.h
@@ -4577,7 +2577,7 @@ __buf
 	}
 }
 
-	@410user/libmalloc/memlib.c
+	@libmalloc/memlib.c
 
 8 
 	~<°ddef.h
@@ -4763,7 +2763,7 @@ mem_brkp
 	}
 }
 
-	@410user/libmalloc/memlib.h
+	@libmalloc/memlib.h
 
 7 #i‚de‡
 _MEMLIB_H
@@ -4787,7 +2787,7 @@ mem_sbrk
 ö¸
 );
 
-	@410user/libmalloc/mm_malloc.c
+	@libmalloc/mm_malloc.c
 
 28 
 	~"mm_mÆloc.h
@@ -5875,7 +3875,7 @@ bp
 	}
 }
 
-	@410user/libmalloc/mm_malloc.h
+	@libmalloc/mm_malloc.h
 
 8 #i‚de‡
 _MM_MALLOC_H
@@ -6041,7 +4041,7 @@ mm_ªÆloc
 size
 );
 
-	@410user/libsimics/simics.h
+	@libsimics/simics.h
 
 6 #i‚de‡
 LIB_SIMICS_H
@@ -6249,7 +4249,7 @@ __VA_ARGS__
 
 	)
 
-	@410user/libsimics/simics_c.c
+	@libsimics/simics_c.c
 
 1 
 	~<simics.h
@@ -6463,7 +4463,7 @@ buf
 	}
 }
 
-	@410user/libstdio/doprnt.c
+	@libstdio/doprnt.c
 
 27 
 	~<°d¨g.h
@@ -8135,7 +6135,7 @@ fmt
 	}
 }
 
-	@410user/libstdio/doprnt.h
+	@libstdio/doprnt.h
 
 22 #i‚de‡
 __DOPRNT_H_INCLUDED__
@@ -8177,7 +6177,7 @@ putc
 putc_¨g
 );
 
-	@410user/libstdio/doscan.c
+	@libstdio/doscan.c
 
 34 
 	~<°ddef.h
@@ -8585,7 +6585,7 @@ vÆs
 	}
 }
 
-	@410user/libstdio/doscan.h
+	@libstdio/doscan.h
 
 22 #i‚de‡
 __DOSCAN_H_INCLUDED__
@@ -8625,7 +6625,7 @@ gëc_¨g
 gëc_¨g
 );
 
-	@410user/libstdio/hexdump.c
+	@libstdio/hexdump.c
 
 22 
 	~<˘y≥.h
@@ -8745,7 +6745,7 @@ j
 	}
 }
 
-	@410user/libstdio/printf.c
+	@libstdio/printf.c
 
 30 
 	~<°dio.h
@@ -8969,7 +6969,7 @@ fmt
 	}
 }
 
-	@410user/libstdio/putchar.c
+	@libstdio/putchar.c
 
 23 
 	~<°dio.h
@@ -8999,7 +6999,7 @@ c
 	}
 }
 
-	@410user/libstdio/puts.c
+	@libstdio/puts.c
 
 6 
 	~<°dio.h
@@ -9035,7 +7035,7 @@ s
 	}
 }
 
-	@410user/libstdio/sprintf.c
+	@libstdio/sprintf.c
 
 27 
 	~<°d¨g.h
@@ -9369,7 +7369,7 @@ fmt
 	}
 }
 
-	@410user/libstdio/sscanf.c
+	@libstdio/sscanf.c
 
 27 
 	~<°d¨g.h
@@ -9515,7 +7515,7 @@ vÆs
 	}
 }
 
-	@410user/libstdio/stdio.h
+	@libstdio/stdio.h
 
 21 #i‚de‡
 _FLUX_MC_STDIO_H
@@ -9667,7 +7667,7 @@ buf
 Àn
 );
 
-	@410user/libstdlib/abs.c
+	@libstdlib/abs.c
 
 19 
 	~<°dlib.h
@@ -9691,7 +7691,7 @@ vÆ
 	}
 }
 
-	@410user/libstdlib/atol.c
+	@libstdlib/atol.c
 
 1 
 	~<°ddef.h
@@ -9719,7 +7719,7 @@ NULL
 	}
 }
 
-	@410user/libstdlib/ctype.c
+	@libstdlib/ctype.c
 
 19 
 	$ißscii
@@ -9947,7 +7947,7 @@ c
 	}
 }
 
-	@410user/libstdlib/ctype.h
+	@libstdlib/ctype.h
 
 18 #i‚de‡
 _FLUX_MC_CTYPE_H_
@@ -10043,7 +8043,7 @@ tﬁowî
 c
 );
 
-	@410user/libstdlib/exit.c
+	@libstdlib/exit.c
 
 7 
 	~<sysˇŒ.h
@@ -10081,7 +8081,7 @@ NORETURN
 	}
 }
 
-	@410user/libstdlib/qsort.c
+	@libstdlib/qsort.c
 
 34 
 	~<ty≥s.h
@@ -10853,7 +8853,7 @@ lo›
 	}
 }
 
-	@410user/libstdlib/rand.c
+	@libstdlib/rand.c
 
 19 
 	~<°dlib.h
@@ -10973,7 +8973,7 @@ CYCLES
 	}
 }
 
-	@410user/libstdlib/stdlib.h
+	@libstdlib/stdlib.h
 
 1 #i‚de‡
 _STDLIB_H_
@@ -11065,7 +9065,7 @@ vÆ
 	`∑nic
 (const *, ...);
 
-	@410user/libstdlib/strtol.c
+	@libstdlib/strtol.c
 
 22 
 	~<°dlib.h
@@ -11231,7 +9231,7 @@ v
 	}
 }
 
-	@410user/libstdlib/strtoul.c
+	@libstdlib/strtoul.c
 
 22 
 	~<°dlib.h
@@ -11367,7 +9367,7 @@ v
 	}
 }
 
-	@410user/libstring/memcmp.c
+	@libstring/memcmp.c
 
 42 
 	$memcmp
@@ -11419,7 +9419,7 @@ b
 	}
 }
 
-	@410user/libstring/memset.c
+	@libstring/memset.c
 
 22 
 	~<ty≥s.h
@@ -11461,7 +9461,7 @@ tov
 	}
 }
 
-	@410user/libstring/rindex.c
+	@libstring/rindex.c
 
 19 
 	~<°rög.h
@@ -11511,7 +9511,7 @@ s
 	}
 }
 
-	@410user/libstring/strcat.c
+	@libstring/strcat.c
 
 28 
 	$°rˇt
@@ -11551,7 +9551,7 @@ add
 	}
 }
 
-	@410user/libstring/strchr.c
+	@libstring/strchr.c
 
 22 
 	~<°rög.h
@@ -11587,7 +9587,7 @@ s
 	}
 }
 
-	@410user/libstring/strcmp.c
+	@libstring/strcmp.c
 
 42 
 	$°rcmp
@@ -11641,7 +9641,7 @@ b
 	}
 }
 
-	@410user/libstring/strcpy.c
+	@libstring/strcpy.c
 
 37 
 	$°r˝y
@@ -11677,7 +9677,7 @@ to
 	}
 }
 
-	@410user/libstring/strcspn.c
+	@libstring/strcspn.c
 
 37 
 	~<ty≥s.h
@@ -11759,7 +9759,7 @@ sc
 	}
 }
 
-	@410user/libstring/strdup.c
+	@libstring/strdup.c
 
 19 
 	~<°rög.h
@@ -11805,7 +9805,7 @@ buf
 	}
 }
 
-	@410user/libstring/string.h
+	@libstring/string.h
 
 21 #i‚de‡
 _FLUX_MC_STRING_H_
@@ -12029,7 +10029,7 @@ __to
 __n
 );
 
-	@410user/libstring/strlen.c
+	@libstring/strlen.c
 
 36 
 	$°æí
@@ -12061,7 +10061,7 @@ __n
 	}
 }
 
-	@410user/libstring/strncat.c
+	@libstring/strncat.c
 
 37 
 	~<ty≥s.h
@@ -12145,7 +10145,7 @@ d°
 	}
 }
 
-	@410user/libstring/strncmp.c
+	@libstring/strncmp.c
 
 19 
 	~<°rög.h
@@ -12199,7 +10199,7 @@ n
 	}
 }
 
-	@410user/libstring/strncpy.c
+	@libstring/strncpy.c
 
 39 
 	$°∫˝y
@@ -12251,7 +10251,7 @@ to
 	}
 }
 
-	@410user/libstring/strpbrk.c
+	@libstring/strpbrk.c
 
 34 
 	~<ty≥s.h
@@ -12321,7 +10321,7 @@ NULL
 	}
 }
 
-	@410user/libstring/strrchr.c
+	@libstring/strrchr.c
 
 22 
 	~<°rög.h
@@ -12371,7 +10371,7 @@ s
 	}
 }
 
-	@410user/libstring/strspn.c
+	@libstring/strspn.c
 
 34 
 	~<ty≥s.h
@@ -12453,7 +10453,7 @@ s1
 	}
 }
 
-	@410user/libstring/strstr.c
+	@libstring/strstr.c
 
 19 
 	~<°rög.h
@@ -12519,7 +10519,7 @@ hÀn
 	}
 }
 
-	@410user/libstring/strtok.c
+	@libstring/strtok.c
 
 34 
 	~<°rög.h
@@ -12675,7 +10675,7 @@ sc
 	}
 }
 
-	@410user/libtest/report.c
+	@libtest/report.c
 
 6 
 	~<°dio.h
@@ -13145,7 +11145,7 @@ v
 	}
 }
 
-	@410user/libtest/report.h
+	@libtest/report.h
 
 6 #i‚de‡
 LIBTEST_REPORT_H
@@ -13283,9 +11283,9 @@ löe
 v
 );
 
-	@410user/libtest/test.c
+	@libtest/test.c
 
-	@410user/libtest/test.h
+	@libtest/test.h
 
 6 #i‚de‡
 LIBTEST_TEST_H
@@ -13339,7 +11339,7 @@ n‹ëu∫
 mode
 );
 
-	@410user/libthrgrp/thrgrp.c
+	@libthrgrp/thrgrp.c
 
 14 
 	~<c⁄d.h
@@ -13853,7 +11853,7 @@ tid
 	}
 }
 
-	@410user/libthrgrp/thrgrp.h
+	@libthrgrp/thrgrp.h
 
 8 #i‚de‡
 THRGRP_H
@@ -13995,7 +11995,7 @@ tg
 °©us
 );
 
-	@410user/libx86/gccisms.c
+	@libx86/gccisms.c
 
 41 
 	#HALF_BITS
@@ -15127,7 +13127,7 @@ u_quad_t
 	}
 }
 
-	@410user/progs/actual_wait.c
+	@progs/actual_wait.c
 
 10 
 	~<sysˇŒ.h
@@ -15527,7 +13527,7 @@ which
 	}
 }
 
-	@410user/progs/agility_drill.c
+	@progs/agility_drill.c
 
 68 
 	~<thªad.h
@@ -15893,7 +13893,7 @@ REPORT_END_SUCCESS
 	}
 }
 
-	@410user/progs/beady_test.c
+	@progs/beady_test.c
 
 33 
 	~<thªad.h
@@ -16731,7 +14731,7 @@ tg
 	}
 }
 
-	@410user/progs/cat.c
+	@progs/cat.c
 
 4 
 	~<sysˇŒ.h
@@ -16839,7 +14839,7 @@ off£t
 	}
 }
 
-	@410user/progs/cvar_test.c
+	@progs/cvar_test.c
 
 42 
 	~<thªad.h
@@ -17315,7 +15315,7 @@ NULL
 	}
 }
 
-	@410user/progs/cyclone.c
+	@progs/cyclone.c
 
 20 
 	~<thªad.h
@@ -17531,7 +15531,7 @@ tokí
 	}
 }
 
-	@410user/progs/excellent.c
+	@progs/excellent.c
 
 14 
 	~<°dlib.h
@@ -17673,7 +15673,7 @@ t°©us
 	}
 }
 
-	@410user/progs/getpid_test1.c
+	@progs/getpid_test1.c
 
 11 
 	~<sysˇŒ.h
@@ -17753,7 +15753,7 @@ END_FAIL
 	}
 }
 
-	@410user/progs/halt_test.c
+	@progs/halt_test.c
 
 10 
 	~<sysˇŒ.h
@@ -17803,7 +15803,7 @@ REPORT_END_FAIL
 	}
 }
 
-	@410user/progs/idle.c
+	@progs/idle.c
 
 10 
 	$maö
@@ -17813,7 +15813,7 @@ REPORT_END_FAIL
 	}
 }
 
-	@410user/progs/init.c
+	@progs/init.c
 
 10 
 	~<sysˇŒ.h
@@ -17879,7 +15879,7 @@ exô°©us
 	}
 }
 
-	@410user/progs/join_specific_test.c
+	@progs/join_specific_test.c
 
 26 
 	~<°dlib.h
@@ -18085,7 +16085,7 @@ curArg
 	}
 }
 
-	@410user/progs/juggle.c
+	@progs/juggle.c
 
 9 
 	~<°dio.h
@@ -18637,7 +16637,7 @@ th_cou¡
 	}
 }
 
-	@410user/progs/largetest.c
+	@progs/largetest.c
 
 23 
 	~<sysˇŒ.h
@@ -18853,7 +16853,7 @@ id
 	}
 }
 
-	@410user/progs/mandelbrot.c
+	@progs/mandelbrot.c
 
 9 
 	~<as£π.h
@@ -20023,7 +18023,7 @@ NULL
 	}
 }
 
-	@410user/progs/misbehave.c
+	@progs/misbehave.c
 
 10 
 	~<sysˇŒ.h
@@ -20087,7 +18087,7 @@ misbehave_vÆ
 	}
 }
 
-	@410user/progs/misbehave_wrap.c
+	@progs/misbehave_wrap.c
 
 13 
 	~<°dio.h
@@ -20385,7 +18385,7 @@ ex≥˘rv
 	}
 }
 
-	@410user/progs/multitest.c
+	@progs/multitest.c
 
 15 
 	~<sysˇŒ.h
@@ -20527,7 +18527,7 @@ i
 	}
 }
 
-	@410user/progs/nibbles.c
+	@progs/nibbles.c
 
 9 
 	~<°dlib.h
@@ -21943,7 +19943,7 @@ GETCHAR_INT
 	}
 }
 
-	@410user/progs/paraguay.c
+	@progs/paraguay.c
 
 14 
 	~<sysˇŒ.h
@@ -22325,7 +20325,7 @@ cv¨2
 	}
 }
 
-	@410user/progs/racer.c
+	@progs/racer.c
 
 32 
 	~<thªad.h
@@ -22989,7 +20989,7 @@ i
 	}
 }
 
-	@410user/progs/rwlock_downgrade_read_test.c
+	@progs/rwlock_downgrade_read_test.c
 
 6 
 	~<thªad.h
@@ -23239,7 +21239,7 @@ REPORT_END_FAIL
 	}
 }
 
-	@410user/progs/shell.c
+	@progs/shell.c
 
 12 
 	#mÆloc
@@ -24161,7 +22161,7 @@ c⁄sﬁe_height
 	}
 }
 
-	@410user/progs/stack_test1.c
+	@progs/stack_test1.c
 
 13 
 	~<°dio.h
@@ -24277,7 +22277,7 @@ END_SUCCESS
 	}
 }
 
-	@410user/progs/startle.c
+	@progs/startle.c
 
 10 
 	~<thªad.h
@@ -24457,7 +22457,7 @@ ktids
 	}
 }
 
-	@410user/progs/switzerland.c
+	@progs/switzerland.c
 
 10 
 	~<°dio.h
@@ -24619,7 +22619,7 @@ END_SUCCESS
 	}
 }
 
-	@410user/progs/thr_exit_join.c
+	@progs/thr_exit_join.c
 
 1 
 	~<°dio.h
@@ -24697,7 +22697,7 @@ waôî
 	}
 }
 
-	@410user/progs/wild_test1.c
+	@progs/wild_test1.c
 
 11 
 	~<sysˇŒ.h
@@ -24752,4558 +22752,6 @@ REPORT_END_FAIL
 ( -1 );
 
 32 
-	}
-}
-
-	@spec/common_kern.h
-
-1 #i‚de‡
-_SPEC_COMMON_KERN_H_
-
-
-2 
-	#_SPEC_COMMON_KERN_H_
-
-
-	)
-
-15 
-machöe_phys_‰ames
-();
-
-17 
-	~<boŸ/mu…iboŸ.h
->
-
-34 
-kî√l_maö
-(
-mböfo_t
- *
-mböfo
-, 
-¨gc
-, **
-¨gv
-, **
-ívp
-);
-
-42 
-	#USER_MEM_START
- 0x01000000
-
-	)
-
-	@spec/compiler.h
-
-6 #i‚de‡
-_SPEC_COMPILER_H
-
-
-7 
-	#_SPEC_COMPILER_H
-
-
-	)
-
-10 #i‚de‡
-NORETURN
-
-
-11 
-	#NORETURN
- 
-	`__©åibuã__
-((
-n‹ëu∫
-))
-
-	)
-
-14 
-	#MUST_CHECK
- 
-	`__©åibuã__
-((
-w¨n_unu£d_ªsu…
-))
-
-	)
-
-20 
-	#STATIC_ZERO_ASSERT
-(
-c⁄dôi⁄
-Ë((°ru˘ { :-!(c⁄dôi⁄); }))
-
-	)
-
-21 
-	#STATIC_NULL_ASSERT
-(
-c⁄dôi⁄
-Ë((*)
-	`STATIC_ZERO_ASSERT
-(c⁄dôi⁄))
-
-	)
-
-24 
-	#STATIC_ASSERT
-(
-c⁄dôi⁄
-Ë(()
-	`STATIC_ZERO_ASSERT
-(c⁄dôi⁄))
-
-	)
-
-	@spec/contracts.h
-
-8 
-	~<as£π.h
->
-
-16 #unde‡
-ASSERT
-
-
-17 #unde‡
-REQUIRES
-
-
-18 #unde‡
-ENSURES
-
-
-20 #ifde‡
-DEBUG
-
-
-22 
-	#ASSERT
-(
-COND
-Ë
-	`as£π
-(COND)
-
-	)
-
-23 
-	#REQUIRES
-(
-COND
-Ë
-	`as£π
-(COND)
-
-	)
-
-24 
-	#ENSURES
-(
-COND
-Ë
-	`as£π
-(COND)
-
-	)
-
-28 
-	#ASSERT
-(
-COND
-Ë(()0)
-
-	)
-
-29 
-	#REQUIRES
-(
-COND
-Ë(()0)
-
-	)
-
-30 
-	#ENSURES
-(
-COND
-Ë(()0)
-
-	)
-
-	@spec/limits.h
-
-6 #i‚de‡
-LIMITS_H
-
-
-7 
-	#LIMITS_H
-
-
-	)
-
-9 
-	#CHAR_BIT
- 8
-
-	)
-
-11 
-	#SCHAR_MIN
- (-128)
-
-	)
-
-12 
-	#SCHAR_MAX
- 127
-
-	)
-
-14 
-	#UCHAR_MAX
- 255
-
-	)
-
-16 
-	#SHRT_MIN
- (-32768)
-
-	)
-
-17 
-	#SHRT_MAX
- 32767
-
-	)
-
-19 
-	#USHRT_MAX
- 65535
-
-	)
-
-21 
-	#INT_MIN
- ((sig√d )0x80000000)
-
-	)
-
-22 
-	#INT_MAX
- ((sig√d )0x7fffffff)
-
-	)
-
-24 
-	#UINT_MAX
- (()0xffffffff)
-
-	)
-
-26 
-	#LONG_MIN
- ((sig√d )0x80000000L)
-
-	)
-
-27 
-	#LONG_MAX
- ((sig√d )0x7FFFFFFFL)
-
-	)
-
-29 
-	#ULONG_MAX
- (()0xFFFFFFFFL)
-
-	)
-
-31 
-	#LLONG_MIN
- ((sig√d )0x8000000000000000LL)
-
-	)
-
-32 
-	#LLONG_MAX
- ((sig√d )0x7FFFFFFFFFFFFFFFLL)
-
-	)
-
-34 
-	#ULLONG_MAX
- (()0xFFFFFFFFFFFFFFFFLL)
-
-	)
-
-	@spec/syscall.h
-
-9 #i‚de‡
-_SYSCALL_H
-
-
-10 
-	#_SYSCALL_H
-
-
-	)
-
-12 
-	#NORETURN
- 
-	`__©åibuã__
-((
-__n‹ëu∫__
-))
-
-	)
-
-14 
-	#PAGE_SIZE
- 0x0001000
-
-	)
-
-17 
-f‹k
-();
-
-18 
-exec
-(*
-exe˙ame
-, *
-¨gvec
-[]);
-
-19 
-£t_°©us
-(
-°©us
-);
-
-20 
-	$v™ish
-(Ë
-NORETURN
-;
-
-21 
-	`waô
-(*
-°©us_±r
-);
-
-22 
-	$èsk_v™ish
-(
-°©us
-Ë
-NORETURN
-;
-
-25 
-	`gëtid
-();
-
-26 
-	`yõld
-(
-pid
-);
-
-27 
-	`descheduÀ
-(*
-Êag
-);
-
-28 
-	`make_ru¬abÀ
-(
-pid
-);
-
-29 
-	`gë_ticks
-();
-
-30 
-	`¶ìp
-(
-ticks
-);
-
-33 
-	`√w_∑ges
-(* 
-addr
-, 
-Àn
-);
-
-34 
-	`ªmove_∑ges
-(* 
-addr
-);
-
-37 
-	`gëch¨
-();
-
-38 
-	`ªadlöe
-(
-size
-, *
-buf
-);
-
-39 
-	`¥öt
-(
-size
-, *
-buf
-);
-
-40 
-	`£t_ãrm_cﬁ‹
-(
-cﬁ‹
-);
-
-41 
-	`£t_curs‹_pos
-(
-row
-, 
-cﬁ
-);
-
-42 
-	`gë_curs‹_pos
-(*
-row
-, *
-cﬁ
-);
-
-45 
-	#FGND_BLACK
- 0x0
-
-	)
-
-46 
-	#FGND_BLUE
- 0x1
-
-	)
-
-47 
-	#FGND_GREEN
- 0x2
-
-	)
-
-48 
-	#FGND_CYAN
- 0x3
-
-	)
-
-49 
-	#FGND_RED
- 0x4
-
-	)
-
-50 
-	#FGND_MAG
- 0x5
-
-	)
-
-51 
-	#FGND_BRWN
- 0x6
-
-	)
-
-52 
-	#FGND_LGRAY
- 0x7
-
-	)
-
-53 
-	#FGND_DGRAY
- 0x8
-
-	)
-
-54 
-	#FGND_BBLUE
- 0x9
-
-	)
-
-55 
-	#FGND_BGRN
- 0xA
-
-	)
-
-56 
-	#FGND_BCYAN
- 0xB
-
-	)
-
-57 
-	#FGND_PINK
- 0xC
-
-	)
-
-58 
-	#FGND_BMAG
- 0xD
-
-	)
-
-59 
-	#FGND_YLLW
- 0xE
-
-	)
-
-60 
-	#FGND_WHITE
- 0xF
-
-	)
-
-62 
-	#BGND_BLACK
- 0x00
-
-	)
-
-63 
-	#BGND_BLUE
- 0x10
-
-	)
-
-64 
-	#BGND_GREEN
- 0x20
-
-	)
-
-65 
-	#BGND_CYAN
- 0x30
-
-	)
-
-66 
-	#BGND_RED
- 0x40
-
-	)
-
-67 
-	#BGND_MAG
- 0x50
-
-	)
-
-68 
-	#BGND_BRWN
- 0x60
-
-	)
-
-69 
-	#BGND_LGRAY
- 0x70
-
-	)
-
-72 
-	`hÆt
-();
-
-73 
-	`ªadfûe
-(*
-fûíame
-, *
-buf
-, 
-cou¡
-, 
-off£t
-);
-
-76 
-	`misbehave
-(
-mode
-);
-
-79 
-	~<uªg.h
->
-
-80 (*
-	tswexn_h™dÀr_t
-)(*
-	t¨g
-, 
-	tuªg_t
- *
-	tuªg
-);
-
-81 
-	`swexn
-(*
-e•3
-, 
-swexn_h™dÀr_t
- 
-eù
-, *
-¨g
-, 
-uªg_t
- *
-√wuªg
-);
-
-	@spec/syscall_int.h
-
-12 #i‚de‡
-_SYSCALL_INT_H
-
-
-13 
-	#_SYSCALL_INT_H
-
-
-	)
-
-15 
-	#SYSCALL_INT
- 0x40
-
-	)
-
-16 
-	#FORK_INT
- 0x41
-
-	)
-
-17 
-	#EXEC_INT
- 0x42
-
-	)
-
-19 
-	#WAIT_INT
- 0x44
-
-	)
-
-20 
-	#YIELD_INT
- 0x45
-
-	)
-
-21 
-	#DESCHEDULE_INT
- 0x46
-
-	)
-
-22 
-	#MAKE_RUNNABLE_INT
- 0x47
-
-	)
-
-23 
-	#GETTID_INT
- 0x48
-
-	)
-
-24 
-	#NEW_PAGES_INT
- 0x49
-
-	)
-
-25 
-	#REMOVE_PAGES_INT
- 0x4A
-
-	)
-
-26 
-	#SLEEP_INT
- 0x4B
-
-	)
-
-27 
-	#GETCHAR_INT
- 0x4C
-
-	)
-
-28 
-	#READLINE_INT
- 0x4D
-
-	)
-
-29 
-	#PRINT_INT
- 0x4E
-
-	)
-
-30 
-	#SET_TERM_COLOR_INT
- 0x4F
-
-	)
-
-31 
-	#SET_CURSOR_POS_INT
- 0x50
-
-	)
-
-32 
-	#GET_CURSOR_POS_INT
- 0x51
-
-	)
-
-33 
-	#THREAD_FORK_INT
- 0x52
-
-	)
-
-34 
-	#GET_TICKS_INT
- 0x53
-
-	)
-
-35 
-	#MISBEHAVE_INT
- 0x54
-
-	)
-
-36 
-	#HALT_INT
- 0x55
-
-	)
-
-38 
-	#TASK_VANISH_INT
- 0x57
-
-	)
-
-39 
-	#SET_STATUS_INT
- 0x59
-
-	)
-
-40 
-	#VANISH_INT
- 0x60
-
-	)
-
-42 
-	#READFILE_INT
- 0x62
-
-	)
-
-44 
-	#SWEXN_INT
- 0x74
-
-	)
-
-50 
-	#SYSCALL_RESERVED_START
- 0x80
-
-	)
-
-51 
-	#SYSCALL_RESERVED_0
- 0x80
-
-	)
-
-52 
-	#SYSCALL_RESERVED_1
- 0x81
-
-	)
-
-53 
-	#SYSCALL_RESERVED_2
- 0x82
-
-	)
-
-54 
-	#SYSCALL_RESERVED_3
- 0x83
-
-	)
-
-55 
-	#SYSCALL_RESERVED_4
- 0x84
-
-	)
-
-56 
-	#SYSCALL_RESERVED_5
- 0x85
-
-	)
-
-57 
-	#SYSCALL_RESERVED_6
- 0x86
-
-	)
-
-58 
-	#SYSCALL_RESERVED_7
- 0x87
-
-	)
-
-59 
-	#SYSCALL_RESERVED_8
- 0x88
-
-	)
-
-60 
-	#SYSCALL_RESERVED_9
- 0x89
-
-	)
-
-61 
-	#SYSCALL_RESERVED_10
- 0x8A
-
-	)
-
-62 
-	#SYSCALL_RESERVED_11
- 0x8B
-
-	)
-
-63 
-	#SYSCALL_RESERVED_12
- 0x8C
-
-	)
-
-64 
-	#SYSCALL_RESERVED_13
- 0x8D
-
-	)
-
-65 
-	#SYSCALL_RESERVED_14
- 0x8E
-
-	)
-
-66 
-	#SYSCALL_RESERVED_15
- 0x8F
-
-	)
-
-67 
-	#SYSCALL_RESERVED_END
- 0x8F
-
-	)
-
-	@spec/ureg.h
-
-1 #i‚de‡
-_UREG_H_
-
-
-2 
-	#_UREG_H_
-
-
-	)
-
-5 
-	#SWEXN_CAUSE_DIVIDE
- 0x00
-
-	)
-
-6 
-	#SWEXN_CAUSE_DEBUG
- 0x01
-
-	)
-
-7 
-	#SWEXN_CAUSE_BREAKPOINT
- 0x03
-
-	)
-
-8 
-	#SWEXN_CAUSE_OVERFLOW
- 0x04
-
-	)
-
-9 
-	#SWEXN_CAUSE_BOUNDCHECK
- 0x05
-
-	)
-
-10 
-	#SWEXN_CAUSE_OPCODE
- 0x06
-
-	)
-
-11 
-	#SWEXN_CAUSE_NOFPU
- 0x07
-
-	)
-
-12 
-	#SWEXN_CAUSE_SEGFAULT
- 0x0B
-
-	)
-
-13 
-	#SWEXN_CAUSE_STACKFAULT
- 0x0C
-
-	)
-
-14 
-	#SWEXN_CAUSE_PROTFAULT
- 0x0D
-
-	)
-
-15 
-	#SWEXN_CAUSE_PAGEFAULT
- 0x0E
-
-	)
-
-16 
-	#SWEXN_CAUSE_FPUFAULT
- 0x10
-
-	)
-
-17 
-	#SWEXN_CAUSE_ALIGNFAULT
- 0x11
-
-	)
-
-18 
-	#SWEXN_CAUSE_SIMDFAULT
- 0x13
-
-	)
-
-20 #i‚de‡
-ASSEMBLER
-
-
-22 
-	suªg_t
- {
-
-23 
-	mˇu£
-;
-
-24 
-	m¸2
-;
-
-26 
-	mds
-;
-
-27 
-	mes
-;
-
-28 
-	mfs
-;
-
-29 
-	mgs
-;
-
-31 
-	medi
-;
-
-32 
-	mesi
-;
-
-33 
-	mebp
-;
-
-34 
-	mzîo
-;
-
-35 
-	mebx
-;
-
-36 
-	medx
-;
-
-37 
-	mecx
-;
-
-38 
-	móx
-;
-
-40 
-	mîr‹_code
-;
-
-41 
-	meù
-;
-
-42 
-	mcs
-;
-
-43 
-	meÊags
-;
-
-44 
-	me•
-;
-
-45 
-	mss
-;
-
-46 } 
-	tuªg_t
-;
-
-	@user/autostack.c
-
-1 
-	~<simics.h
->
-
-2 
-	~"thªad_comm⁄.h
-"
-
-10 
-	$ö°Æl_auto°ack
-(*
-°ack_high
-, *
-°ack_low
-)
-
-15 
-	`Õrötf
-("[DBG_%s], P¨íà°ack, high: %p,Üo: %p\n", 
-__FUNCTION__
-, 
-°ack_high
-, 
-°ack_lo
-);
-
-16 
-	`thr_£t_maö_°ackH
-(
-°ack_high
-);
-
-17 
-	`thr_£t_maö_°ackL
-(
-°ack_low
-);
-
-20 
-	}
-}
-
-	@user/inc/common.h
-
-1 #i‚de‡
-_COMMON_H_
-
-
-2 
-	#_COMMON_H_
-
-
-	)
-
-8 
-	#SUCCESS
- 0
-
-	)
-
-9 
-	#ERROR
- -1
-
-	)
-
-11 
-	#WSIZE
- 4
-
-	)
-
-	@user/inc/cond_type.h
-
-5 #i‚de‡
-_COND_TYPE_H
-
-
-6 
-	#_COND_TYPE_H
-
-
-	)
-
-9 
-	sc⁄d
- {
-
-11 } 
-	gc⁄d_t
-;
-
-	@user/inc/mutex_type.h
-
-5 #i‚de‡
-_MUTEX_TYPE_H
-
-
-6 
-	#_MUTEX_TYPE_H
-
-
-	)
-
-9 
-	smuãx
- {
-
-11 } 
-	gmuãx_t
-;
-
-	@user/inc/rwlock_type.h
-
-5 #i‚de‡
-_RWLOCK_TYPE_H
-
-
-6 
-	#_RWLOCK_TYPE_H
-
-
-	)
-
-9 
-	srwlock
- {
-
-11 } 
-	grwlock_t
-;
-
-	@user/inc/sem_type.h
-
-5 #i‚de‡
-_SEM_TYPE_H
-
-
-6 
-	#_SEM_TYPE_H
-
-
-	)
-
-9 
-	s£m
- {
-
-11 } 
-	g£m_t
-;
-
-	@user/inc/thread_common.h
-
-1 #i‚de‡
-_THREAD_COMMON_H_
-
-
-2 
-	#_THREAD_COMMON_H_
-
-
-	)
-
-7 
-ölöe
- 
-thr_£t_maö_°ackH
-(*
-öput
-);
-
-8 
-ölöe
- 
-thr_£t_maö_°ackL
-(*
-öput
-);
-
-9 
-ölöe
- 
-thr_£t_ªsv_°ackH
-(*
-öput
-);
-
-10 
-ölöe
- 
-thr_£t_ªsv_°ackL
-(*
-öput
-);
-
-11 
-ölöe
- * 
-thr_gë_maö_°ackH
-();
-
-12 
-ölöe
- * 
-thr_gë_maö_°ackL
-();
-
-13 
-ölöe
- * 
-thr_gë_ªsv_°ackH
-();
-
-14 
-ölöe
- * 
-thr_gë_ªsv_°ackL
-();
-
-	@user/inc/util.h
-
-1 #i‚de‡
-_UTIL_H_
-
-
-2 
-	#_UTIL_H_
-
-
-	)
-
-7 * 
-utû_gë_e•
-();
-
-	@user/libsyscall/syscall.c
-
-23 
-	~<sysˇŒ.h
->
-
-26 
-	$f‹k
-()
-
-29 
-	}
-}
-
-32 
-	$exec
-(*
-exe˙ame
-, *
-¨gvec
-[])
-
-35 
-	}
-}
-
-37 
-	$£t_°©us
-(
-°©us
-)
-
-40 
-	}
-}
-
-43 vﬁ©ûê
-	g∂aˇã_the_compûî
-;
-
-44 
-	$v™ish
-()
-
-46 
-bœckhﬁe
- = 867-5309;
-
-48 
-bœckhﬁe
- ^= blackhole;
-
-49 
-bœckhﬁe
- /= blackhole;
-
-50 *(*Ë
-bœckhﬁe
- = blackhole;
-
-52 ++
-∂aˇã_the_compûî
-;
-
-53 
-	}
-}
-
-55 
-	$waô
-(*
-°©us_±r
-)
-
-58 
-	}
-}
-
-60 
-	$yõld
-(
-pid
-)
-
-63 
-	}
-}
-
-65 
-	$descheduÀ
-(*
-Êag
-)
-
-68 
-	}
-}
-
-70 
-	$make_ru¬abÀ
-(
-pid
-)
-
-73 
-	}
-}
-
-75 
-	$gëtid
-()
-
-78 
-	}
-}
-
-81 
-	$¶ìp
-(
-ticks
-)
-
-84 
-	}
-}
-
-87 
-	$swexn
-(*
-e•3
-, 
-swexn_h™dÀr_t
- 
-eù
-, *
-¨g
-, 
-uªg_t
- *
-√wuªg
-)
-
-90 
-	}
-}
-
-92 
-	$gëch¨
-()
-
-95 
-	}
-}
-
-97 
-	$ªadlöe
-(
-size
-, *
-buf
-)
-
-100 
-	}
-}
-
-102 
-	$¥öt
-(
-size
-, *
-buf
-)
-
-105 
-	}
-}
-
-107 
-	$£t_ãrm_cﬁ‹
-(
-cﬁ‹
-)
-
-110 
-	}
-}
-
-112 
-	$gë_curs‹_pos
-(*
-row
-, *
-cﬁ
-)
-
-115 
-	}
-}
-
-117 
-	$£t_curs‹_pos
-(
-row
-, 
-cﬁ
-)
-
-120 
-	}
-}
-
-122 
-	$hÆt
-()
-
-126 
-	}
-}
-
-128 
-	$ªadfûe
-(*
-fûíame
-, *
-buf
-, 
-cou¡
-, 
-off£t
-)
-
-131 
-	}
-}
-
-133 
-	$èsk_v™ish
-(
-°©us
-)
-
-135 
-°©us
- ^= status;
-
-136 
-°©us
- /= status;
-
-139 
-	}
-}
-
-142 
-	$√w_∑ges
-(* 
-addr
-, 
-Àn
-)
-
-145 
-	}
-}
-
-148 
-	$ªmove_∑ges
-(* 
-addr
-)
-
-151 
-	}
-}
-
-154 
-	$gë_ticks
-()
-
-157 
-	}
-}
-
-160 
-	$misbehave
-(
-mode
-)
-
-163 
-	}
-}
-
-	@user/libthread/malloc.c
-
-8 
-	~<°dlib.h
->
-
-9 
-	~<ty≥s.h
->
-
-10 
-	~<°ddef.h
->
-
-11 
-	~<simics.h
->
-
-13 *
-	$mÆloc
-(
-size_t
- 
-__size
-)
-
-15 *
-±r
- = 
-NULL
-;
-
-17 
-	`Õrötf
-("Inside malloc \n");
-
-18 
-±r
- = 
-	`_mÆloc
-(
-__size
-);
-
-19 
-	`Õrötf
-("After malloc \n");
-
-21  (
-±r
-);
-
-22 
-	}
-}
-
-24 *
-	$ˇŒoc
-(
-size_t
- 
-__√…
-, size_à
-__ñtsize
-)
-
-26 *
-±r
- = 
-NULL
-;
-
-28 
-±r
- = 
-	`_ˇŒoc
-(
-__√…
-, 
-__ñtsize
-);
-
-30  (
-±r
-);
-
-31 
-	}
-}
-
-33 *
-	$ªÆloc
-(*
-__buf
-, 
-size_t
- 
-__√w_size
-)
-
-35 *
-±r
- = 
-NULL
-;
-
-37 
-±r
- = 
-	`_ªÆloc
-(
-__buf
-, 
-__√w_size
-);
-
-39  (
-±r
-);
-
-40 
-	}
-}
-
-42 
-	$‰ì
-(*
-__buf
-)
-
-44 
-	`_‰ì
-(
-__buf
-);
-
-46 
-	}
-}
-
-	@user/libthread/panic.c
-
-22 
-	~<°dio.h
->
-
-23 
-	~<°d¨g.h
->
-
-24 
-	~<°dlib.h
->
-
-25 
-	~<simics.h
->
-
-31 
-	$∑nic
-(c⁄° *
-fmt
-, ...)
-
-33 
-va_li°
- 
-vl
-;
-
-35 
-	`va_°¨t
-(
-vl
-, 
-fmt
-);
-
-36 
-	`v¥ötf
-(
-fmt
-, 
-vl
-);
-
-37 
-	`va_íd
-(
-vl
-);
-
-39 
-	`¥ötf
-("\n");
-
-41 vﬁ©ûê
-side_ef„˘
- = 0;
-
-44 
-	`¥ötf
-("When in danger or in doubt,Ñun in circles, screamánd shout.\n");
-
-45 
-	`Õrötf
-("When in danger or in doubt,Ñun in circles, screamánd shout.");
-
-46 ++
-side_ef„˘
-;
-
-48 
-	}
-}
-
-	@user/libthread/thr_internals.h
-
-7 #i‚de‡
-THR_INTERNALS_H
-
-
-8 
-	#THR_INTERNALS_H
-
-
-	)
-
-15 
-	ttid_t
-;
-
-20 
-	sthªad_glbl_s
- {
-
-22 *
-	mmaö_°ack_hi
-;
-
-23 *
-	mmaö_°ack_lo
-;
-
-24 *
-	mªsv_°ack_hi
-;
-
-25 *
-	mªsv_°ack_lo
-;
-
-26 
-	mthªad_°ack_size
-;
-
-28 } 
-	tthªad_glbl_t
-;
-
-33 
-	stcb_s
- {
-
-35 *
-	mtcb_°ack_hi
-;
-
-36 *
-	mtcb_°ack_lo
-;
-
-37 
-tid_t
- 
-	mtid
-;
-
-38 *
-	mfunc
-;
-
-39 *
-	m¨gs
-;
-
-41 } 
-	ttcb_t
-;
-
-51 
-	#MAIN_STACK_EXTRA_PAGES
- 2
-
-	)
-
-52 
-	#RESV_STACK_NUM_PAGES
- 1
-
-	)
-
-53 
-	#CHILD_STACK_NUM_PAGES
- 2
-
-	)
-
-54 
-	#TID_NUM_INVALID
- 0
-
-	)
-
-59 
-	#THR_SUCCESS
- 0
-
-	)
-
-60 
-	#THR_ERROR
- -1
-
-	)
-
-61 
-	#THR_ENOMEM
- -2
-
-	)
-
-62 
-	#THR_TCB_INS_ERR
- -3
-
-	)
-
-67 
-	#THR_TCB_GET_STKH
-(
-_tcb_
-Ë((_tcb_Ë? ((_tcb_)->
-tcb_°ack_hi
-Ë: 
-NULL
-)
-
-	)
-
-68 
-	#THR_TCB_GET_STKL
-(
-_tcb_
-Ë((_tcb_Ë? ((_tcb_)->
-tcb_°ack_lo
-Ë: 
-NULL
-)
-
-	)
-
-69 
-	#THR_TCB_GET_TID
-(
-_tcb_
-Ë((_tcb_Ë? ((_tcb_)->
-tid
-Ë: 0)
-
-	)
-
-70 
-	#THR_TCB_GET_FUNC
-(
-_tcb_
-Ë((_tcb_Ë? ((_tcb_)->
-func
-Ë: 
-NULL
-)
-
-	)
-
-71 
-	#THR_TCB_GET_ARGS
-(
-_tcb_
-Ë((_tcb_Ë? ((_tcb_)->
-¨gs
-Ë: 
-NULL
-)
-
-	)
-
-73 
-	#THR_TCB_SET_STKH
-(
-_tcb_
-, 
-_vÆ_
-Ë((_tcb_Ë? ((_tcb_)->
-tcb_°ack_hi
-) \
-
-74 
-_vÆ_
- : 
-NULL
-)
-
-	)
-
-76 
-	#THR_TCB_SET_STKL
-(
-_tcb_
-, 
-_vÆ_
-Ë((_tcb_Ë? ((_tcb_)->
-tcb_°ack_lo
-) \
-
-77 
-_vÆ_
- : 
-NULL
-)
-
-	)
-
-79 
-	#THR_TCB_SET_TID
-(
-_tcb_
-, 
-_vÆ_
-Ë((_tcb_Ë? ((_tcb_)->
-tid
-Ë_vÆ_ : 0)
-
-	)
-
-81 
-	#THR_TCB_SET_FUN
-(
-_tcb_
-, 
-_vÆ_
-Ë((_tcb_Ë? ((_tcb_)->
-func
-) = _val_ \
-
-82 : 
-NULL
-)
-
-	)
-
-84 
-	#THR_TCB_SET_ARG
-(
-_tcb_
-, 
-_vÆ_
-Ë((_tcb_Ë? ((_tcb_)->
-¨gs
-) = _val_ \
-
-85 : 
-NULL
-)
-
-	)
-
-92 
-thr_öt_f‹k_c_wøµî
-(
-tcb_t
- *
-√w_tcb
-);
-
-93 
-tid_t
- 
-thr_öt_f‹k_asm_wøµî
-();
-
-94 
-tcb_t
- * 
-thr_öt_¸óã_tcb
-(*
-°ack_hi
-, *
-°ack_lo
-,
-
-95 * (*
-func
-)(*), *
-¨g
-);
-
-96 
-thr_öt_ö£π_tcb
-(
-tcb_t
- *
-tcb
-);
-
-97 * 
-thr_öt_Æloˇã_°ack
-(
-°ack_size
-);
-
-98 
-thr_öt_dóŒoˇã_°ack
-(*
-ba£
-);
-
-99 
-tid_t
- 
-thr_öt_Æloˇã_√w_tid
-();
-
-100 
-thr_öt_dóŒoˇã_tid
-(
-tid_t
- 
-tid
-);
-
-101 
-tid_t
- 
-thr_öt_f‹k_asm_wøµî
-(*
-chûd_°ack_hi
-);
-
-	@user/libthread/thread.c
-
-1 
-	~<°dio.h
->
-
-2 
-	~<simics.h
->
-
-3 
-	~<sysˇŒ.h
->
-
-4 
-	~<sysˇŒ_öt.h
->
-
-5 
-	~<thr_öã∫Æs.h
->
-
-6 
-	~<°dlib.h
->
-
-7 
-	~<°rög.h
->
-
-8 
-	~"comm⁄.h
-"
-
-9 
-	~"thªad_comm⁄.h
-"
-
-14 
-thªad_glbl_t
- 
-	gthªad_glbl
-;
-
-17 
-	$thr_öô
-–
-size
- )
-
-19 
-rc
- = 
-SUCCESS
-;
-
-20 *
-maö_°ack_hi
- = 
-NULL
-;
-
-21 *
-maö_°ack_lo
- = 
-NULL
-;
-
-22 *
-ªsv_°ack_hi
- = 
-NULL
-;
-
-23 *
-ªsv_°ack_lo
- = 
-NULL
-;
-
-25 
-	`Õrötf
-("[DBG_%s], E¡î\n", 
-__FUNCTION__
-);
-
-33 
-maö_°ack_hi
- = 
-	`thr_gë_maö_°ackH
-();
-
-34 
-maö_°ack_lo
- = 
-	`thr_gë_maö_°ackL
-();
-
-41 
-ªsv_°ack_hi
- = (
-maö_°ack_lo
- - (
-MAIN_STACK_EXTRA_PAGES
- * 
-PAGE_SIZE
-));
-
-42 
-ªsv_°ack_lo
- = 
-ªsv_°ack_hi
- - (
-RESV_STACK_NUM_PAGES
- * 
-PAGE_SIZE
-);
-
-44 
-	`thr_£t_ªsv_°ackH
-(
-ªsv_°ack_hi
-);
-
-45 
-	`thr_£t_ªsv_°ackL
-(
-ªsv_°ack_lo
-);
-
-47  (
-rc
-);
-
-48 
-	}
-}
-
-51 
-thr_¸óã
-(* (*
-func
-)(*), *
-¨g
-)
-
-53 
-	grc
- = 
-SUCCESS
-;
-
-54 *
-	g°ack_lo
- = 
-NULL
-;
-
-55 *
-	g°ack_hi
- = 
-NULL
-;
-
-58 
-tcb_t
- *
-	g√w_tcb
- = 
-NULL
-;
-
-63 
-tcb_t
- 
-	gãmp_tcb
-;
-
-64 
-mem£t
-(&
-ãmp_tcb
-, 0, (
-tcb_t
-));
-
-65 
-tcb_t
- *
-	g√w_tcb
- = &
-ãmp_tcb
-;
-
-70 
-tid_t
- 
-	g√w_tid
- = 
-TID_NUM_INVALID
-;
-
-72 
-Õrötf
-("[DBG_%s], E¡î\n", 
-__FUNCTION__
-);
-
-77 i‡((!
-	gfunc
-Ë|| (!
-	g¨g
-)) {
-
-81 
-Õrötf
-("[DBG_%s], Invalid input, func: %p,árg: %p\n",
-
-82 
-__FUNCTION__
-, 
-func
-, 
-¨g
-);
-
-83  (
-	grc
-);
-
-89 
-	g°ack_lo
- = 
-thr_öt_Æloˇã_°ack
-(
-CHILD_STACK_NUM_PAGES
-);
-
-91 i‡(!
-	g°ack_lo
-) {
-
-97 
-Õrötf
-("[DBG_%s], sèckáŒoˇti⁄ faûed \n", 
-__FUNCTION__
-);
-
-98 
-	grc
- = 
-ERROR
-;
-
-99  (
-	grc
-);
-
-102 
-	g°ack_hi
- = (
-°ack_lo
- + 
-PAGE_SIZE
- - 
-WSIZE
-);
-
-103 
-Õrötf
-("[DBG_%s], B4 cª©e_tcb\n", 
-__FUNCTION__
-);
-
-110 
-	g√w_tcb
- = 
-thr_öt_¸óã_tcb
-(
-°ack_hi
-, 
-°ack_lo
-, 
-func
-, 
-¨g
-);
-
-112 i‡(!
-	g√w_tcb
-) {
-
-118 
-thr_öt_dóŒoˇã_°ack
-(
-°ack_lo
-);
-
-119 
-Õrötf
-("[DBG_%s], sèckáŒoˇti⁄ faûed \n", 
-__FUNCTION__
-);
-
-120 
-	grc
- = 
-ERROR
-;
-
-121  (
-	grc
-);
-
-128 
-THR_TCB_SET_TID
-(
-√w_tcb
-, 
-thr_öt_Æloˇã_√w_tid
-());
-
-129 
-THR_TCB_SET_STKH
-(
-√w_tcb
-, 
-°ack_hi
-);
-
-130 
-THR_TCB_SET_STKL
-(
-√w_tcb
-, 
-°ack_lo
-);
-
-131 
-THR_TCB_SET_FUN
-(
-√w_tcb
-, 
-func
-);
-
-132 
-THR_TCB_SET_ARG
-(
-√w_tcb
-, 
-¨g
-);
-
-137 
-Õrötf
-("[DBG_%s], A·î cª©e_tcb\n", 
-__FUNCTION__
-);
-
-139 
-	g√w_tid
- = 
-THR_TCB_GET_TID
-(
-√w_tcb
-);
-
-144 
-	grc
- = 
-thr_öt_ö£π_tcb
-(
-√w_tcb
-);
-
-146 i‡(
-	grc
- !
-THR_SUCCESS
-) {
-
-151 
-Õrötf
-("[DBG_%s], TCB insertion failed withÑc: %d \n",
-
-152 
-__FUNCTION__
-, 
-rc
-);
-
-153 
-	grc
- = 
-ERROR
-;
-
-154  (
-	grc
-);
-
-163 
-thr_öt_f‹k_c_wøµî
-(
-√w_tcb
-);
-
-165 
-Õrötf
-("[DBG_%s], Exô\n", 
-__FUNCTION__
-);
-
-167  (
-	g√w_tid
-);
-
-174 
-	$thr_£t_maö_°ackH
-(*
-öput
-)
-
-176 
-thªad_glbl
-.
-maö_°ack_hi
- = 
-öput
-;
-
-178 
-	}
-}
-
-181 
-	$thr_£t_maö_°ackL
-(*
-öput
-)
-
-183 
-thªad_glbl
-.
-maö_°ack_lo
- = 
-öput
-;
-
-185 
-	}
-}
-
-188 
-	$thr_£t_ªsv_°ackH
-(*
-öput
-)
-
-190 
-thªad_glbl
-.
-ªsv_°ack_hi
- = 
-öput
-;
-
-192 
-	}
-}
-
-195 
-	$thr_£t_ªsv_°ackL
-(*
-öput
-)
-
-197 
-thªad_glbl
-.
-ªsv_°ack_lo
- = 
-öput
-;
-
-199 
-	}
-}
-
-202 
-	$thr_gë_maö_°ackH
-()
-
-204  (
-thªad_glbl
-.
-maö_°ack_hi
-);
-
-205 
-	}
-}
-
-208 
-	$thr_gë_maö_°ackL
-()
-
-210  (
-thªad_glbl
-.
-maö_°ack_lo
-);
-
-211 
-	}
-}
-
-214 
-	$thr_gë_ªsv_°ackH
-()
-
-216  (
-thªad_glbl
-.
-ªsv_°ack_hi
-);
-
-217 
-	}
-}
-
-220 
-	$thr_gë_ªsv_°ackL
-()
-
-222  (
-thªad_glbl
-.
-ªsv_°ack_lo
-);
-
-223 
-	}
-}
-
-231 
-	$thr_öt_Æloˇã_°ack
-(
-°ack_size
-)
-
-233 *
-°ack_±r
- = 
-NULL
-;
-
-234 
-rc
- = 0;
-
-239 
-°ack_±r
- = (
-	`thr_gë_ªsv_°ackL
-());
-
-248 
-	`Õrötf
-("[DBG_%s], AŒoˇãÖagê© %p\n", 
-__FUNCTION__
-, 
-°ack_±r
-);
-
-249 
-rc
- = 
-	`√w_∑ges
-(
-°ack_±r
-, (
-CHILD_STACK_NUM_PAGES
- * 
-PAGE_SIZE
-));
-
-251 i‡(
-rc
- < 0) {
-
-255 
-	`Õrötf
-("[DBG_%s], Pageállocation failed withÑc: %d \n",
-
-256 
-__FUNCTION__
-, 
-rc
-);
-
-258 
-°ack_±r
- = 
-NULL
-;
-
-261  (
-°ack_±r
-);
-
-262 
-	}
-}
-
-265 
-	$thr_öt_dóŒoˇã_°ack
-(*
-ba£
-)
-
-268 i‡(!
-ba£
-)
-
-276 
-	}
-}
-
-279 
-	$thr_öt_f‹k_c_wøµî
-(
-tcb_t
- *
-√w_tcb
-)
-
-281 
-tid_t
- 
-chûd_tid
- = 0;
-
-282 *
-chûd_°ack_hi
- = 
-NULL
-;
-
-283 *
-ãmp_•
- = 
-NULL
-;
-
-285 i‡(!
-√w_tcb
-) {
-
-292 
-chûd_°ack_hi
- = 
-	`THR_TCB_GET_STKH
-(
-√w_tcb
-);
-
-293 
-	`Õrötf
-("[DBG_%s], Chûd sèck_hi: %∞\n", 
-__FUNCTION__
-, 
-chûd_°ack_hi
-);
-
-295 
-chûd_tid
- = 
-	`thr_öt_f‹k_asm_wøµî
-(
-chûd_°ack_hi
-);
-
-297 i‡(
-chûd_tid
-) {
-
-301 
-ãmp_•
- = 
-	`utû_gë_e•
-();
-
-302 
-	`Õrötf
-("[DBG_%s], i¿P¨íàc⁄ext, sp: %p\n", 
-__FUNCTION__
-, 
-ãmp_•
-);
-
-310 
-ãmp_•
- = 
-	`utû_gë_e•
-();
-
-311 
-	`Õrötf
-("[DBG_%s], i¿chûd c⁄ext, sp: %p\n", 
-__FUNCTION__
-, 
-ãmp_•
-);
-
-315 
-	}
-}
-
-317 
-tcb_t
- *
-
-318 
-thr_öt_¸óã_tcb
-(*
-°ack_hi
-, *
-°ack_lo
-,
-
-319 * (*
-func
-)(*), *
-¨g
-)
-
-321 
-tcb_t
- *
-	g√w_tcb
- = 
-NULL
-;
-
-322 
-tid_t
- 
-	g√w_tid
- = 
-TID_NUM_INVALID
-;
-
-324 
-	g√w_tid
- = 
-thr_öt_Æloˇã_√w_tid
-();
-
-325 
-	g√w_tcb
- = 
-mÆloc
-((
-tcb_t
-));
-
-326 
-mem£t
-(
-√w_tcb
-, 0, (
-tcb_t
-));
-
-331 
-THR_TCB_SET_TID
-(
-√w_tcb
-, 
-√w_tid
-);
-
-332 
-THR_TCB_SET_STKH
-(
-√w_tcb
-, 
-°ack_hi
-);
-
-333 
-THR_TCB_SET_STKL
-(
-√w_tcb
-, 
-°ack_lo
-);
-
-334 
-THR_TCB_SET_FUN
-(
-√w_tcb
-, 
-func
-);
-
-335 
-THR_TCB_SET_ARG
-(
-√w_tcb
-, 
-¨g
-);
-
-337  (
-	g√w_tcb
-);
-
-341 
-	$thr_öt_ö£π_tcb
-(
-tcb_t
- *
-tcb
-)
-
-343 
-rc
- = 
-THR_SUCCESS
-;
-
-344  (
-rc
-);
-
-345 
-	}
-}
-
-347 
-tid_t
-
-
-348 
-	$thr_öt_Æloˇã_√w_tid
-()
-
-350 
-tid_t
- 
-√w_tid
- = 1;
-
-355  (
-√w_tid
-);
-
-356 
-	}
-}
-
-359 
-	$thr_öt_dóŒoˇã_tid
-(
-tid_t
- 
-tid
-)
-
-365 
-	}
-}
-
-	@user/progs/test1.c
-
-1 
-	~<°dio.h
->
-
-2 
-	~<thªad.h
->
-
-3 
-	~<simics.h
->
-
-4 
-	~<sysˇŒ.h
->
-
-7 
-	$thªad_run
-(*
-öput_¨gs
-)
-
-9 
-öput
- = 0;
-
-11 
-öput
- = *((*)(
-öput_¨gs
-));
-
-13 
-	`¥ötf
-("Insidêthªad_run, i≈ut: %d\n", 
-öput
-);
-
-17  (
-NULL
-);
-
-19 
-	}
-}
-
-22 
-	$maö
-()
-
-24 
-rc
- = 0;
-
-25 
-tid
- = 0;
-
-26 
-¨gs
- = 1;
-
-28 
-rc
- = 
-	`thr_öô
-(10);
-
-30 
-	`Õrötf
-("[APP_%s],á·îÅhr_öôÑ¯%d\n", 
-__FUNCTION__
-, 
-rc
-);
-
-32 
-tid
- = 
-	`thr_¸óã
-(
-thªad_run
-, (*)(&(
-¨gs
-)));
-
-34 
-	`Õrötf
-("[APP_%s],á·îÅhr_¸óãÅid = %d\n", 
-__FUNCTION__
-, 
-tid
-);
-
-36 
-rc
- = 0;
-
-37 *
-ba£_±r
- = (*)(0xffff3ffc);
-
-39 
-rc
- = 
-	`√w_∑ges
-(
-ba£_±r
-, 4096);
-
-41 
-	`Õrötf
-("Insidêmaö,á·îÇew_∑ges,Ñc: %d\n", 
-rc
-);
-
-45 
-	}
-}
-
-	@vq_challenge/variable_queue.h
-
-25 
-	#Q_NEW_HEAD
-(
-Q_HEAD_TYPE
-, 
-Q_ELEM_TYPE
-Ë;
-
-	)
-
-43 
-	#Q_NEW_LINK
-(
-Q_ELEM_TYPE
-Ë;
-
-	)
-
-52 
-	#Q_INIT_HEAD
-(
-Q_HEAD
-Ë;
-
-	)
-
-64 
-	#Q_INIT_ELEM
-(
-Q_ELEM
-, 
-LINK_NAME
-Ë;
-
-	)
-
-82 
-	#Q_INSERT_FRONT
-(
-Q_HEAD
-, 
-Q_ELEM
-, 
-LINK_NAME
-Ë;
-
-	)
-
-99 
-	#Q_INSERT_TAIL
-(
-Q_HEAD
-, 
-Q_ELEM
-, 
-LINK_NAME
-Ë;
-
-	)
-
-111 
-	#Q_GET_FRONT
-(
-Q_HEAD
-Ë;
-
-	)
-
-122 
-	#Q_GET_TAIL
-(
-Q_HEAD
-Ë;
-
-	)
-
-138 
-	#Q_GET_NEXT
-(
-Q_ELEM
-, 
-LINK_NAME
-Ë;
-
-	)
-
-153 
-	#Q_GET_PREV
-(
-Q_ELEM
-, 
-LINK_NAME
-Ë;
-
-	)
-
-170 
-	#Q_INSERT_AFTER
-(
-Q_HEAD
-,
-Q_INQ
-,
-Q_TOINSERT
-,
-LINK_NAME
-);
-
-	)
-
-187 
-	#Q_INSERT_BEFORE
-(
-Q_HEAD
-,
-Q_INQ
-,
-Q_TOINSERT
-,
-LINK_NAME
-);
-
-	)
-
-208 
-	#Q_REMOVE
-(
-Q_HEAD
-,
-Q_ELEM
-,
-LINK_NAME
-Ë;
-
-	)
-
-239 
-	#Q_FOREACH
-(
-CURRENT_ELEM
-,
-Q_HEAD
-,
-LINK_NAME
-Ë;
-
-	)
-
-	@vq_challenge/vqtest.c
-
-7 
-	~<°dlib.h
->
-
-8 
-	~<°dio.h
->
-
-9 
-	~<as£π.h
->
-
-11 
-	~"v¨übÀ_queue.h
-"
-
-13 
-	snode
- {
-
-14 
-Q_NEW_LINK
-(
-node
-Ë
-	mlök
-;
-
-15 
-	md©a
-;
-
-16 } 
-	tnode_t
-;
-
-18 
-Q_NEW_HEAD
-(
-li°_t
-, 
-node
-);
-
-20 
-	#LIST_LEN
- 5
-
-	)
-
-22 
-	$ã°_öô
-() {
-
-23 
-li°_t
- 
-li°
-;
-
-25 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-27 
-	`as£π
-(!
-	`Q_GET_FRONT
-(&
-li°
-));
-
-28 
-	`as£π
-(!
-	`Q_GET_TAIL
-(&
-li°
-));
-
-29 
-	}
-}
-
-31 
-	$ã°_ö£π
-() {
-
-32 
-li°_t
- 
-li°
-;
-
-34 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-36 
-node_t
- 
-node
-;
-
-37 
-	`Q_INIT_ELEM
-(&
-node
-, 
-lök
-);
-
-39 
-node
-.
-d©a
- = 1;
-
-41 
-	`Q_INSERT_TAIL
-(&
-li°
-, &
-node
-, 
-lök
-);
-
-43 
-	`as£π
-(
-	`Q_GET_TAIL
-(&
-li°
-Ë=&
-node
-);
-
-44 
-	`as£π
-(
-	`Q_GET_FRONT
-(&
-li°
-Ë=&
-node
-);
-
-46 
-	`as£π
-(!
-	`Q_GET_NEXT
-(&
-node
-, 
-lök
-));
-
-47 
-	`as£π
-(!
-	`Q_GET_PREV
-(&
-node
-, 
-lök
-));
-
-48 
-	}
-}
-
-50 
-	$ã°_ªmove
-() {
-
-51 
-li°_t
- 
-li°
-;
-
-53 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-55 
-node_t
- 
-node
-;
-
-56 
-	`Q_INIT_ELEM
-(&
-node
-, 
-lök
-);
-
-58 
-	`Q_INSERT_TAIL
-(&
-li°
-, &
-node
-, 
-lök
-);
-
-60 
-	`as£π
-(
-	`Q_GET_TAIL
-(&
-li°
-Ë=&
-node
-);
-
-61 
-	`as£π
-(
-	`Q_GET_FRONT
-(&
-li°
-Ë=&
-node
-);
-
-63 
-	`as£π
-(!
-	`Q_GET_NEXT
-(&
-node
-, 
-lök
-));
-
-64 
-	`as£π
-(!
-	`Q_GET_PREV
-(&
-node
-, 
-lök
-));
-
-66 
-	`Q_REMOVE
-(&
-li°
-, &
-node
-, 
-lök
-);
-
-68 
-	`as£π
-(!
-	`Q_GET_FRONT
-(&
-li°
-));
-
-69 
-	`as£π
-(!
-	`Q_GET_TAIL
-(&
-li°
-));
-
-70 
-	}
-}
-
-72 
-	$ã°_ö£π_‰⁄ts
-() {
-
-73 
-li°_t
- 
-li°
-;
-
-75 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-77 
-node_t
- 
-nodes
-[
-LIST_LEN
-];
-
-79 
-i
-;
-
-80 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-81 
-	`Q_INIT_ELEM
-(&
-nodes
-[
-i
-], 
-lök
-);
-
-82 
-nodes
-[
-i
-].
-d©a
- = i;
-
-83 
-	`Q_INSERT_FRONT
-(&
-li°
-, &
-nodes
-[
-i
-], 
-lök
-);
-
-86 
-node_t
- *
-cur
- = 
-	`Q_GET_FRONT
-(&
-li°
-);
-
-87 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-88 
-	`as£π
-(
-cur
-);
-
-89 
-	`as£π
-(
-cur
-->
-d©a
- =
-LIST_LEN
- - 
-i
- - 1);
-
-90 
-cur
- = 
-	`Q_GET_NEXT
-(cur, 
-lök
-);
-
-93 
-	`as£π
-(!
-cur
-);
-
-95 
-cur
- = 
-	`Q_GET_TAIL
-(&
-li°
-);
-
-96 
-i
- = 
-LIST_LEN
--1; i >= 0; i--) {
-
-97 
-	`as£π
-(
-cur
-);
-
-98 
-	`as£π
-(
-cur
-->
-d©a
- =
-LIST_LEN
- - 
-i
- - 1);
-
-99 
-cur
- = 
-	`Q_GET_PREV
-(cur, 
-lök
-);
-
-101 
-	`as£π
-(!
-cur
-);
-
-102 
-	}
-}
-
-104 
-	$ã°_ö£π_èûs
-() {
-
-105 
-li°_t
- 
-li°
-;
-
-107 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-109 
-node_t
- 
-nodes
-[
-LIST_LEN
-];
-
-111 
-i
-;
-
-112 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-113 
-	`Q_INIT_ELEM
-(&
-nodes
-[
-i
-], 
-lök
-);
-
-114 
-nodes
-[
-i
-].
-d©a
- = i;
-
-115 
-	`Q_INSERT_TAIL
-(&
-li°
-, &
-nodes
-[
-i
-], 
-lök
-);
-
-118 
-node_t
- *
-cur
- = 
-	`Q_GET_FRONT
-(&
-li°
-);
-
-119 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-120 
-	`as£π
-(
-cur
-);
-
-121 
-	`as£π
-(
-cur
-->
-d©a
- =
-i
-);
-
-122 
-node_t
- *
-√xt
- = 
-	`Q_GET_NEXT
-(
-cur
-, 
-lök
-);
-
-123 
-	`as£π
-(!
-√xt
- || 
-	`Q_GET_PREV
-“ext, 
-lök
-Ë=
-cur
-);
-
-124 
-cur
- = 
-√xt
-;
-
-127 
-	`as£π
-(!
-cur
-);
-
-129 
-cur
- = 
-	`Q_GET_TAIL
-(&
-li°
-);
-
-130 
-i
- = 
-LIST_LEN
--1; i >= 0; i--) {
-
-131 
-	`as£π
-(
-cur
-);
-
-132 
-	`as£π
-(
-cur
-->
-d©a
- =
-i
-);
-
-133 
-node_t
- *
-¥ev
- = 
-	`Q_GET_PREV
-(
-cur
-, 
-lök
-);
-
-134 
-	`as£π
-(!
-¥ev
- || 
-	`Q_GET_NEXT
-’ªv, 
-lök
-Ë=
-cur
-);
-
-135 
-cur
- = 
-¥ev
-;
-
-137 
-	`as£π
-(!
-cur
-);
-
-138 
-	}
-}
-
-140 
-	$ã°_ªmoves
-() {
-
-141 
-li°_t
- 
-li°
-;
-
-143 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-145 
-node_t
- 
-nodes
-[
-LIST_LEN
-];
-
-147 
-i
-;
-
-148 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-149 
-	`Q_INIT_ELEM
-(&
-nodes
-[
-i
-], 
-lök
-);
-
-150 
-	`Q_INSERT_FRONT
-(&
-li°
-, &
-nodes
-[
-i
-], 
-lök
-);
-
-153 
-	`as£π
-(
-	`Q_GET_FRONT
-(&
-li°
-Ë=&
-nodes
-[
-LIST_LEN
--1]);
-
-154 
-	`as£π
-(
-	`Q_GET_TAIL
-(&
-li°
-Ë=&
-nodes
-[0]);
-
-156 
-node_t
- *
-cur
- = 
-	`Q_GET_FRONT
-(&
-li°
-);
-
-157 
-cur
-) {
-
-158 
-node_t
- *
-√xt
- = 
-	`Q_GET_NEXT
-(
-cur
-, 
-lök
-);
-
-159 
-	`Q_REMOVE
-(&
-li°
-, 
-cur
-, 
-lök
-);
-
-160 
-cur
- = 
-√xt
-;
-
-161 
-i
-++;
-
-163 
-	}
-}
-
-165 
-	$ã°_ö£π_a·î
-() {
-
-166 
-li°_t
- 
-li°
-;
-
-168 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-170 
-node_t
- 
-nodes
-[
-LIST_LEN
-];
-
-172 
-	`Q_INIT_ELEM
-(&
-nodes
-[0], 
-lök
-);
-
-173 
-nodes
-[0].
-d©a
- = 0;
-
-174 
-	`Q_INSERT_FRONT
-(&
-li°
-, &
-nodes
-[0], 
-lök
-);
-
-176 
-i
-;
-
-177 
-i
- = 1; i < 
-LIST_LEN
-; i++) {
-
-178 
-	`Q_INIT_ELEM
-(&
-nodes
-[
-i
-], 
-lök
-);
-
-179 
-	`Q_INSERT_AFTER
-(&
-li°
-, &
-nodes
-[
-i
--1], &nodes[i], 
-lök
-);
-
-180 
-nodes
-[
-i
-].
-d©a
- = i;
-
-181 
-	`as£π
-(
-	`Q_GET_NEXT
-(&
-nodes
-[
-i
--1], 
-lök
-) == &nodes[i]);
-
-182 
-	`as£π
-(
-	`Q_GET_PREV
-(&
-nodes
-[
-i
-], 
-lök
-) == &nodes[i-1]);
-
-184 
-	`as£π
-(
-	`Q_GET_FRONT
-(&
-li°
-Ë=&
-nodes
-[0]);
-
-185 
-	`as£π
-(
-	`Q_GET_TAIL
-(&
-li°
-Ë=&
-nodes
-[
-LIST_LEN
--1]);
-
-187 
-node_t
- *
-cur
- = 
-	`Q_GET_FRONT
-(&
-li°
-);
-
-188 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-189 
-	`as£π
-(
-cur
-);
-
-190 
-	`as£π
-(
-cur
-->
-d©a
- =
-i
-);
-
-191 
-cur
- = 
-	`Q_GET_NEXT
-(cur, 
-lök
-);
-
-193 
-	`as£π
-(!
-cur
-);
-
-194 
-	}
-}
-
-196 
-	$ã°_ö£π_bef‹e
-() {
-
-197 
-li°_t
- 
-li°
-;
-
-199 
-	`Q_INIT_HEAD
-(&
-li°
-);
-
-201 
-node_t
- 
-nodes
-[
-LIST_LEN
-];
-
-203 
-	`Q_INIT_ELEM
-(&
-nodes
-[0], 
-lök
-);
-
-204 
-nodes
-[0].
-d©a
- = 0;
-
-205 
-	`Q_INSERT_FRONT
-(&
-li°
-, &
-nodes
-[0], 
-lök
-);
-
-207 
-i
-;
-
-208 
-i
- = 1; i < 
-LIST_LEN
-; i++) {
-
-209 
-	`Q_INIT_ELEM
-(&
-nodes
-[
-i
-], 
-lök
-);
-
-210 
-	`Q_INSERT_BEFORE
-(&
-li°
-, &
-nodes
-[
-i
--1], &nodes[i], 
-lök
-);
-
-211 
-nodes
-[
-i
-].
-d©a
- = i;
-
-212 
-	`as£π
-(
-	`Q_GET_PREV
-(&
-nodes
-[
-i
--1], 
-lök
-) == &nodes[i]);
-
-213 
-	`as£π
-(
-	`Q_GET_NEXT
-(&
-nodes
-[
-i
-], 
-lök
-) == &nodes[i-1]);
-
-215 
-	`as£π
-(
-	`Q_GET_TAIL
-(&
-li°
-Ë=&
-nodes
-[0]);
-
-216 
-	`as£π
-(
-	`Q_GET_FRONT
-(&
-li°
-Ë=&
-nodes
-[
-LIST_LEN
--1]);
-
-218 
-node_t
- *
-cur
- = 
-	`Q_GET_FRONT
-(&
-li°
-);
-
-219 
-i
- = 0; i < 
-LIST_LEN
-; i++) {
-
-220 
-	`as£π
-(
-cur
-);
-
-221 
-	`as£π
-(
-cur
-->
-d©a
- =
-LIST_LEN
- - 
-i
- - 1);
-
-222 
-cur
- = 
-	`Q_GET_NEXT
-(cur, 
-lök
-);
-
-224 
-	`as£π
-(!
-cur
-);
-
-225 
-	}
-}
-
-227 
-	#RUN_TEST
-(
-t
-) do {\
-
-228 
-	`¥ötf
-("Running "#t"()...");\
-
-229 
-	`t
-();\
-
-230 
-	`¥ötf
-(" OK.\n");\
-
-231 } 0)
-
-	)
-
-233 
-	$maö
-() {
-
-234 
-	`RUN_TEST
-(
-ã°_öô
-);
-
-235 
-	`RUN_TEST
-(
-ã°_ö£π
-);
-
-236 
-	`RUN_TEST
-(
-ã°_ö£π_‰⁄ts
-);
-
-237 
-	`RUN_TEST
-(
-ã°_ö£π_èûs
-);
-
-238 
-	`RUN_TEST
-(
-ã°_ö£π_bef‹e
-);
-
-239 
-	`RUN_TEST
-(
-ã°_ö£π_a·î
-);
-
-240 
-	`RUN_TEST
-(
-ã°_ªmove
-);
-
-242 
 	}
 }
 
@@ -31005,7 +24453,7 @@ __THROW
 ¨gs
 Ë
 	)
-¨gs
+args
 
 42 
 	#__MALLOC_P
@@ -31013,7 +24461,7 @@ __THROW
 ¨gs
 Ë
 	)
-¨gs
+args
 
 43 
 	#__MALLOC_PMT
@@ -31021,7 +24469,7 @@ __THROW
 ¨gs
 Ë
 	)
-¨gs
+args
 
 48 
 __BEGIN_DECLS
@@ -62563,7 +56011,7 @@ f˘
 __nŸhrow__
 )Ë
 	)
-f˘
+fct
 
 50 #i‡
 deföed
@@ -62603,7 +56051,7 @@ f˘
 f˘
 Ë
 	)
-f˘
+fct
 
 61 
 	#__ölöe
@@ -62623,7 +56071,7 @@ f˘
 f˘
 Ë
 	)
-f˘
+fct
 
 66 
 	#__c⁄°
@@ -62649,7 +56097,7 @@ f˘
 ¨gs
 Ë
 	)
-¨gs
+args
 
 75 
 	#__PMT
@@ -62657,7 +56105,7 @@ f˘
 ¨gs
 Ë
 	)
-¨gs
+args
 
 80 
 	#__CONCAT
@@ -63105,7 +56553,7 @@ __USER_LABEL_PREFIX__
 	`__STRING
  (¥efixË
 	)
-˙ame
+cname
 
 202 #i‡!
 deföed
@@ -63803,7 +57251,7 @@ __REDIRECT
 Æüs
 Ë«mê
 	)
-¥Ÿo
+proto
 
 388 
 	#__LDBL_REDIR
@@ -63813,7 +57261,7 @@ __REDIRECT
 ¥Ÿo
 Ë«mê
 	)
-¥Ÿo
+proto
 
 389 
 	#__LDBL_REDIR1_NTH
@@ -81814,143 +75262,107 @@ __END_DECLS
 .
 1
 /usr/include
-194
-4836
-410kern/boot/multiboot.h
-410kern/boot/util.h
-410kern/boot/util_cmdline.c
-410kern/boot/util_lmm.c
-410kern/inc/asm_style.h
-410kern/inc/assert.h
-410kern/inc/exec2obj.h
-410kern/inc/kvmphys.h
-410kern/inc/malloc.h
-410kern/inc/stdarg.h
-410kern/inc/stddef.h
-410kern/inc/stdint.h
-410kern/inc/types.h
-410user/crt0.c
-410user/exec2obj.c
-410user/inc/410_tests.h
-410user/inc/asm_style.h
-410user/inc/assert.h
-410user/inc/cond.h
-410user/inc/malloc.h
-410user/inc/mutex.h
-410user/inc/rand.h
-410user/inc/rwlock.h
-410user/inc/sem.h
-410user/inc/stdarg.h
-410user/inc/stddef.h
-410user/inc/stdint.h
-410user/inc/thread.h
-410user/inc/types.h
-410user/libRNG/mt19937int.c
-410user/libmalloc/malloc.c
-410user/libmalloc/memlib.c
-410user/libmalloc/memlib.h
-410user/libmalloc/mm_malloc.c
-410user/libmalloc/mm_malloc.h
-410user/libsimics/simics.h
-410user/libsimics/simics_c.c
-410user/libstdio/doprnt.c
-410user/libstdio/doprnt.h
-410user/libstdio/doscan.c
-410user/libstdio/doscan.h
-410user/libstdio/hexdump.c
-410user/libstdio/printf.c
-410user/libstdio/putchar.c
-410user/libstdio/puts.c
-410user/libstdio/sprintf.c
-410user/libstdio/sscanf.c
-410user/libstdio/stdio.h
-410user/libstdlib/abs.c
-410user/libstdlib/atol.c
-410user/libstdlib/ctype.c
-410user/libstdlib/ctype.h
-410user/libstdlib/exit.c
-410user/libstdlib/qsort.c
-410user/libstdlib/rand.c
-410user/libstdlib/stdlib.h
-410user/libstdlib/strtol.c
-410user/libstdlib/strtoul.c
-410user/libstring/memcmp.c
-410user/libstring/memset.c
-410user/libstring/rindex.c
-410user/libstring/strcat.c
-410user/libstring/strchr.c
-410user/libstring/strcmp.c
-410user/libstring/strcpy.c
-410user/libstring/strcspn.c
-410user/libstring/strdup.c
-410user/libstring/string.h
-410user/libstring/strlen.c
-410user/libstring/strncat.c
-410user/libstring/strncmp.c
-410user/libstring/strncpy.c
-410user/libstring/strpbrk.c
-410user/libstring/strrchr.c
-410user/libstring/strspn.c
-410user/libstring/strstr.c
-410user/libstring/strtok.c
-410user/libtest/report.c
-410user/libtest/report.h
-410user/libtest/test.c
-410user/libtest/test.h
-410user/libthrgrp/thrgrp.c
-410user/libthrgrp/thrgrp.h
-410user/libx86/gccisms.c
-410user/progs/actual_wait.c
-410user/progs/agility_drill.c
-410user/progs/beady_test.c
-410user/progs/cat.c
-410user/progs/cvar_test.c
-410user/progs/cyclone.c
-410user/progs/excellent.c
-410user/progs/getpid_test1.c
-410user/progs/halt_test.c
-410user/progs/idle.c
-410user/progs/init.c
-410user/progs/join_specific_test.c
-410user/progs/juggle.c
-410user/progs/largetest.c
-410user/progs/mandelbrot.c
-410user/progs/misbehave.c
-410user/progs/misbehave_wrap.c
-410user/progs/multitest.c
-410user/progs/nibbles.c
-410user/progs/paraguay.c
-410user/progs/racer.c
-410user/progs/rwlock_downgrade_read_test.c
-410user/progs/shell.c
-410user/progs/stack_test1.c
-410user/progs/startle.c
-410user/progs/switzerland.c
-410user/progs/thr_exit_join.c
-410user/progs/wild_test1.c
-spec/common_kern.h
-spec/compiler.h
-spec/contracts.h
-spec/limits.h
-spec/syscall.h
-spec/syscall_int.h
-spec/ureg.h
-user/autostack.c
-user/inc/common.h
-user/inc/cond_type.h
-user/inc/mutex_type.h
-user/inc/rwlock_type.h
-user/inc/sem_type.h
-user/inc/thread_common.h
-user/inc/util.h
-user/libsyscall/syscall.c
-user/libthread/malloc.c
-user/libthread/panic.c
-user/libthread/thr_internals.h
-user/libthread/thread.c
-user/progs/test1.c
-vq_challenge/variable_queue.h
-vq_challenge/vqtest.c
+158
+3280
+crt0.c
+exec2obj.c
+inc/410_tests.h
+inc/asm_style.h
+inc/assert.h
+inc/cond.h
+inc/malloc.h
+inc/mutex.h
+inc/rand.h
+inc/rwlock.h
+inc/sem.h
+inc/stdarg.h
+inc/stddef.h
+inc/stdint.h
+inc/thread.h
+inc/types.h
+libRNG/mt19937int.c
+libmalloc/malloc.c
+libmalloc/memlib.c
+libmalloc/memlib.h
+libmalloc/mm_malloc.c
+libmalloc/mm_malloc.h
+libsimics/simics.h
+libsimics/simics_c.c
+libstdio/doprnt.c
+libstdio/doprnt.h
+libstdio/doscan.c
+libstdio/doscan.h
+libstdio/hexdump.c
+libstdio/printf.c
+libstdio/putchar.c
+libstdio/puts.c
+libstdio/sprintf.c
+libstdio/sscanf.c
+libstdio/stdio.h
+libstdlib/abs.c
+libstdlib/atol.c
+libstdlib/ctype.c
+libstdlib/ctype.h
+libstdlib/exit.c
+libstdlib/qsort.c
+libstdlib/rand.c
+libstdlib/stdlib.h
+libstdlib/strtol.c
+libstdlib/strtoul.c
+libstring/memcmp.c
+libstring/memset.c
+libstring/rindex.c
+libstring/strcat.c
+libstring/strchr.c
+libstring/strcmp.c
+libstring/strcpy.c
+libstring/strcspn.c
+libstring/strdup.c
+libstring/string.h
+libstring/strlen.c
+libstring/strncat.c
+libstring/strncmp.c
+libstring/strncpy.c
+libstring/strpbrk.c
+libstring/strrchr.c
+libstring/strspn.c
+libstring/strstr.c
+libstring/strtok.c
+libtest/report.c
+libtest/report.h
+libtest/test.c
+libtest/test.h
+libthrgrp/thrgrp.c
+libthrgrp/thrgrp.h
+libx86/gccisms.c
+progs/actual_wait.c
+progs/agility_drill.c
+progs/beady_test.c
+progs/cat.c
+progs/cvar_test.c
+progs/cyclone.c
+progs/excellent.c
+progs/getpid_test1.c
+progs/halt_test.c
+progs/idle.c
+progs/init.c
+progs/join_specific_test.c
+progs/juggle.c
+progs/largetest.c
+progs/mandelbrot.c
+progs/misbehave.c
+progs/misbehave_wrap.c
+progs/multitest.c
+progs/nibbles.c
+progs/paraguay.c
+progs/racer.c
+progs/rwlock_downgrade_read_test.c
+progs/shell.c
+progs/stack_test1.c
+progs/startle.c
+progs/switzerland.c
+progs/thr_exit_join.c
+progs/wild_test1.c
 /usr/include/assert.h
 /usr/include/ctype.h
 /usr/include/malloc.h

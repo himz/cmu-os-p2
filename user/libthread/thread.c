@@ -3,8 +3,11 @@
 #include <syscall.h>
 #include <syscall_int.h>
 #include <thr_internals.h>
+#include <stdlib.h>
+#include <string.h>
 #include "common.h"
 #include "thread_common.h"
+#include "util.h"
 
 /*
  * Global Variables.
@@ -19,6 +22,8 @@ thr_init( unsigned int size )
     char *main_stack_lo = NULL;
     char *resv_stack_hi = NULL;
     char *resv_stack_lo = NULL;
+
+    lprintf("[DBG_%s], Enter\n", __FUNCTION__);
 
     /*
      * At this stage we expect that only main thread
@@ -48,8 +53,11 @@ thr_create(void * (*func)(void *), void *arg)
 {
     int rc = SUCCESS;
     char *stack_lo = NULL;
+    char *stack_hi = NULL;
     tcb_t *new_tcb = NULL;
     tid_t new_tid = TID_NUM_INVALID;
+
+    lprintf("[DBG_%s], Enter\n", __FUNCTION__);
 
     /*
      * Do some basic verification.
@@ -79,7 +87,8 @@ thr_create(void * (*func)(void *), void *arg)
         return (rc);
     }
 
-    new_tcb = thr_int_create_tcb();
+    stack_hi = (stack_lo + PAGE_SIZE - WSIZE);
+    new_tcb = thr_int_create_tcb(stack_hi, stack_lo, func, arg);
 
     if (!new_tcb) {
         /*
@@ -186,15 +195,33 @@ char *
 thr_int_allocate_stack(int stack_size)
 {
     char *stack_ptr = NULL;
+    int rc = 0;
 
     /*
      * As of now return a hardcoded value.
      */
-    stack_ptr = (thr_get_resv_stackL() - (WSIZE));
+    stack_ptr = (thr_get_resv_stackL());
 
     /*
      * TODO: Add proper code.
      */
+    
+    /*
+     * Allocate the page.
+     */
+    lprintf("[DBG_%s], Allocate page at %p\n", __FUNCTION__, stack_ptr);
+    rc = new_pages(stack_ptr, (CHILD_STACK_NUM_PAGES * PAGE_SIZE));
+
+    if (rc < 0) {
+        /*
+         * Page allocation failed.
+         */
+        lprintf("[DBG_%s], Page allocation failed with rc: %d \n",
+                                                 __FUNCTION__, rc);
+
+        stack_ptr = NULL;
+    }
+
     return (stack_ptr);
 }
 
@@ -215,27 +242,106 @@ thr_int_deallocate_stack(char *base)
 void
 thr_int_fork_c_wrapper(tcb_t *new_tcb)
 {
+    tid_t child_tid = 0;
+    char *child_stack_hi = NULL;
+    char *temp_sp = NULL;
+    char *temp_bp = NULL;
+
     /*
-     * TODO: Add proper code.
+     * Child thread's callback.
      */
+    void * (*func)(void *) = NULL;
+    void *args = NULL;
+    void *child_rc = NULL;
+
+    if (!new_tcb) {
+        /*
+         * Should not have happened.
+         */
+        return;
+    }
+
+    child_stack_hi = THR_TCB_GET_STKH(new_tcb);
+    lprintf("[DBG_%s], Child stack_hi: %p \n", __FUNCTION__, child_stack_hi);
+
+    child_tid = thr_int_fork_asm_wrapper(child_stack_hi);
+
+    if (child_tid) {
+        /*
+         * Inside Parent.
+         */
+        temp_sp = util_get_esp();
+        temp_bp = util_get_ebp();
+        lprintf("[DBG_%s], in Parent conext, sp: %p, bp: %p\n", __FUNCTION__, temp_sp, temp_bp);
+
+    } else {
+
+        /*
+         * Inside child context.
+         * Lets run the registered function.
+         */
+        temp_sp = util_get_esp();
+        temp_bp = util_get_ebp();
+        func = THR_TCB_GET_FUNC(new_tcb);
+        args = THR_TCB_GET_ARGS(new_tcb);
+        lprintf("[DBG_%s], in child conext, func: %p, arg: %p\n", __FUNCTION__, func, args);
+
+        /*
+         * Time to call the child function.
+         */
+
+        child_rc = (*func) (args);
+    }
+
     return; 
 }
 
 tcb_t *
-thr_int_create_tcb()
+thr_int_create_tcb(char *stack_hi, char *stack_lo, 
+                   void * (*func)(void *), void *arg)
 {
+    tcb_t *new_tcb = NULL;
+    tid_t new_tid = TID_NUM_INVALID;
+
+    new_tid = thr_int_allocate_new_tid();
+    new_tcb = malloc(sizeof(tcb_t));
+    memset(new_tcb, 0, sizeof(tcb_t));
+
     /*
-     * TODO: Add proper code.
+     * Set TCB parameters.
      */
-    return (NULL);
+    THR_TCB_SET_TID(new_tcb, new_tid);
+    THR_TCB_SET_STKH(new_tcb, stack_hi);
+    THR_TCB_SET_STKL(new_tcb, stack_lo);
+    THR_TCB_SET_FUN(new_tcb, func);
+    THR_TCB_SET_ARG(new_tcb, arg);
+
+    return (new_tcb);
 }
 
 int
 thr_int_insert_tcb(tcb_t *tcb)
 {
     int rc = THR_SUCCESS;
+    return (rc);
+}
+
+tid_t 
+thr_int_allocate_new_tid()
+{
+    tid_t new_tid = 1;
+
     /*
      * TODO: Add proper code.
      */
-    return (rc);
+    return (new_tid);
+}
+
+void 
+thr_int_deallocate_tid(tid_t tid)
+{
+    /*
+     * TODO: Add proper code.
+     */
+    return;
 }

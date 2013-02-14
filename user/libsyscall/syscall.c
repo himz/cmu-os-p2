@@ -138,10 +138,12 @@ void task_vanish(int status)
 		continue;
 }
 
+#if 0
 int new_pages(void * addr, int len)
 {
 	return -1;
 }
+#endif
 
 int remove_pages(void * addr)
 {

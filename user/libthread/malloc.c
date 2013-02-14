@@ -8,23 +8,39 @@
 #include <stdlib.h>
 #include <types.h>
 #include <stddef.h>
+#include <simics.h>
 
 void *malloc(size_t __size)
 {
-  return NULL;
+    void *ptr = NULL;
+
+    lprintf("Inside malloc \n");
+    ptr = _malloc(__size);
+    lprintf("After malloc \n");
+
+    return (ptr);
 }
 
 void *calloc(size_t __nelt, size_t __eltsize)
 {
-  return NULL;
+    void *ptr = NULL;
+
+    ptr = _calloc(__nelt, __eltsize);
+
+    return (ptr);
 }
 
 void *realloc(void *__buf, size_t __new_size)
 {
-  return NULL;
+    void *ptr = NULL;
+
+    ptr = _realloc(__buf, __new_size);
+
+    return (ptr);
 }
 
 void free(void *__buf)
 {
-  return;
+    _free(__buf);
+    return;
 }

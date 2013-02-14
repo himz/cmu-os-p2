@@ -14,6 +14,13 @@
  */
 typedef unsigned long tid_t;
 
+typedef struct thread_reuse_stack_s {
+
+    char *stack_hi;
+    struct thread_reuse_stack_s *next;
+
+} thread_reuse_stack_t;
+
 /*
  * Thread globals.
  */
@@ -23,7 +30,10 @@ typedef struct thread_glbl_s {
     char *main_stack_lo;
     char *resv_stack_hi;
     char *resv_stack_lo;
+    char *avail_stack_hi;
+    char *avail_stack_lo;
     unsigned int thread_stack_size;
+    thread_reuse_stack_t *reuse_stacks;
 
 } thread_glbl_t;
 
@@ -91,9 +101,12 @@ typedef struct tcb_s {
  */
 void thr_int_fork_c_wrapper(tcb_t *new_tcb);
 tid_t thr_int_fork_asm_wrapper();
-tcb_t * thr_int_create_tcb();
+tcb_t * thr_int_create_tcb(char *stack_hi, char *stack_lo, 
+                           void * (*func)(void *), void *arg);
 int thr_int_insert_tcb(tcb_t *tcb);
 char * thr_int_allocate_stack(int stack_size);
 void thr_int_deallocate_stack(char *base);
-
+tid_t thr_int_allocate_new_tid();
+void thr_int_deallocate_tid(tid_t tid);
+tid_t thr_int_fork_asm_wrapper(char *child_stack_hi);
 #endif /* THR_INTERNALS_H */

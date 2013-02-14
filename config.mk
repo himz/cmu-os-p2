@@ -98,7 +98,7 @@ STUDENTTESTS = test1
 ###########################################################################
 # Object files for your thread library
 ###########################################################################
-THREAD_OBJS = malloc.o panic.o thread.o utility.o
+THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o
 
 # Thread Group Library Support.
 #
@@ -111,4 +111,4 @@ THREAD_OBJS = malloc.o panic.o thread.o utility.o
 ###########################################################################
 # Object files for your syscall wrappers
 ###########################################################################
-SYSCALL_OBJS = syscall.o fork.o vanish.o sleep.o get_ticks.o
+SYSCALL_OBJS = syscall.o fork.o vanish.o sleep.o get_ticks.o new_pages.o

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define BUFSIZE 1024
+#define BUFSIZE 87 // "four score and seven"
 
 int main(int argc, char **argv)
 {
