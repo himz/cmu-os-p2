@@ -1,6 +1,6 @@
 user/libthread/malloc.o: user/libthread/malloc.c \
  410user/libstdlib/stdlib.h 410user/inc/stddef.h 410user/inc/types.h \
- 410user/inc/malloc.h
+ 410user/inc/malloc.h 410user/libsimics/simics.h
 
 410user/libstdlib/stdlib.h:
 
@@ -9,3 +9,5 @@ user/libthread/malloc.o: user/libthread/malloc.c \
 410user/inc/types.h:
 
 410user/inc/malloc.h:
+
+410user/libsimics/simics.h:

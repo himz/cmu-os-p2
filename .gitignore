@@ -1,8 +1,8 @@
 # Compiled source #
 ###################
-bootfd.img
-kernel.strip
-
+*.img
+*.strip
+*.swp
 
 # Compiled source #
 ###################
