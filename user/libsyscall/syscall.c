@@ -29,15 +29,20 @@ int fork(void)
 }
 #endif
 
+
+#if 0
 int exec(char *execname, char *argvec[])
 {
 	return -1;
 }
+#endif
 
+#if 0
 void set_status(int status)
 {
 	return;
 }
+#endif
 
 #if 0
 volatile int placate_the_compiler;
@@ -52,30 +57,40 @@ void vanish(void)
 		++placate_the_compiler;
 }
 #endif
+
+#if 0
 int wait(int *status_ptr)
 {
 	return -1;
 }
+#endif
 
+#if 0
 int yield(int pid)
 {
 	return -1;
 }
-
+#endif
+#if 0
 int deschedule(int *flag)
 {
 	return -1;
 }
+#endif
 
+#if 0
 int make_runnable(int pid)
 {
 	return -1;
 }
+#endif
 
+#if 0
 int gettid(void)
 {
 	return -1;
 }
+#endif
 
 #if 0
 int sleep(int ticks)
@@ -84,52 +99,69 @@ int sleep(int ticks)
 }
 #endif
 
+#if 0
 int swexn(void *esp3, swexn_handler_t eip, void *arg, ureg_t *newureg)
 {
   return 0; /* FALSE, but placates assert() in crt0.c */
 }
+#endif
 
+#if 0 
 char getchar(void)
 {
 	return -1;
 }
-
+#endif
+#if 0
 int readline(int size, char *buf)
 {
 	return -1;
 }
+#endif
 
+#if 0
 int print(int size, char *buf)
 {
 	return -1;
 }
+#endif
 
+#if 0
 int set_term_color(int color)
 {
 	return -1;
 }
+#endif
 
+#if 0
 int get_cursor_pos(int *row, int *col)
 {
   return -1;
 }
+#endif
 
+#if 0
 int set_cursor_pos(int row, int col)
 {
 	return -1;
 }
+#endif
 
+#if 0
 void halt(void)
 {
 	while (1)
 		continue;
 }
+#endif
+
 
 int readfile(char *filename, char *buf, int count, int offset)
 {
 	return -1;
 }
 
+#if 0
 void task_vanish(int status)
 {
 	status ^= status;
@@ -137,6 +169,7 @@ void task_vanish(int status)
 	while (1)
 		continue;
 }
+#endif
 
 #if 0
 int new_pages(void * addr, int len)
@@ -145,10 +178,13 @@ int new_pages(void * addr, int len)
 }
 #endif
 
+
+#if 0
 int remove_pages(void * addr)
 {
 	return -1;
 }
+#endif
 
 #if 0
 int get_ticks()
@@ -157,7 +193,9 @@ int get_ticks()
 }
 #endif
 
+#if 0
 void misbehave(int mode)
 {
 	return;
 }
+#endif
