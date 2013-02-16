@@ -111,4 +111,4 @@ THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o
 ###########################################################################
 # Object files for your syscall wrappers
 ###########################################################################
-SYSCALL_OBJS = syscall.o fork.o vanish.o sleep.o get_ticks.o new_pages.o
+SYSCALL_OBJS = syscall.o  sleep.o  deschedule.o gettid.o readfile.o exec.o halt.o readline.o swexn.o fork.o make_runnable.o remove_pages.o task_vanish.o getchar.o misbehave.o set_cursor_pos.o vanish.o get_cursor_pos.o new_pages.o set_status.o wait.o get_ticks.o print.o set_term_color.o yield.o
