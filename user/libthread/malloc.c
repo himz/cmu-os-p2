@@ -14,9 +14,7 @@ void *malloc(size_t __size)
 {
     void *ptr = NULL;
 
-    lprintf("Inside malloc \n");
     ptr = _malloc(__size);
-    lprintf("After malloc \n");
 
     return (ptr);
 }

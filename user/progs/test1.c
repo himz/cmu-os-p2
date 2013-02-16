@@ -12,8 +12,6 @@ thread_run(void *input_args)
     
     lprintf("Inside thread_run, input: %d\n", input);
 
-    while(1);
-    
     return (NULL); 
 
 }

@@ -98,7 +98,7 @@ STUDENTTESTS = test1
 ###########################################################################
 # Object files for your thread library
 ###########################################################################
-THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o
+THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o skip_list.o
 
 # Thread Group Library Support.
 #
