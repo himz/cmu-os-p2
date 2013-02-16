@@ -156,10 +156,12 @@ void halt(void)
 #endif
 
 
+#if 0
 int readfile(char *filename, char *buf, int count, int offset)
 {
 	return -1;
 }
+#endif
 
 #if 0
 void task_vanish(int status)

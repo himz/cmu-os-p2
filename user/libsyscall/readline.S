@@ -4,7 +4,7 @@
 
 readline:
     pushl   %esi
-    lea     8(%esp), %esi
+    leal    8(%esp), %esi
     int     $READLINE_INT
     popl	%esi
 	ret
