@@ -1,8 +1,9 @@
 user/libthread/thread.o: user/libthread/thread.c 410user/libstdio/stdio.h \
  410user/inc/stddef.h 410user/inc/types.h 410user/inc/stdarg.h \
  410user/libsimics/simics.h spec/syscall.h spec/ureg.h spec/syscall_int.h \
- user/libthread/thr_internals.h user/inc/common.h \
- user/inc/thread_common.h
+ user/libthread/thr_internals.h 410user/libstdlib/stdlib.h \
+ 410user/inc/malloc.h 410user/libstring/string.h user/inc/common.h \
+ user/inc/thread_common.h user/inc/util.h
 
 410user/libstdio/stdio.h:
 
@@ -22,6 +23,14 @@ spec/syscall_int.h:
 
 user/libthread/thr_internals.h:
 
+410user/libstdlib/stdlib.h:
+
+410user/inc/malloc.h:
+
+410user/libstring/string.h:
+
 user/inc/common.h:
 
 user/inc/thread_common.h:
+
+user/inc/util.h:

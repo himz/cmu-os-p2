@@ -22,6 +22,7 @@ int main()
     int rc = 0;
     int tid = 0;
     int args = 1;
+    int sleep_return =100;
 
     rc = thr_init(10);
 
@@ -31,15 +32,18 @@ int main()
 
     lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
 
+    
+
+
     while(1);
-#if 0
-    int rc = 0;
-    char *base_ptr = (char *)(0xffff3ffc);
+    #if 0
+        int rc = 0;
+        char *base_ptr = (char *)(0xffff3ffc);
 
-    rc = new_pages(base_ptr, 4096);
+        rc = new_pages(base_ptr, 4096);
 
-    lprintf("Inside main, after new_pages, rc: %d\n", rc);
-#endif
+        lprintf("Inside main, after new_pages, rc: %d\n", rc);
+    #endif
 
     return 0;
 }

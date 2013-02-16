@@ -7,7 +7,11 @@
 
 
 typedef struct mutex {
-  /* fill this in */
+    int initd;			/* Whether this mutex initialized before*/
+    int list_lock;		/* List of blocked threads */
+    int lock;			/* Locked, unlocked*/
+    int owner;			/* tid of Thread holding lock */
+    struct node *head;
 } mutex_t;
 
 #endif /* _MUTEX_TYPE_H */
