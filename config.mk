@@ -93,20 +93,12 @@ UPDATE_METHOD = afs
 # A list of the test programs you want compiled in from the user/progs
 # directory
 #
-<<<<<<< HEAD
-STUDENTTESTS = test1 skip_list_test
-=======
-STUDENTTESTS = test1 test2
->>>>>>> f6d60fb91dbce6df456493cf2feeb2d4d8cc6f7c
+STUDENTTESTS = test1 skip_list_test test2 mutex_test
 
 ###########################################################################
 # Object files for your thread library
 ###########################################################################
-<<<<<<< HEAD
-THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o skip_list.o
-=======
-THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o mutex.o xchg.o
->>>>>>> f6d60fb91dbce6df456493cf2feeb2d4d8cc6f7c
+THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o mutex.o xchg.o skip_list.o
 
 # Thread Group Library Support.
 #
@@ -119,8 +111,4 @@ THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o mutex.o xchg.
 ###########################################################################
 # Object files for your syscall wrappers
 ###########################################################################
-<<<<<<< HEAD
-SYSCALL_OBJS = syscall.o fork.o vanish.o sleep.o get_ticks.o new_pages.o set_status.o readline.o
-=======
 SYSCALL_OBJS = syscall.o  sleep.o  deschedule.o gettid.o readfile.o exec.o halt.o readline.o swexn.o fork.o make_runnable.o remove_pages.o task_vanish.o getchar.o misbehave.o set_cursor_pos.o vanish.o get_cursor_pos.o new_pages.o set_status.o wait.o get_ticks.o print.o set_term_color.o yield.o
->>>>>>> f6d60fb91dbce6df456493cf2feeb2d4d8cc6f7c

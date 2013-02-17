@@ -45,7 +45,8 @@ typedef struct tcb_s {
     tid_t tid;
     void *func;
     void *args;
-    boolean_t is_joinable;
+    //boolean_t is_joinable;
+    int is_joinable;
     void *ret_data;
 
 } tcb_t;

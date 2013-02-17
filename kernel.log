@@ -1,11 +1,7 @@
-45845017 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
-182727324992 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
+46151941 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
+63066322156 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
 
-182727337588 udbg: Head: 0x00000000
+63066322868 udbg: Well i got the lock 
 
-182727338434 udbg: Curr_num_buckets: 0
-
-182727339255 udbg: Max_num_buckets: 5
-
-182727340022 udbg: Max_num_nodes: 5
+63066323554 udbg: Well i got the lock 
 
