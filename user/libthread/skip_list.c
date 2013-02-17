@@ -6,11 +6,13 @@
 #include "util.h"
 
 skip_list_global_t *
-skip_list_init(uint32_t max_num_buckets, uint32_t max_num_node)
+skip_list_init(skip_list_global_t *skip_list_global, 
+              uint32_t max_num_buckets, 
+              uint32_t max_num_node)
 {
-    skip_list_global_t *skip_list_global = NULL;
-
-    skip_list_global = calloc(1, sizeof(skip_list_global_t));
+    if (!skip_list_global) {
+        lprintf("[DBG_%s], Invalid input \n", __FUNCTION__);
+    }
 
     SLIST_GLB_SET_M_NUM_BKT((skip_list_global), max_num_buckets);
     SLIST_GLB_SET_M_NUM_NODES((skip_list_global), max_num_node);
@@ -111,6 +113,7 @@ skip_list_remove(skip_list_global_t *skip_list_glb,
          * Bucket itself is not present.
          * Error, return.
          */
+        lprintf("[DBG_%s], Bucket not present \n", __FUNCTION__);
         return;
     }
     
@@ -153,7 +156,7 @@ skip_list_get_bucket(skip_list_global_t *skip_list_glb,
         return (NULL);
     }
 
-    while (1) {
+    while (bucket) {
 
         bucket_key = SLIST_BKT_GET_KEY(bucket);
 
@@ -166,7 +169,7 @@ skip_list_get_bucket(skip_list_global_t *skip_list_glb,
             break;
         }
 
-        if (bucket_key > input_key) {
+        if (bucket_key < input_key) {
             /*
              * we have moved fwd from where the bucket should have been,
              * break.
@@ -179,101 +182,6 @@ skip_list_get_bucket(skip_list_global_t *skip_list_glb,
     }
 
     return (ret_bucket);
-}
-
-int 
-skip_list_insert_node(skip_list_bucket_t *input_bucket, 
-                          skip_list_node_t* input_node)
-{
-    int rc = SUCCESS;
-    skip_list_node_t* head = NULL;
-    skip_list_node_t* node_iter = NULL;
-    skip_list_node_t* prev_node = NULL;
-    uint32_t input_key = 0;
-
-    if ((!input_bucket) || (!input_node)) {
-
-        /*
-         * Invalid inputs, log the event & return.
-         */
-        lprintf("[DBG_%s], Invalid inputs, skip_list_glb: %p,"
-                " list_bucket: %p \n", __FUNCTION__, 
-                input_bucket, input_node);
-
-        rc = ERROR;
-
-        return (rc);
-    }
-
-    input_key = SLIST_NODE_GET_KEY(input_node);
-    head = SLIST_BKT_GET_HEAD(input_bucket);
-
-    if (!head) {
-
-        /*
-         * This is the 1st node.
-         */
-        SLIST_BKT_SET_HEAD(input_bucket, input_node);
-
-    } else {
-
-        /*
-         * Iterate across the node lists & inserted the bucket
-         * in sorted manner indexed by node key.
-         */
-        node_iter = head;
-
-        while (1) {
-
-            if (!node_iter)
-                break;
-
-            if (SLIST_NODE_GET_KEY(node_iter) == input_key) {
-
-                /*
-                 * DUP Key, invalid scenario
-                 * log the event & return.
-                 */
-                lprintf("[DBG_%s], duplicate key: %lu\n", 
-                        __FUNCTION__, input_key);
-
-                rc = ERROR;
-                return (rc);
-
-            } else if (SLIST_NODE_GET_KEY(node_iter) > input_key) {
-
-                /*
-                 * Move further down.
-                 * Key is still less move further down.
-                 */
-                prev_node = node_iter;
-                node_iter = node_iter->next;
-
-            } else {
-
-                /*
-                 * 1st bucket whose key is greater than input.
-                 */
-                break;
-            }
-
-        }
-
-        /*
-         * Reaching here means no error were observed during search.
-         * Insert the new bucket.
-         */
-        input_node->next = node_iter;
-        input_node->prev = prev_node;
-         
-        prev_node->next = input_node;
-
-        if (node_iter)
-            node_iter->prev = input_node;
-
-    }
-
-    return (rc);
 }
 
 int 
@@ -311,6 +219,7 @@ skip_list_insert_bucket(skip_list_global_t *skip_list_glb,
          * This is the 1st node.
          */
         SLIST_GLB_SET_HEAD(skip_list_glb, list_bucket);
+        SLIST_GLB_INC_C_NUM_BKT(skip_list_glb);
 
     } else {
 
@@ -360,10 +269,18 @@ skip_list_insert_bucket(skip_list_global_t *skip_list_glb,
          * Reaching here means no error were observed during search.
          * Insert the new bucket.
          */
+        SLIST_GLB_INC_C_NUM_BKT(skip_list_glb);
         list_bucket->next = bucket_iter;
         list_bucket->prev = prev_bucket;
-         
-        prev_bucket->next = list_bucket;
+
+        if (prev_bucket) { 
+
+            prev_bucket->next = list_bucket;
+
+        } else {
+
+            SLIST_GLB_SET_HEAD(skip_list_glb, list_bucket);
+        }
 
         if (bucket_iter)
             bucket_iter->prev = list_bucket;
@@ -410,9 +327,8 @@ skip_list_remove_bucket(skip_list_global_t *skip_list_glb,
 
     search_bucket = (*(input_bucket));
 
-    /*
-     * We could find the node.
-     */
+    SLIST_GLB_DEC_C_NUM_BKT(skip_list_glb);
+
     prev_bucket = SLIST_BKT_GET_PREV(search_bucket);
     next_bucket = SLIST_BKT_GET_NEXT(search_bucket);
 
@@ -439,6 +355,113 @@ skip_list_remove_bucket(skip_list_global_t *skip_list_glb,
     *input_bucket = NULL;
 
     return;
+}
+
+int 
+skip_list_insert_node(skip_list_bucket_t *input_bucket, 
+                          skip_list_node_t* input_node)
+{
+    int rc = SUCCESS;
+    skip_list_node_t* head = NULL;
+    skip_list_node_t* node_iter = NULL;
+    skip_list_node_t* prev_node = NULL;
+    uint32_t input_key = 0;
+
+    if ((!input_bucket) || (!input_node)) {
+
+        /*
+         * Invalid inputs, log the event & return.
+         */
+        lprintf("[DBG_%s], Invalid inputs, skip_list_glb: %p,"
+                " list_bucket: %p \n", __FUNCTION__, 
+                input_bucket, input_node);
+
+        rc = ERROR;
+
+        return (rc);
+    }
+
+    input_key = SLIST_NODE_GET_KEY(input_node);
+    head = SLIST_BKT_GET_HEAD(input_bucket);
+
+    if (!head) {
+
+        /*
+         * This is the 1st node.
+         */
+        SLIST_BKT_SET_HEAD(input_bucket, input_node);
+        SLIST_BKT_INC_NNODES(input_bucket);
+
+
+    } else {
+
+        /*
+         * Iterate across the node lists & inserted the bucket
+         * in sorted manner indexed by node key.
+         */
+        node_iter = head;
+
+        while (1) {
+
+            if (!node_iter)
+                break;
+
+            if (SLIST_NODE_GET_KEY(node_iter) == input_key) {
+
+                /*
+                 * DUP Key, invalid scenario
+                 * log the event & return.
+                 */
+                lprintf("[DBG_%s], duplicate key: %lu\n", 
+                        __FUNCTION__, input_key);
+
+                rc = ERROR;
+                return (rc);
+
+            } else if (SLIST_NODE_GET_KEY(node_iter) > input_key) {
+
+                /*
+                 * Move further down.
+                 * Key is still less move further down.
+                 */
+                prev_node = node_iter;
+                node_iter = node_iter->next;
+
+            } else {
+
+                /*
+                 * 1st bucket whose key is greater than input.
+                 */
+                break;
+            }
+
+        }
+
+        /*
+         * Reaching here means no error were observed during search.
+         * Insert the new node.
+         */
+        SLIST_BKT_INC_NNODES(input_bucket);
+        input_node->next = node_iter;
+        input_node->prev = prev_node;
+
+        if (prev_node) {
+
+            prev_node->next = input_node;
+
+        } else {
+
+            /*
+             * Change the head of the linked list.
+             */
+            SLIST_BKT_SET_HEAD(input_bucket, input_node);
+        }
+
+        if (node_iter)
+            node_iter->prev = input_node;
+    }
+
+    return (rc);
 }
 
 void
@@ -498,6 +521,8 @@ skip_list_remove_node(skip_list_bucket_t *input_bucket, uint32_t input_key)
         /*
          * We could find the node.
          */
+        SLIST_BKT_DEC_NNODES(input_bucket);
+
         prev_node = SLIST_NODE_GET_PREV(search_node);
         next_node = SLIST_NODE_GET_NEXT(search_node);
 
@@ -523,7 +548,73 @@ skip_list_remove_node(skip_list_bucket_t *input_bucket, uint32_t input_key)
         free(search_node);
     }
 
-    
     return;
 }
 
+/*
+ * DBG APIS.
+ */
+void 
+skip_list_dbg_dump_node(skip_list_node_t *input_node)
+{
+    if (!input_node)
+        return;
+
+    lprintf("\t\tSelf: %p\n", input_node);
+    lprintf("\t\tNode_Key: %lu\n", SLIST_NODE_GET_KEY(input_node));
+    lprintf("\t\tNext: %p\n", SLIST_NODE_GET_NEXT(input_node));
+    lprintf("\t\tPrev: %p\n", SLIST_NODE_GET_PREV(input_node));
+
+    return;
+}
+
+void 
+skip_list_dbg_dump_bucket(skip_list_bucket_t *input_bucket)
+{
+    skip_list_node_t *node_iter = NULL;
+
+    if (!input_bucket)
+        return;
+
+    lprintf("\tSelf: %p\n", input_bucket);
+    lprintf("\tHead: %p\n", SLIST_BKT_GET_HEAD(input_bucket));
+    lprintf("\tNext: %p\n", SLIST_BKT_GET_NEXT(input_bucket));
+    lprintf("\tPrev: %p\n", SLIST_BKT_GET_PREV(input_bucket));
+    lprintf("\tBucket_key: %lu\n", SLIST_BKT_GET_KEY(input_bucket));
+    lprintf("\tNum_nodes: %lu\n", SLIST_BKT_GET_NNODES(input_bucket));
+
+    node_iter =  SLIST_BKT_GET_HEAD(input_bucket);
+
+    while (node_iter) {
+
+        skip_list_dbg_dump_node(node_iter);
+
+        node_iter = node_iter->next;
+    }
+
+    return;
+}
+
+void 
+skip_list_dbg_dump_all(skip_list_global_t *input_global)
+{
+    skip_list_bucket_t *bucket_iter = NULL;
+
+    if (!input_global)
+        return;
+
+    lprintf("Head: %p\n", SLIST_GLB_GET_HEAD(input_global));
+    lprintf("Curr_num_buckets: %lu\n", SLIST_GLB_GET_C_NUM_BKT(input_global));
+    lprintf("Max_num_buckets: %lu\n", SLIST_GLB_GET_M_NUM_BKT(input_global));
+    lprintf("Max_num_nodes: %lu\n", SLIST_GLB_GET_M_NUM_NODES(input_global));
+
+    bucket_iter = SLIST_GLB_GET_HEAD(input_global);
+
+    while (bucket_iter) {
+
+        skip_list_dbg_dump_bucket(bucket_iter);
+        bucket_iter = bucket_iter->next;
+    }
+
+    return;
+}

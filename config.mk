@@ -93,7 +93,7 @@ UPDATE_METHOD = afs
 # A list of the test programs you want compiled in from the user/progs
 # directory
 #
-STUDENTTESTS = test1
+STUDENTTESTS = test1 skip_list_test
 
 ###########################################################################
 # Object files for your thread library
@@ -111,4 +111,4 @@ THREAD_OBJS = malloc.o panic.o thread.o utility.o thread_utility.o skip_list.o
 ###########################################################################
 # Object files for your syscall wrappers
 ###########################################################################
-SYSCALL_OBJS = syscall.o fork.o vanish.o sleep.o get_ticks.o new_pages.o
+SYSCALL_OBJS = syscall.o fork.o vanish.o sleep.o get_ticks.o new_pages.o set_status.o readline.o

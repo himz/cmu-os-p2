@@ -36,4 +36,26 @@ typedef struct skip_list_global_s {
                                                 _val_)
 #define SLIST_GLB_SET_HEAD(_glb_, _val_)        (((_glb_)->head) = _val_)
 
+#define SLIST_GLB_INC_C_NUM_BKT(_glb_)          (((_glb_)->curr_num_buckets)  \
+                                                = (SLIST_GLB_GET_C_NUM_BKT    \
+                                                (_glb_) + 1))
+#define SLIST_GLB_DEC_C_NUM_BKT(_glb_)          (((_glb_)->curr_num_buckets)  \
+                                                = (SLIST_GLB_GET_C_NUM_BKT    \
+                                                (_glb_) - 1))
+
+/*
+ * Declarations.
+ */
+void skip_list_dbg_dump_all(skip_list_global_t *skip_list_glb);
+
+skip_list_global_t * skip_list_init(skip_list_global_t *skip_list_glb, 
+                                             uint32_t max_num_buckets,
+                                             uint32_t max_num_node);
+
+int skip_list_insert(skip_list_global_t *skip_list_glb, int32_t bucket_index, 
+                                            uint32_t node_index, void *data);
+
+void skip_list_remove(skip_list_global_t *skip_list_glb, int32_t bucket_index,
+                                                         uint32_t node_index);
+
 #endif

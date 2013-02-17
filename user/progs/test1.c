@@ -22,7 +22,6 @@ int main()
     int rc = 0;
     int tid = 0;
     int args = 1;
-    int sleep_return =100;
 
     rc = thr_init(10);
 
@@ -31,8 +30,6 @@ int main()
     tid = thr_create(thread_run, (void *)(&(args)));
 
     lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
-
-    
 
 
     while(1);

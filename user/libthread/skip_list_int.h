@@ -62,6 +62,15 @@ typedef struct skip_list_bucket_s {
 #define SLIST_NODE_SET_DATA(_node_, _val_)        (((_glb_)->data = _val_))
 
 /*
+ * INC Macros.
+ */
+#define SLIST_BKT_INC_NNODES(_bkt_)               ((_bkt_)->num_nodes += 1)
+
+/*
+ * DEC Macros.
+ */
+#define SLIST_BKT_DEC_NNODES(_bkt_)               ((_bkt_)->num_nodes -= 1)
+/*
  * Declarations.
  */
 
@@ -80,7 +89,8 @@ void skip_list_remove_node(skip_list_bucket_t *input_bucket,
 void skip_list_remove_bucket(skip_list_global_t *skip_list_glb,
                               skip_list_bucket_t** list_bucket);
 
-
-
+void skip_list_dbg_dump_bucket(skip_list_bucket_t *input_bucket);
+void skip_list_dbg_dump_node(skip_list_node_t *input_node);
+//void skip_list_dbg_dump_all(skip_list_global_t *skip_list_glb);
 #endif
 

@@ -1,25 +1,11 @@
-45351033 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
-37148319847 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
+45845017 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
+182727324992 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
 
-37148320688 udbg: [DBG_thr_init], Enter
+182727337588 udbg: Head: 0x00000000
 
-37148326750 udbg: [DBG_thr_init], main_stack_hi: 0xffffffff, main_stack_lo: 0xffff7000 
+182727338434 udbg: Curr_num_buckets: 0
 
-37148329002 udbg: [DBG_thr_init], child_stack_size: 4096
+182727339255 udbg: Max_num_buckets: 5
 
-37148335064 udbg: [DBG_thr_init], free_stack_hi: 0xffff4ffc, free_stack_lo: 0xffff4000 
-
-37148338828 udbg: [APP_main],  after thr_init  rc = 0, thread_run: 0x01000000
-
-37148339707 udbg: [DBG_thr_create], Enter
-
-37148343566 udbg: [DBG_thr_int_allocate_stack], Allocate page at 0xffff4000
-
-37148353375 udbg: [DBG_thr_create], stack_hi: 0xffff4ffc, stack_lo: 0xffff4000, cstack_size: 4096 
-
-37148362605 udbg: [DBG_thr_int_fork_c_wrapper], Child stack_hi: 0xffff4ffc 
-
-37148382007 udbg: [APP_main],  after thr_create  tid = 1
-
-37148572421 udbg: Inside thread_run, input: 1
+182727340022 udbg: Max_num_nodes: 5
 
