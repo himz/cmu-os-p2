@@ -14,4 +14,6 @@ struct node {
     struct node *next;
 };
 
+int xchg(int *lock, int value);
+
 #endif
