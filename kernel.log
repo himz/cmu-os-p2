@@ -1,7 +1,29 @@
-46151941 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
-63066322156 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
+46384921 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
+34795321939 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
 
-63066322868 udbg: Well i got the lock 
+34795330546 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
 
-63066323554 udbg: Well i got the lock 
+34795336603 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+34795340367 udbg: [APP_main],  after thr_init  rc = 0, thread_run: 0x01000000
+
+34795341248 udbg: [DBG_thr_create], Enter
+
+34795341923 udbg: Well i got the lock 
+
+34795357646 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+34795361532 udbg: [DBG_thr_int_fork_c_wrapper], Child stack_hi: 0xffff3ffc 
+
+34795380918 udbg: [APP_main],  after thr_create  tid = 0
+
+34795383281 udbg: Inside thread_run, input: 0
+
+34795386509 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+34795387180 udbg: Well i got the lock 
+
+34795390948 udbg: [DBG_thr_exit], search based on stk: 0xffff3000 failed 
+
+34795392799 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack 
 

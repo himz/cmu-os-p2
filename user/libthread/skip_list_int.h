@@ -24,6 +24,9 @@ typedef struct skip_list_bucket_s {
      */
     uint32_t bucket_key;
     uint32_t num_nodes; /* Number of nodes present in this bucket. */
+    uint32_t max_node_key;
+    uint32_t min_node_key;
+    uint32_t decr_factor;
 
 } skip_list_bucket_t;
 
@@ -74,8 +77,13 @@ typedef struct skip_list_bucket_s {
  * Declarations.
  */
 
-skip_list_bucket_t* skip_list_get_bucket(skip_list_global_t *skip_list_glb, 
-                                                      uint32_t bucket_key);
+skip_list_bucket_t* 
+skip_list_get_bucket(skip_list_global_t *skip_list_glb, 
+                                  uint32_t bucket_key);
+
+skip_list_node_t* 
+skip_list_get_node(skip_list_bucket_t *search_bucket, 
+                                  uint32_t node_key);
 
 int skip_list_insert_bucket(skip_list_global_t *skip_list_glb, 
                             skip_list_bucket_t* list_bucket);
@@ -91,6 +99,5 @@ void skip_list_remove_bucket(skip_list_global_t *skip_list_glb,
 
 void skip_list_dbg_dump_bucket(skip_list_bucket_t *input_bucket);
 void skip_list_dbg_dump_node(skip_list_node_t *input_node);
-//void skip_list_dbg_dump_all(skip_list_global_t *skip_list_glb);
 #endif
 

@@ -27,7 +27,7 @@ skip_list_init(skip_list_global_t *skip_list_global,
 
 int
 skip_list_insert(skip_list_global_t *skip_list_glb, 
-                int32_t bucket_index, uint32_t node_index, 
+                uint32_t bucket_index, uint32_t node_index, 
                 void *data)
 {
     int rc = SUCCESS;
@@ -91,7 +91,7 @@ skip_list_insert(skip_list_global_t *skip_list_glb,
 
 void
 skip_list_remove(skip_list_global_t *skip_list_glb,
-                int32_t bucket_index, uint32_t node_index)
+                 uint32_t bucket_index, uint32_t node_index)
 {
     skip_list_bucket_t *list_bucket = NULL;
 
@@ -128,6 +128,46 @@ skip_list_remove(skip_list_global_t *skip_list_glb,
     }
 
     return;
+}
+
+void *
+skip_list_find(skip_list_global_t *skip_list_glb,
+              uint32_t bucket_index, uint32_t node_index)
+{
+    void *ret_data = NULL;
+    skip_list_bucket_t *search_bucket = NULL;
+    skip_list_node_t *search_node = NULL;
+
+    if (!(skip_list_glb)) {
+
+        /*
+         * Invalid input.
+         */
+        lprintf("[DBG_%s], list_glb NULL \n", __FUNCTION__);
+        return (NULL);
+    }
+
+    search_bucket = skip_list_get_bucket(skip_list_glb, bucket_index);
+    if (!search_bucket) {
+        /*
+         * Bucket is NULL.
+         */
+        lprintf("[DBG_%s], list_glb NULL \n", __FUNCTION__);
+        return (NULL);
+    }
+
+    search_node = skip_list_get_node(search_bucket, node_index);
+    if (!search_node) {
+        /*
+         * Bucket is NULL.
+         */
+        lprintf("[DBG_%s], list_glb NULL \n", __FUNCTION__);
+        return (NULL);
+    }
+
+    ret_data = SLIST_NODE_GET_DATA(search_node);
+
+    return (ret_data);
 }
 
 skip_list_bucket_t* 
@@ -182,6 +222,60 @@ skip_list_get_bucket(skip_list_global_t *skip_list_glb,
     }
 
     return (ret_bucket);
+}
+
+skip_list_node_t* 
+skip_list_get_node(skip_list_bucket_t *input_bucket,
+                                 uint32_t input_key)
+{
+    skip_list_node_t *node = NULL;
+    skip_list_node_t *ret_node = NULL;
+    uint32_t node_key = 0;
+
+    if (!(input_bucket)) {
+
+        /*
+         * Invalid input.
+         */
+        lprintf("[DBG_%s], input bucket NULL \n", __FUNCTION__);
+        return (NULL);
+    }
+
+    node = SLIST_BKT_GET_HEAD(input_bucket);
+    if (!node) {
+
+        /*
+         * Head itself is NULL, list is empty.
+         */
+        return (NULL);
+    }
+
+    while (node) {
+
+        node_key = SLIST_NODE_GET_KEY(node);
+
+        if (node_key == input_key) {
+
+            /*
+             * Found the matching bucket, break.
+             */
+            ret_node = node;
+            break;
+        }
+
+        if (node_key < input_key) {
+            /*
+             * we have moved fwd from where the bucket should have been,
+             * break.
+             */
+            ret_node = NULL;
+            break;
+        }
+
+        node = SLIST_NODE_GET_NEXT(node);
+    }
+
+    return (ret_node);
 }
 
 int 

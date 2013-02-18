@@ -6,9 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <types.h>
+#include <mutex.h>
 #include "common.h"
 #include "thread_common.h"
 #include "util.h"
+#include "skip_list_common.h"
 
 /*
  * Global Variables.
@@ -23,9 +25,14 @@ thr_init( unsigned int inp_size )
     char *main_stack_lo = NULL;
     char *free_stack_hi = NULL;
     char *free_stack_lo = NULL;
-    unsigned int child_stack_size = 0;
+    char *resv_stack_hi = NULL;
+    char *resv_stack_lo = NULL;
 
-    lprintf("[DBG_%s], Enter\n", __FUNCTION__);
+    unsigned int child_stack_size = 0;
+    mutex_t *mutex = NULL;
+    skip_list_global_t *skip_list = NULL;;
+
+    //lprintf("[DBG_%s], Enter\n", __FUNCTION__);
 
     /*
      * At this stage we expect that only main thread
@@ -47,8 +54,10 @@ thr_init( unsigned int inp_size )
         return (rc);
     }
 
-    lprintf("[DBG_%s], main_stack_hi: %p, main_stack_lo: %p \n", 
-                    __FUNCTION__, main_stack_hi, main_stack_lo);
+    //lprintf("[DBG_%s], main_stack_hi: %p, main_stack_lo: %p \n", 
+    //                __FUNCTION__, main_stack_hi, main_stack_lo);
+
+    skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
 
     /*
      * Calculate child stack size.
@@ -60,20 +69,49 @@ thr_init( unsigned int inp_size )
 
     THR_GLB_SET_TSSIZE((&thread_glbl), child_stack_size);
 
-    lprintf("[DBG_%s], child_stack_size: %u\n", 
-                __FUNCTION__, child_stack_size);
+    //lprintf("[DBG_%s], child_stack_size: %u\n", 
+    //            __FUNCTION__, child_stack_size);
+    //
+    resv_stack_hi = main_stack_lo - 
+                    (MAIN_STACK_EXTRA_PAGES * PAGE_SIZE) 
+                    - WSIZE;
+    resv_stack_lo = (resv_stack_hi - child_stack_size + WSIZE);
 
+    THR_GLB_SET_RSTKH((&thread_glbl), resv_stack_hi);
+    THR_GLB_SET_RSTKL((&thread_glbl), resv_stack_lo);
+
+    /*
+     * Allocate this reserve stack.
+     * Size of resv stack is 1 page as of now.
+     */
+    new_pages(resv_stack_lo, (PAGE_SIZE * RESV_STACK_NUM_PAGES));
+
+#if 0
     free_stack_hi = main_stack_lo - 
                     (MAIN_STACK_EXTRA_PAGES * PAGE_SIZE) 
                     - WSIZE;
+    free_stack_lo = (free_stack_hi - child_stack_size + WSIZE);
+#endif
+
+    free_stack_hi = resv_stack_lo - WSIZE;
     free_stack_lo = (free_stack_hi - child_stack_size + WSIZE);
 
     THR_GLB_SET_FSTKH((&thread_glbl), free_stack_hi);
     THR_GLB_SET_FSTKL((&thread_glbl), free_stack_lo);
 
+    mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+    mutex_init(mutex);
+
+    /*
+     * TODO: Change it.
+     */
+    skip_list_init(skip_list, 0, 0);
+    
+    lprintf("[DBG_%s], resv_stack_hi: %p, resv_stack_lo: %p \n", 
+                    __FUNCTION__, resv_stack_hi, resv_stack_lo);
+
     lprintf("[DBG_%s], free_stack_hi: %p, free_stack_lo: %p \n", 
                     __FUNCTION__, free_stack_hi, free_stack_lo);
-
 
     return (rc);
 }
@@ -87,6 +125,7 @@ thr_create(void * (*func)(void *), void *arg)
     tcb_t *new_tcb = NULL;
     tid_t new_tid = TID_NUM_INVALID;
     unsigned int child_stack_size = 0;
+    mutex_t *mutex = NULL;
 
     lprintf("[DBG_%s], Enter\n", __FUNCTION__);
 
@@ -104,25 +143,32 @@ thr_create(void * (*func)(void *), void *arg)
 
     child_stack_size = THR_GLB_GET_TSSIZE(&thread_glbl);
 
-    /*
-     * TODO: Take STACK Lock.
-     */
+    mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+    mutex_lock(mutex);
+
+    new_tcb = thr_int_create_tcb(stack_hi, stack_lo, func, arg);
+    if (!new_tcb) {
+        /*
+         * We are out of memory.
+         * Log & return error.
+         */
+        mutex_unlock(mutex);
+        lprintf("[DBG_%s], stack allocation failed \n", __FUNCTION__);
+        rc = ERROR;
+        return (rc);
+    }
 
     /*
      * Allocate stack space for child.
      */
-    stack_lo = thr_int_allocate_stack(child_stack_size);
-
-    /*
-     * TODO: Release STACK Lock.
-     */
-
+    stack_lo = thr_int_allocate_stack(child_stack_size, new_tcb);
     if (!stack_lo) {
 
         /*
          * Stack allocation failed.
          * Log & return error.
          */
+        mutex_unlock(mutex);
         lprintf("[DBG_%s], stack allocation failed \n", __FUNCTION__);
         rc = ERROR;
         return (rc);
@@ -130,58 +176,32 @@ thr_create(void * (*func)(void *), void *arg)
 
     stack_hi = (stack_lo + child_stack_size - WSIZE);
 
+    THR_TCB_SET_STKH(new_tcb, stack_hi);
+    THR_TCB_SET_STKL(new_tcb, stack_lo);
+
     lprintf("[DBG_%s], stack_hi: %p, stack_lo: %p, cstack_size: %u \n", __FUNCTION__, stack_hi, stack_lo, child_stack_size);
-
-    /*
-     * TODO: Take TCB Lock.
-     */
-    new_tcb = thr_int_create_tcb(stack_hi, stack_lo, func, arg);
-    /*
-     * TCB: Relase TCB Lock.
-     */
-
-    if (!new_tcb) {
-        /*
-         * We are out of memory.
-         * Free up the stack space.
-         * Log & return error.
-         */
-
-        /*
-         * TODO: Take Stack Lock.
-         */
-        thr_int_deallocate_stack(stack_lo);
-        /*
-         * TODO: Release Stack Lock.
-         */
-        lprintf("[DBG_%s], stack allocation failed \n", __FUNCTION__);
-        rc = ERROR;
-        return (rc);
-    }
 
     new_tid = THR_TCB_GET_TID(new_tcb);
 
     /*
      * After following stage there is no reason for thread create to fail.
      */
-    /*
-     * TODO: Take TCB Lock.
-     */
     rc = thr_int_insert_tcb(new_tcb);
-    /*
-     * TODO: Release TCB Lock.
-     */
 
     if (rc != THR_SUCCESS) {
+
         /*
          * TCB insertion failed for some reason.
          * Log the event & return;
          */
+        mutex_unlock(mutex);
         lprintf("[DBG_%s], TCB insertion failed with rc: %d \n", 
                                               __FUNCTION__, rc);
         rc = ERROR;
         return (rc);
     }
+
+    mutex_unlock(mutex);
 
     /*
      * Done with all tcb handling,
@@ -192,7 +212,6 @@ thr_create(void * (*func)(void *), void *arg)
     thr_int_fork_c_wrapper(&new_tcb);
 
     /*
-     *
      * TODO: Insert KERN TID in data structure.
      */
 
@@ -204,20 +223,23 @@ thr_exit(void *status)
 {
     char *stack_lo = NULL;
     char *curr_stack_ptr = NULL;
+    char *resv_stack_hi = NULL;
     unsigned int stack_lo_mask = 0;
     tcb_t *tcb = NULL;
     tid_t tid = TID_NUM_INVALID;
     boolean_t is_joinable = FALSE;
+    mutex_t *mutex = NULL;
     
     curr_stack_ptr = util_get_esp();
     stack_lo_mask = (~(PAGE_SIZE - 1));
     stack_lo = (char *)(((unsigned int)curr_stack_ptr) & stack_lo_mask);
     
-    lprintf("[DBG_%s], stack_lo: %p \n", __FUNCTION__, stack_lo); 
+    lprintf("[DBG_%s], stack_lo: %p \n", __FUNCTION__, stack_lo);
+    
+    mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+    resv_stack_hi = THR_GLB_GET_RSTKH(&thread_glbl);
+    mutex_lock(mutex); 
 
-    /*
-     * TODO: Acquire TCB lock.
-     */
     /*
      * Search TCB.
      */
@@ -231,21 +253,17 @@ thr_exit(void *status)
          */
         lprintf("[DBG_%s], search based on stk: %p failed \n", 
                                       __FUNCTION__, stack_lo);
-        /*
-         * TODO: Release TCB lock.
-         */
+
 
     } else {
 
         tid = THR_TCB_GET_TID(tcb);
         is_joinable = THR_TCB_GET_JOIN(tcb);
 
-        /*
-         * TODO: Release TCB lock.
-         */
     }
 
     if (is_joinable == TRUE) {
+
         /*
          * Thread is joinable, let the joining thread do the
          * cleanup.
@@ -253,28 +271,31 @@ thr_exit(void *status)
         vanish();
     }
 
+    thr_int_deallocate_tid(tid);
+    thr_int_deallocate_stack(stack_lo);
+
+
+    /*
+     * TODO: do it in assembly.
+     */
+#if 0
     /*
      * Clean up the tid.
      */
-    /*
-     * TODO: Take TID Lock.
+
+        /*
+     * Mutex unlock.
      */
-    /*
-     * TODO: Take Stack Lock.
-     */
-    thr_int_deallocate_tid(tid);
-    thr_int_deallocate_stack(stack_lo);
-    /*
-     * TODO: Release TID Lock.
-     */
-    /*
-     * TODO: Release STACK Lock.
-     */
+    mutex_unlock();
 
     /*
      * No other resources should be released.
      */
     vanish();
+#endif
+    thr_int_exit_asm_wrapper(mutex, resv_stack_hi, stack_lo);
+
+    return;
 }
 
 
@@ -313,7 +334,7 @@ thr_get_main_stackL()
  * ====================================
  */
 char *
-thr_int_allocate_stack(int stack_size)
+thr_int_allocate_stack(int stack_size, void *list_data)
 {
     char *stack_ptr = NULL;
     int rc = 0;
@@ -321,6 +342,7 @@ thr_int_allocate_stack(int stack_size)
     char *new_free_stack_lo = NULL;
     char *new_free_stack_hi = NULL;
     unsigned int child_stack_size = THR_GLB_GET_TSSIZE(&thread_glbl);
+    skip_list_global_t *skip_list = NULL;
 
     reuse_stack = THR_GLB_GET_RSTACK(&thread_glbl);
 
@@ -340,30 +362,16 @@ thr_int_allocate_stack(int stack_size)
         THR_GLB_SET_FSTKL(&thread_glbl, new_free_stack_lo);
 
     } else {
-#if 0
 
         /*
-         * Pick one from reusable stack space.
+         * TODO: Add code here.
          */
-        stack_ptr = thr_int_get_reuse_node(&reuse_stack);
 
-        if (!stack_ptr) {
-            /*
-             * Reuse node linked list is corrupted.
-             * Log the event & return NULL.
-             */
-            lprintf("[DBG_%s], stack_ptr is NULL in"
-                    " reuse linked list\n", __FUNCTION__);
-
-            return (NULL);
-        }
-#endif
     }
 
     /*
      * Allocate the page.
      */
-    lprintf("[DBG_%s], Allocate page at %p\n", __FUNCTION__, stack_ptr);
     rc = new_pages(stack_ptr, stack_size);
 
     if (rc < 0) {
@@ -375,19 +383,48 @@ thr_int_allocate_stack(int stack_size)
         stack_ptr = NULL;
     }
 
+    skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
+
+    /*
+     * TODO: change the bucket index.
+     */
+    skip_list_insert(skip_list, 0, ((uint32_t)(stack_ptr)), list_data);
+
     return (stack_ptr);
 }
 
 void
 thr_int_deallocate_stack(char *base)
 {
+    skip_list_global_t *skip_list = NULL;
+
+    lprintf("[DBG_%s], Inside deallocate stack \n", __FUNCTION__);
 
     if (!base)
         return;
 
+    skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
+
     /*
-     * TODO: Add proper code.
+     * Remove the node from skip list..
      */
+
+    /*
+     * TODO: change the bucket index.
+     */
+    skip_list_remove(skip_list, 0, ((uint32_t)base));
+
+    /*
+     * Deallocate does not remove the page, as it could be called
+     * in the same thread's context.
+     */
+
+#if 0
+    /*
+     * Free up this page.
+     */
+    remove_pages(base);
+#endif
 
     return;
 }
@@ -444,22 +481,20 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
 #endif
         func = THR_TCB_GET_FUNC(new_tcb);
         args = THR_TCB_GET_ARGS(new_tcb);
-#if 0
-        lprintf("[DBG_%s], in child conext, sp: %p, bp: %p\n", __FUNCTION__, temp_sp, temp_bp);
-#endif
+        //lprintf("[DBG_%s], in child conext, sp: %p\n", __FUNCTION__, temp_sp);
+        //lprintf("[DBG_%s], I am ok till here !!!\n", __FUNCTION__);
 
         /*
          * Time to call the child function.
          */
         child_rc = (*func) (args);
 
+
         /*
          * Reaching here means that thread is done w/o calling thread_exit.
          * thread exit should never return.
          */
         thr_exit(NULL);
-
-        lprintf("[DBG_%s], What am i doing here !!!\n", __FUNCTION__);
     }
 
     return; 
@@ -498,7 +533,9 @@ thr_int_insert_tcb(tcb_t *tcb)
 tid_t 
 thr_int_allocate_new_tid()
 {
-    tid_t new_tid = 1;
+    tid_t new_tid = THR_GLB_GET_NEXT_TID(&(thread_glbl));
+
+    THR_GLB_INC_NEXT_TID(&(thread_glbl));
 
     /*
      * TODO: Add proper code.
@@ -545,11 +582,19 @@ thr_int_get_reuse_node(thread_reuse_stack_t **input)
     return (ret_ptr);
 }
 #endif
+
 tcb_t *
 thr_int_search_tcb_by_stk(char *stack_lo)
 {
-    /*
-     * TODO: Add code here.
-     */
-    return (NULL);
+    tcb_t *tcb = NULL;
+    skip_list_global_t *skip_list = NULL;
+
+    skip_list = THR_GLB_GET_SKPLST_PTR(&(thread_glbl));
+
+    if (!skip_list)
+        return NULL;
+
+    tcb = skip_list_find(skip_list, 0, ((uint32_t)(stack_lo)));
+
+    return (tcb);
 }

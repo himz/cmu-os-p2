@@ -91,15 +91,10 @@ void mutex_lock( mutex_t *mp )
  */
 void mutex_unlock( mutex_t *mp )
 {
-    /*
-     * Mutex unlock will be called by only one thread for
-     * a mutex hence no need to worry about race condition here.
-     */
     if (mp == NULL || !mp -> initd)
         return;
 
-    mp -> lock = 1;
+    xchg(&(mp->lock), 1);
 
     return;
 }
-

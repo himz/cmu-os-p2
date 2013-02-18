@@ -52,10 +52,14 @@ skip_list_global_t * skip_list_init(skip_list_global_t *skip_list_glb,
                                              uint32_t max_num_buckets,
                                              uint32_t max_num_node);
 
-int skip_list_insert(skip_list_global_t *skip_list_glb, int32_t bucket_index, 
+int skip_list_insert(skip_list_global_t *skip_list_glb, uint32_t bucket_index, 
                                             uint32_t node_index, void *data);
 
-void skip_list_remove(skip_list_global_t *skip_list_glb, int32_t bucket_index,
+void skip_list_remove(skip_list_global_t *skip_list_glb, uint32_t bucket_index,
                                                          uint32_t node_index);
+
+void * skip_list_find(skip_list_global_t *skip_list_glb, uint32_t bucket_index,
+                                                         uint32_t node_index);
+
 
 #endif

@@ -1,10 +1,10 @@
 user/libthread/mutex.o: user/libthread/mutex.c 410user/libsimics/simics.h \
  spec/syscall.h spec/ureg.h spec/syscall_int.h \
- user/libthread/thr_internals.h 410user/libstdlib/stdlib.h \
- 410user/inc/stddef.h 410user/inc/types.h 410user/inc/malloc.h \
+ user/libthread/thr_internals.h user/inc/mutex_type.h 410user/inc/types.h \
+ user/inc/skip_list_common.h 410user/inc/stdint.h \
+ 410user/libstdlib/stdlib.h 410user/inc/stddef.h 410user/inc/malloc.h \
  410user/libstring/string.h user/inc/common.h user/inc/thread_common.h \
- user/inc/util.h user/inc/mutex_type.h user/libthread/mutex_internals.h \
- 410user/inc/mutex.h
+ user/inc/util.h user/libthread/mutex_internals.h 410user/inc/mutex.h
 
 410user/libsimics/simics.h:
 
@@ -16,11 +16,17 @@ spec/syscall_int.h:
 
 user/libthread/thr_internals.h:
 
+user/inc/mutex_type.h:
+
+410user/inc/types.h:
+
+user/inc/skip_list_common.h:
+
+410user/inc/stdint.h:
+
 410user/libstdlib/stdlib.h:
 
 410user/inc/stddef.h:
-
-410user/inc/types.h:
 
 410user/inc/malloc.h:
 
@@ -31,8 +37,6 @@ user/inc/common.h:
 user/inc/thread_common.h:
 
 user/inc/util.h:
-
-user/inc/mutex_type.h:
 
 user/libthread/mutex_internals.h:
 

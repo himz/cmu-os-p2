@@ -3,10 +3,12 @@
  *  @brief This file may be used to define things
  *         internal to the thread library.
  */
-
 #ifndef THR_INTERNALS_H
 #define THR_INTERNALS_H
 
+#include <mutex_type.h>
+#include <types.h>
+#include "skip_list_common.h"
 /*
  * =====================
  * Data Types.
@@ -30,8 +32,13 @@ typedef struct thread_glbl_s {
     char *main_stack_lo;
     char *free_stack_hi;
     char *free_stack_lo;
+    char *resv_stack_hi;
+    char *resv_stack_lo;
     unsigned int tstack_size;
     thread_reuse_stack_t *reuse_stacks;
+    mutex_t thr_mutex;
+    skip_list_global_t skip_list;
+    tid_t next_tid;
 
 } thread_glbl_t;
 
@@ -45,8 +52,7 @@ typedef struct tcb_s {
     tid_t tid;
     void *func;
     void *args;
-    //boolean_t is_joinable;
-    int is_joinable;
+    boolean_t is_joinable;
     void *ret_data;
 
 } tcb_t;
@@ -60,7 +66,7 @@ typedef struct tcb_s {
  * Numberof extra pages main thread is allowed to extend to.
  */
 #define MAIN_STACK_EXTRA_PAGES     2
-#define CHILD_STACK_NUM_PAGES      2
+#define RESV_STACK_NUM_PAGES       1
 #define TID_NUM_INVALID            0
 
 /*
@@ -83,6 +89,7 @@ typedef struct tcb_s {
 #define THR_TCB_GET_ARGS(_tcb_)   ((_tcb_) ? ((_tcb_)->args) : NULL)
 #define THR_TCB_GET_JOIN(_tcb_)   ((_tcb_) ? ((_tcb_)->is_joinable) : FALSE)
 #define THR_TCB_GET_RDATA(_tcb_)  ((_tcb_) ? ((_tcb_)->ret_data) : NULL)
+
 
 #define THR_TCB_SET_STKH(_tcb_, _val_)   ((_tcb_) ? ((_tcb_)->tcb_stack_hi) \
                                          = _val_ : NULL)
@@ -108,17 +115,25 @@ typedef struct tcb_s {
 /*
  * b. Accessing Thread Global.
  */
-#define THR_GLB_GET_FSTKH(_glb_)   ((_glb_)->free_stack_hi)
-#define THR_GLB_GET_FSTKL(_glb_)   ((_glb_)->free_stack_lo)
-#define THR_GLB_GET_TSSIZE(_glb_)  ((_glb_)->tstack_size)
-#define THR_GLB_GET_RSTACK(_glb_)  ((_glb_)->reuse_stacks)
+#define THR_GLB_GET_FSTKH(_glb_)      ((_glb_)->free_stack_hi)
+#define THR_GLB_GET_FSTKL(_glb_)      ((_glb_)->free_stack_lo)
+#define THR_GLB_GET_RSTKH(_glb_)      ((_glb_)->resv_stack_hi)
+#define THR_GLB_GET_RSTKL(_glb_)      ((_glb_)->resv_stack_lo)
+#define THR_GLB_GET_TSSIZE(_glb_)     ((_glb_)->tstack_size)
+#define THR_GLB_GET_RSTACK(_glb_)     ((_glb_)->reuse_stacks)
+#define THR_GLB_GET_MUTEX_PTR(_glb_)  ((&((_glb_)->thr_mutex)))
+#define THR_GLB_GET_SKPLST_PTR(_glb_) ((&((_glb_)->skip_list)))
+#define THR_GLB_GET_NEXT_TID(_glb_)   (((_glb_)->next_tid))
 
-#define THR_GLB_SET_FSTKH(_glb_, _val_)  (((_glb_)->free_stack_hi) = _val_)
 
-#define THR_GLB_SET_FSTKL(_glb_, _val_)  (((_glb_)->free_stack_lo) = _val_)
+#define THR_GLB_SET_FSTKH(_glb_, _val_)     (((_glb_)->free_stack_hi) = _val_)
+#define THR_GLB_SET_FSTKL(_glb_, _val_)     (((_glb_)->free_stack_lo) = _val_)
+#define THR_GLB_SET_RSTKH(_glb_, _val_)     (((_glb_)->resv_stack_hi) = _val_)
+#define THR_GLB_SET_RSTKL(_glb_, _val_)     (((_glb_)->resv_stack_lo) = _val_)
+#define THR_GLB_SET_TSSIZE(_glb_, _val_)    (((_glb_)->tstack_size) = _val_)
+#define THR_GLB_SET_RSTACK(_glb_, _val_)    (((_glb_)->reuse_stacks) = _val_)
 
-#define THR_GLB_SET_TSSIZE(_glb_, _val_) (((_glb_)->tstack_size) = _val_)
-#define THR_GLB_SET_RSTACK(_glb_, _val_) (((_glb_)->reuse_stacks) = _val_)
+#define THR_GLB_INC_NEXT_TID(_glb_)         (((_glb_)->next_tid) += 1)
 
 
 /*
@@ -128,12 +143,15 @@ typedef struct tcb_s {
  */
 void thr_int_fork_c_wrapper(tcb_t **new_tcb);
 tid_t thr_int_fork_asm_wrapper(char *child_stack_hi);
+void  thr_int_exit_asm_wrapper(mutex_t *mutex, char *new_stack_hi,
+                                               char *old_stack_lo);
 tcb_t * thr_int_create_tcb(char *stack_hi, char *stack_lo, 
                            void * (*func)(void *), void *arg);
 int thr_int_insert_tcb(tcb_t *tcb);
-char * thr_int_allocate_stack(int stack_size);
+char * thr_int_allocate_stack(int stack_size, void *data);
 void thr_int_deallocate_stack(char *base);
 tid_t thr_int_allocate_new_tid();
 void thr_int_deallocate_tid(tid_t tid);
 tcb_t* thr_int_search_tcb_by_stk(char *stack_lo);
+
 #endif /* THR_INTERNALS_H */

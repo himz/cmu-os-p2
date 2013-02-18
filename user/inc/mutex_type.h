@@ -8,10 +8,7 @@
 
 typedef struct mutex {
     int initd;			/* Whether this mutex initialized before*/
-    int list_lock;		/* Lock for List of blocked threads */
     int lock;			/* Locked = 0, unlocked = 1 */
-    int tid;			/* tid of Thread holding lock */
-    struct node *head;	/* List of threads waiting for the mutex*/
 } mutex_t;
 
 #endif /* _MUTEX_TYPE_H */
