@@ -109,4 +109,8 @@ void thr_int_deallocate_stack(char *base);
 tid_t thr_int_allocate_new_tid();
 void thr_int_deallocate_tid(tid_t tid);
 tid_t thr_int_fork_asm_wrapper(char *child_stack_hi);
+
+int get_current_thread_id();
+
+
 #endif /* THR_INTERNALS_H */

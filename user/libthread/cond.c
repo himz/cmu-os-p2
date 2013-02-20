@@ -1,3 +1,14 @@
+/** @file cond.c
+ *  @brief Implemetation of Condition Variable
+ *
+ *  
+ *  Concept: 
+ *  
+ *  @author Ankur Sharma (ankursha)
+ *  @author Himanshu Pandey (himanshp)
+ *  @bug No know bugs
+ */
+
 #include <simics.h>
 #include <syscall.h>
 #include <syscall_int.h>
@@ -79,7 +90,7 @@ void cond_destroy( cond_t *cv )
 
 	/* Gracefully Destroy condvar now*/
 	mutex_destroy( &cv -> mp );
-	cv -> initd =0;
+	cv -> initd = 0;
 }
 
 void cond_wait( cond_t *cv, mutex_t *mp )
@@ -93,10 +104,12 @@ void cond_wait( cond_t *cv, mutex_t *mp )
 	/* Put the thread in the queue */
 	mutex_lock( &cv -> mp );
 		push ( &cv -> head, &new_thread);
+		mutex_unlock(mp);
 	mutex_unlock( &cv -> mp );
 
 	/* deschedule the current thread */
 	deschedule( &reject );
+	mutx_lock(mp);
 }
 
 /**

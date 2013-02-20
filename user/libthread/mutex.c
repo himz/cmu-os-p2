@@ -1,3 +1,14 @@
+/** @file mutex.c
+ *  @brief Implemetation of mutex
+ *
+ *  
+ *  Concept: 
+ *  
+ *  @author Ankur Sharma (ankursha)
+ *  @author Himanshu Pandey (himanshp)
+ *  @bug No know bugs
+ */
+
 #include <simics.h>
 #include <syscall.h>
 #include <syscall_int.h>
