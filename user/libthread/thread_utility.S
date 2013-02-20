@@ -1,14 +1,15 @@
 #include <syscall_int.h>
 .global thr_int_fork_asm_wrapper
+.global thr_int_exit_asm_wrapper
 
 /*
  * thr_int_fork_asm_wrapper
  */
 thr_int_fork_asm_wrapper:
 
-    push %ebp
-    movl 8(%esp), %eax
-    movl 4(%esp), %ecx
+    push %ebp 
+    movl 0x8(%esp), %eax
+    movl 0x4(%esp), %ecx
     movl %ecx, (%eax)
     movl %esp, %edx
     movl $0x0, %ebp
@@ -20,3 +21,59 @@ thr_int_fork_asm_wrapper:
     pop  %ebp
 .CHILD :
     RET
+
+/*
+ * thr_int_exit_asm_wrapper
+ */
+thr_int_exit_asm_wrapper:
+
+/*
+ * Copy the mutex.
+ */
+    movl 0x4(%esp), %ecx
+
+/*
+ * Copy the new stk pointer.
+ */
+    movl 0x8(%esp), %eax
+
+/*
+ * Copy the old stk pointer.
+ */
+    movl 0xc(%esp), %edx
+
+
+/*
+ * Just copy new address to esp.
+ */
+    movl %eax, %esp
+    movl %eax, %ebp
+    
+/*
+ * We are in new stack now.
+ */
+
+/*
+ * Expand stack for calling new functions.
+ */
+    sub  $0x4, %esp
+
+/*
+ * Save caller saved registers.
+ */
+    push %ecx
+
+    movl %edx, (%esp)
+    call remove_pages
+
+/*
+    pop  %ecx
+
+    movl %ecx, (%esp)
+    call mutex_unlock
+    */
+/*
+ * Now we cann not use the reserve stack,
+ * Hence just jump to vanish.
+ */
+    jmp vanish   

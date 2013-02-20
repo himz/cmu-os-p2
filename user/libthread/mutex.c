@@ -27,13 +27,28 @@
  * @param  mp mutex variable 
  * @return    0 on succes, -1 on error
  */
-int mutex_init( mutex_t *mp )
+int 
+mutex_init( mutex_t *mp )
 {
-	if ( mp == NULL )
-		return -1;
-	mp -> initd = 1;
-	mp -> lock = 1;
-    return 0;
+    int rc = SUCCESS;
+
+    if ( mp == NULL) {
+
+        rc = ERROR;
+        return (rc);
+    }
+
+    /*
+     * Mark that mutex is initialized.
+     */
+    mp -> initd = 1;
+
+    /*
+     * Mark that lock is available.
+     */
+    mp -> lock = 1;
+
+    return (rc);
 }
 
 
@@ -41,10 +56,12 @@ int mutex_init( mutex_t *mp )
  * @brief	destroy the mutex. Mutex lock should not be used after mutex is destroyed
  * @param mp  mutex variable
  */
-void mutex_destroy( mutex_t *mp )
+void 
+mutex_destroy( mutex_t *mp )
 {
-	if( mp == NULL || !mp -> initd)
-		return;
+    if ( mp == NULL || (!(mp->initd)))
+        return;
+
     mp -> initd = 0;
     mp -> lock = 1;
 }
@@ -57,11 +74,25 @@ void mutex_lock( mutex_t *mp )
 {
 	if( mp == NULL || !mp -> initd)
 		return;
-	/* If the current thread is holding the lock ?? what to do */
-    /* if, its locked, yield the current thread, else continue */
-    if( xchg( &mp -> lock, 0) == 0)
-    	yield( -1 );
-	return;
+
+	/* 
+     * If the current thread is holding the lock ?? what to do 
+     *
+     * if, its locked, yield the current thread, else continue 
+     */
+    while (xchg( &mp -> lock, 0) == 0) {
+
+        lprintf("Well i did not get the lock \n");
+
+        yield ( -1 );
+    }
+
+    /*
+     * Gets the lock.
+     */
+    lprintf("Well i got the lock \n");
+
+    return;
 }
 
 
@@ -71,9 +102,10 @@ void mutex_lock( mutex_t *mp )
  */
 void mutex_unlock( mutex_t *mp )
 {
-	if( mp == NULL || !mp -> initd)
-		return;
-	mp -> lock = 1;
+    if (mp == NULL || !mp -> initd)
+        return;
+
+    xchg(&(mp->lock), 1);
+
     return;
 }
-

@@ -56,14 +56,5 @@ int main()
     tid3= thr_create(thread_run, (void *)(&(args)));
 
     while(1);
-    #if 0
-        int rc = 0;
-        char *base_ptr = (char *)(0xffff3ffc);
-
-        rc = new_pages(base_ptr, 4096);
-
-        lprintf("Inside main, after new_pages, rc: %d\n", rc);
-    #endif
-
     return 0;
 }

@@ -9,13 +9,10 @@ thread_run(void *input_args)
     int input = 0;
 
     input = *((int *)(input_args));
-    
+
     lprintf("Inside thread_run, input: %d\n", input);
 
-    while(1);
-    
-    return (NULL); 
-
+    return (NULL);
 }
 
 
@@ -24,7 +21,6 @@ int main()
     int rc = 0;
     int tid = 0;
     int args = 1;
-    int sleep_return =100;
 
     rc = thr_init(10);
 
@@ -34,20 +30,23 @@ int main()
 
     lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
 
-    sleep_return = sleep(10);
-    lprintf("sleep over, sleep_return: %d\n", sleep_return);
-    
+#if 0
 
+    tid = thr_create(thread_run, (void *)(&(args)));
 
-    while(1);
-    #if 0
-        int rc = 0;
-        char *base_ptr = (char *)(0xffff3ffc);
+    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
+#endif
 
-        rc = new_pages(base_ptr, 4096);
+    //while(1);
 
-        lprintf("Inside main, after new_pages, rc: %d\n", rc);
-    #endif
+#if 0
+    int rc = 0;
+    char *base_ptr = (char *)(0xffff3ffc);
+
+    rc = new_pages(base_ptr, 4096);
+
+    lprintf("Inside main, after new_pages, rc: %d\n", rc);
+#endif
 
     return 0;
 }
