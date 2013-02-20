@@ -37,6 +37,7 @@ typedef struct tcb_s {
     void *ret_data;
     mutex_t self_mutex;
     struct tcb_s *waiting_tcb;
+    void *ret_value;
 
 } tcb_t;
 
@@ -93,6 +94,7 @@ typedef struct thread_glbl_s {
 #define THR_TCB_GET_RDATA(_tcb_)     ((_tcb_) ? ((_tcb_)->ret_data) : NULL)
 #define THR_TCB_GET_MUTEX_PTR(_tcb_) ((&((_tcb_)->self_mutex)))
 #define THR_TCB_GET_WAIT_TCB(_tcb_)  (((_tcb_)->waiting_tcb))
+#define THR_TCB_GET_RET_VAL(_tcb_)   (((_tcb_)->ret_value))
 
 
 #define THR_TCB_SET_STKH(_tcb_, _val_)   ((_tcb_) ? ((_tcb_)->tcb_stack_hi) \
@@ -114,7 +116,9 @@ typedef struct thread_glbl_s {
 
 #define THR_TCB_SET_RDATA(_tcb_, _val_)  ((_tcb_) ? ((_tcb_)->ret_data) =    \
                                          _val_ : NULL)
+
 #define THR_TCB_SET_WAIT_TCB(_tcb_, _val_) (((_tcb_)->waiting_tcb) = _val_)
+#define THR_TCB_SET_RET_VAL(_tcb_, _val_)  (((_tcb_)->ret_value) = _val_)
 
 /*
  * b. Accessing Thread Global.

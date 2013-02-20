@@ -218,8 +218,6 @@ thr_create(void * (*func)(void *), void *arg)
         return (rc);
     }
 
-    mutex_unlock(mutex);
-
     /*
      * Done with all tcb handling,
      * time to spawn a new thread.
@@ -227,6 +225,8 @@ thr_create(void * (*func)(void *), void *arg)
      * the relevant info.
      */
     thr_int_fork_c_wrapper(&new_tcb);
+
+    mutex_unlock(mutex);
 
     /*
      * TODO: Insert KERN TID in data structure.
@@ -288,6 +288,10 @@ thr_exit(void *status)
          * Wake up the waiting thread.
          */
         wait_mutex = THR_TCB_GET_MUTEX_PTR(wait_tcb);
+        /*
+         * Provide the return value.
+         */
+        THR_TCB_SET_RET_VAL(wait_tcb, status);
         mutex_unlock(wait_mutex);
     } 
 
@@ -326,6 +330,7 @@ thr_join(int tid, void **statusp)
 
     stack_lo_mask = (~(PAGE_SIZE - 1));
     curr_stack_lo = util_get_ebp();
+
     /*
      * Mask off the LSB 12 bits.
      */
@@ -418,11 +423,114 @@ thr_join(int tid, void **statusp)
      */
     mutex_lock(self_mutex);
 
+    if (statusp) {
+        /*
+         * Update the return value.
+         */
+        *statusp = THR_TCB_GET_RET_VAL(my_tcb); 
+    }
+
     lprintf("[DBG_%s], After self mutex II\n", __FUNCTION__);
 
     mutex_unlock(self_mutex);
 
     return;
+}
+
+int
+thr_getid()
+{
+    char *curr_stack_ptr = NULL;
+    char *stack_lo = NULL;
+    unsigned int stack_lo_mask = 0;
+    mutex_t *glb_mutex = NULL;
+    tcb_t *my_tcb = NULL;
+    tid_t ret_tid = 0;
+
+    glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+
+    if (!glb_mutex) {
+        /*
+         *          * Should not have happened.
+         *                   */
+        lprintf("[DBG_%s], Glb mutex is NULL \n", __FUNCTION__);
+        return (ret_tid);
+    }
+
+    curr_stack_ptr = util_get_esp();
+    stack_lo_mask = (~(PAGE_SIZE - 1));
+    stack_lo = (char *)(((unsigned int)curr_stack_ptr) & stack_lo_mask);
+
+    mutex_lock(glb_mutex);
+
+    my_tcb = thr_int_search_tcb_by_stk(stack_lo);
+
+    if (!my_tcb) {
+
+        /*
+         * Weird my tcb does not exist in the database.
+         */
+        lprintf("[DBG_%s], my_tcb NULL for stack: %p \n", 
+                                __FUNCTION__, stack_lo);
+
+        mutex_unlock(glb_mutex);
+        return (ret_tid);
+    }
+
+    ret_tid = THR_TCB_GET_TID(my_tcb); 
+
+    mutex_unlock(glb_mutex);
+
+    return (ret_tid);
+}
+
+int
+thr_yield(int tid)
+{
+    mutex_t *glb_mutex = NULL;
+    tcb_t *other_tcb = NULL;
+    int rc = SUCCESS;
+
+    glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+
+    if (!glb_mutex) {
+        /*
+         * Should not have happened.
+         */
+        lprintf("[DBG_%s], Glb mutex is NULL \n", __FUNCTION__);
+        rc = ERROR;
+        return (rc);
+    }
+
+
+    if (tid != -1) {
+
+        mutex_lock(glb_mutex);
+
+        /*
+         * No need to search for any TCB, we'll pass
+         * on the argument as it is.
+         */
+
+        other_tcb = thr_int_search_tcb_by_tid(tid);
+
+        if (!other_tcb) {
+            /*
+             * Searching the tcb failed.
+             */
+            lprintf("[DBG_%s], Search for tid: %d failed \n", __FUNCTION__, tid);
+            mutex_unlock(glb_mutex);
+            rc = ERROR;
+            return (rc);
+        }
+
+        tid = THR_TCB_GET_KTID(other_tcb);
+        mutex_unlock(glb_mutex);
+    }
+
+    rc = yield(tid);
+
+    return (rc);
 }
 
 /*
@@ -558,6 +666,7 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
     tid_t child_tid = 0;
     char *child_stack_hi = NULL;
     tcb_t *new_tcb = *input_tcb;
+
 #if 0
     char *temp_sp = NULL;
     char *temp_bp = NULL;
@@ -583,14 +692,11 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
     child_tid = thr_int_fork_asm_wrapper(child_stack_hi - WSIZE);
 
     if (child_tid) {
+
         /*
          * Inside Parent.
          */
-#if 0
-        temp_sp = util_get_esp();
-        temp_bp = util_get_ebp();
-        lprintf("[DBG_%s], in Parent conext, sp: %p, bp: %p\n", __FUNCTION__, temp_sp, temp_bp);
-#endif
+        THR_TCB_SET_KTID(new_tcb, child_tid);
 
     } else {
 
@@ -598,14 +704,9 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
          * Inside child context.
          * Lets run the registered function.
          */
-#if 0
-        temp_sp = util_get_esp();
-        temp_bp = util_get_ebp();
-#endif
+
         func = THR_TCB_GET_FUNC(new_tcb);
         args = THR_TCB_GET_ARGS(new_tcb);
-        //lprintf("[DBG_%s], in child conext, sp: %p\n", __FUNCTION__, temp_sp);
-        //lprintf("[DBG_%s], I am ok till here !!!\n", __FUNCTION__);
 
         /*
          * Time to call the child function.

@@ -3,6 +3,7 @@
 #include <mutex_type.h>
 #include <mutex.h>
 #include <cond.h>
+#include <sem.h>
 #include <simics.h>
 #include <syscall.h>
 
@@ -38,10 +39,10 @@ void doSomething(char c) {
     for (i = 0; i < 3; i++) {
 
         // P operation
-        if (sem_wait(&sem) == 0) {
+        sem_wait(&sem);
 
             // generate random amount of time (< 30 seconds)
-            time = (int) ((double) rand() / RAND_MAX * 30);
+            time =  5 ;//(int) ((double) rand() / RAND_MAX * 30);
 
             printf("Thread %c enters and sleeps for %d seconds...\n", c, time);
 
@@ -50,8 +51,8 @@ void doSomething(char c) {
             printf("Thread %c leaves the critical section\n", c);
 
             // V operation
-            sem_post(&sem);
-        }
+            sem_signal(&sem);
+        
     }
 }
 
