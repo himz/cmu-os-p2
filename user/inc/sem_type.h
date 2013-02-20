@@ -7,7 +7,10 @@
 
 
 typedef struct sem {
-  /* fill this in */
+	mutex_t mp;	/* Mutex for semaphore implementation */
+	int count;			/* Counting Sem */
+	int initd;
+	struct node* head;
 } sem_t;
 
 #endif /* _SEM_TYPE_H */

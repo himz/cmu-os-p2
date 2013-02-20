@@ -3,6 +3,8 @@
 *.img
 *.strip
 *.swp
+*.dep
+*.md5s
 
 # Compiled source #
 ###################

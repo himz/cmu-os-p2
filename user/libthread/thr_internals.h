@@ -158,6 +158,7 @@ char * thr_int_allocate_stack(int stack_size, void *data);
 void thr_int_deallocate_stack(char *base);
 tid_t thr_int_allocate_new_tid(char *stack_lo);
 void thr_int_deallocate_tid(tid_t tid);
+tid_t thr_int_fork_asm_wrapper(char *child_stack_hi);
 tcb_t* thr_int_search_tcb_by_stk(char *stack_lo);
 tcb_t* thr_int_search_tcb_by_tid(tid_t tid);
 

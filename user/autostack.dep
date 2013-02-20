@@ -1,6 +1,0 @@
-user/autostack.o: user/autostack.c 410user/libsimics/simics.h \
- user/inc/thread_common.h
-
-410user/libsimics/simics.h:
-
-user/inc/thread_common.h:

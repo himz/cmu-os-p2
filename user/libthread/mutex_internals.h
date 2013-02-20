@@ -16,4 +16,12 @@ struct node {
 
 int xchg(int *lock, int value);
 
+
+/* Some helper functions */
+/* Push the new thread on the queue of condvar*/
+void push ( struct node ** headref, struct node* new_thread );
+
+/* Pop a thread from the queue of condvar*/
+int pop ( struct node **headref );
+
 #endif
