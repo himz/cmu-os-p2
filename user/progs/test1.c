@@ -7,12 +7,13 @@ void *
 thread_run(void *input_args)
 {
     int input = 0;
+    int tid = thr_getid();
 
     input = *((int *)(input_args));
 
-    sleep(5);
+    //sleep(5);
 
-    printf("Inside thread_run, input: %d\n", input);
+    printf("Inside thread_run, input: %d, tid: %d\n", input, tid);
 
     //while(1);
     return (NULL);
