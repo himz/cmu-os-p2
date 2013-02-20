@@ -63,6 +63,7 @@ skip_list_insert(skip_list_global_t *skip_list_glb,
 
     list_node = calloc(1, sizeof(skip_list_node_t));
     SLIST_NODE_SET_KEY(list_node, node_index);
+    SLIST_NODE_SET_DATA(list_node, data); 
 
     /*
      * If this node index is a dup then insert node should catch it.
