@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <types.h>
+#include <rand.h>
 #include <mutex.h>
 #include "common.h"
 #include "thread_common.h"
@@ -27,6 +28,8 @@ thr_init( unsigned int inp_size )
     char *free_stack_lo = NULL;
     char *resv_stack_hi = NULL;
     char *resv_stack_lo = NULL;
+    tcb_t *main_tcb = NULL;
+    mutex_t *self_mutex = NULL;
 
     unsigned int child_stack_size = 0;
     mutex_t *mutex = NULL;
@@ -53,6 +56,17 @@ thr_init( unsigned int inp_size )
         rc = ERROR;
         return (rc);
     }
+   
+    /*
+     * We have stack values now, lets initialize the main tcb.
+     * i.e TCB used to represent the main thread.
+     */
+    main_tcb = THR_GLB_GET_MAIN_TCB_PTR(&(thread_glbl));
+    THR_TCB_SET_STKH(main_tcb, main_stack_hi);
+    THR_TCB_SET_STKL(main_tcb, main_stack_lo);
+
+    self_mutex = THR_TCB_GET_MUTEX_PTR(main_tcb);
+    mutex_init(self_mutex);
 
     //lprintf("[DBG_%s], main_stack_hi: %p, main_stack_lo: %p \n", 
     //                __FUNCTION__, main_stack_hi, main_stack_lo);
@@ -175,13 +189,16 @@ thr_create(void * (*func)(void *), void *arg)
     }
 
     stack_hi = (stack_lo + child_stack_size - WSIZE);
+    new_tid = thr_int_allocate_new_tid(stack_lo);
 
+    /*
+     * Setup the stack parameters.
+     */
+    THR_TCB_SET_TID(new_tcb, new_tid);
     THR_TCB_SET_STKH(new_tcb, stack_hi);
     THR_TCB_SET_STKL(new_tcb, stack_lo);
 
     lprintf("[DBG_%s], stack_hi: %p, stack_lo: %p, cstack_size: %u \n", __FUNCTION__, stack_hi, stack_lo, child_stack_size);
-
-    new_tid = THR_TCB_GET_TID(new_tcb);
 
     /*
      * After following stage there is no reason for thread create to fail.
@@ -225,27 +242,31 @@ thr_exit(void *status)
     char *curr_stack_ptr = NULL;
     char *resv_stack_hi = NULL;
     unsigned int stack_lo_mask = 0;
-    tcb_t *tcb = NULL;
+    tcb_t *my_tcb = NULL;
+    tcb_t *wait_tcb = NULL;
     tid_t tid = TID_NUM_INVALID;
-    boolean_t is_joinable = FALSE;
-    mutex_t *mutex = NULL;
-    
+    mutex_t *glb_mutex = NULL;
+    mutex_t *wait_mutex = NULL;
+   
     curr_stack_ptr = util_get_esp();
     stack_lo_mask = (~(PAGE_SIZE - 1));
     stack_lo = (char *)(((unsigned int)curr_stack_ptr) & stack_lo_mask);
-    
+
     lprintf("[DBG_%s], stack_lo: %p \n", __FUNCTION__, stack_lo);
     
-    mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+    glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
     resv_stack_hi = THR_GLB_GET_RSTKH(&thread_glbl);
-    mutex_lock(mutex); 
+
+    mutex_lock(glb_mutex);
+     
+    lprintf("[DBG_%s], INSIDE THR_EXIT \n", __FUNCTION__);
 
     /*
      * Search TCB.
      */
-    tcb = thr_int_search_tcb_by_stk(stack_lo);
+    my_tcb = thr_int_search_tcb_by_stk(stack_lo);
 
-    if (!tcb) {
+    if (!my_tcb) {
         /*
          * Search failed.
          * Data structure corruption.
@@ -253,51 +274,156 @@ thr_exit(void *status)
          */
         lprintf("[DBG_%s], search based on stk: %p failed \n", 
                                       __FUNCTION__, stack_lo);
-
-
-    } else {
-
-        tid = THR_TCB_GET_TID(tcb);
-        is_joinable = THR_TCB_GET_JOIN(tcb);
-
-    }
-
-    if (is_joinable == TRUE) {
-
-        /*
-         * Thread is joinable, let the joining thread do the
-         * cleanup.
-         */
+        mutex_unlock(glb_mutex);
         vanish();
     }
 
+    /*
+     * Get the tcb of the thread waiting on me.
+     */
+    wait_tcb = THR_TCB_GET_WAIT_TCB(my_tcb);
+
+    if (wait_tcb) {
+        /*
+         * Wake up the waiting thread.
+         */
+        wait_mutex = THR_TCB_GET_MUTEX_PTR(wait_tcb);
+        mutex_unlock(wait_mutex);
+    } 
+
     thr_int_deallocate_tid(tid);
+
+    /*
+     * Remove the stack address from the s/w image.
+     */
     thr_int_deallocate_stack(stack_lo);
 
+    /*
+     * Free up the TCB memory.
+     */
+    free(my_tcb);
+    my_tcb= NULL;
 
     /*
-     * TODO: do it in assembly.
+     * Do the stack cleanup & mutex unlock in assembly.
      */
-#if 0
-    /*
-     * Clean up the tid.
-     */
-
-        /*
-     * Mutex unlock.
-     */
-    mutex_unlock();
-
-    /*
-     * No other resources should be released.
-     */
-    vanish();
-#endif
-    thr_int_exit_asm_wrapper(mutex, resv_stack_hi, stack_lo);
+    thr_int_exit_asm_wrapper(glb_mutex, resv_stack_hi, stack_lo);
 
     return;
 }
 
+void
+thr_join(int tid, void **statusp)
+{
+    tcb_t *thr_tcb = NULL;
+    tcb_t *my_tcb = NULL;
+    mutex_t *glb_mutex = NULL;
+    mutex_t *self_mutex = NULL;
+    tid_t thr_tid = 0;
+    char *stack_lo = NULL;
+    char *curr_stack_lo = NULL;
+    unsigned int stack_lo_mask = 0;
+
+    stack_lo_mask = (~(PAGE_SIZE - 1));
+    curr_stack_lo = util_get_ebp();
+    /*
+     * Mask off the LSB 12 bits.
+     */
+    curr_stack_lo = (char *)((unsigned int)curr_stack_lo & stack_lo_mask);
+
+    glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+
+    if (!glb_mutex) {
+        /*
+         * Should not have happened.
+         */
+        lprintf("[DBG_%s], Glb mutex is NULL \n", __FUNCTION__);
+        return;
+    }
+
+    mutex_lock(glb_mutex);
+
+    lprintf("[DBG_%s], INSIDE THR_JOIN \n", __FUNCTION__);
+
+    /*
+     * Lets get the TCB 1st.
+     */
+    thr_tcb = thr_int_search_tcb_by_tid(tid);
+
+    if (!thr_tcb) {
+        /*
+         * Thread is alredy removed, simply return.
+         */
+        mutex_unlock(glb_mutex);
+        return;
+    }
+
+    stack_lo = THR_TCB_GET_STKL(thr_tcb);
+
+    thr_tid = THR_TCB_GET_TID(thr_tcb);
+
+    if (thr_tid != tid) {
+
+        /*
+         * Not sure if this can happen, but still handle the
+         * scenario.
+         */
+        mutex_unlock(glb_mutex);
+        return;
+    }
+
+    my_tcb = thr_int_search_tcb_by_stk(curr_stack_lo);
+
+    if (!my_tcb) {
+
+        /*
+         * Somethign is really bad.
+         */
+        lprintf("[DBG_%s], My tcb NULL for stack: %p\n", 
+                __FUNCTION__, curr_stack_lo);
+        mutex_unlock(glb_mutex);
+        return;
+    }
+
+    self_mutex = THR_TCB_GET_MUTEX_PTR(my_tcb);
+
+    if (!self_mutex) {
+        /*
+         * Should not have happened.
+         */
+        lprintf("[DBG_%s], Self mutex is NULL \n", __FUNCTION__);
+        return;
+    }
+
+    /*
+     * Time to link the child & parent.
+     * a. Acquire the self lock.
+     * b. Notify child tcb about waiting parent tcb.
+     */
+
+    lprintf("[DBG_%s], B4 self mutex \n", __FUNCTION__);
+
+    mutex_lock(self_mutex);
+
+    THR_TCB_SET_WAIT_TCB(thr_tcb, my_tcb);
+    lprintf("[DBG_%s], After self mutex \n", __FUNCTION__);
+
+    mutex_unlock(glb_mutex);
+
+    /*
+     * Now i'll wait on self lock again.
+     * If Child has already executed by now it would 
+     * have release the lock, else parent would wait 
+     * on the lock.
+     */
+    mutex_lock(self_mutex);
+
+    lprintf("[DBG_%s], After self mutex II\n", __FUNCTION__);
+
+    mutex_unlock(self_mutex);
+
+    return;
+}
 
 /*
  * Set/Get APIs which will be called by other files.
@@ -388,6 +514,11 @@ thr_int_allocate_stack(int stack_size, void *list_data)
     /*
      * TODO: change the bucket index.
      */
+    /*
+     * Stack ptr should already have 12 lsbs as zero since it is page
+     * alligned.
+     */
+    lprintf("[DBG_%s], Inserting stack ptr : %p \n", __FUNCTION__, stack_ptr);
     skip_list_insert(skip_list, 0, ((uint32_t)(stack_ptr)), list_data);
 
     return (stack_ptr);
@@ -418,14 +549,6 @@ thr_int_deallocate_stack(char *base)
      * Deallocate does not remove the page, as it could be called
      * in the same thread's context.
      */
-
-#if 0
-    /*
-     * Free up this page.
-     */
-    remove_pages(base);
-#endif
-
     return;
 }
 
@@ -505,20 +628,29 @@ thr_int_create_tcb(char *stack_hi, char *stack_lo,
                    void * (*func)(void *), void *arg)
 {
     tcb_t *new_tcb = NULL;
-    tid_t new_tid = TID_NUM_INVALID;
+    mutex_t *self_mutex = NULL;
 
-    new_tid = thr_int_allocate_new_tid();
     new_tcb = malloc(sizeof(tcb_t));
     memset(new_tcb, 0, sizeof(tcb_t));
 
     /*
      * Set TCB parameters.
      */
-    THR_TCB_SET_TID(new_tcb, new_tid);
     THR_TCB_SET_STKH(new_tcb, stack_hi);
     THR_TCB_SET_STKL(new_tcb, stack_lo);
     THR_TCB_SET_FUN(new_tcb, func);
     THR_TCB_SET_ARG(new_tcb, arg);
+
+    /*
+     * Initialize the per TCB mutex.
+     * This mutex is used for implementing thread join.
+     */
+    self_mutex = THR_TCB_GET_MUTEX_PTR(new_tcb);
+
+    /*
+     * The thread will take lock on its own thread.
+     */
+    mutex_init(self_mutex);
 
     return (new_tcb);
 }
@@ -531,15 +663,29 @@ thr_int_insert_tcb(tcb_t *tcb)
 }
 
 tid_t 
-thr_int_allocate_new_tid()
+thr_int_allocate_new_tid(char *stack_lo)
 {
-    tid_t new_tid = THR_GLB_GET_NEXT_TID(&(thread_glbl));
+    unsigned int stack_lo_mask = 0;
+    unsigned long rand_num = 0;
+    tid_t new_tid = TID_NUM_INVALID;
 
-    THR_GLB_INC_NEXT_TID(&(thread_glbl));
+    stack_lo_mask = (~(PAGE_SIZE - 1));
 
     /*
-     * TODO: Add proper code.
+     * Mask out the 12 lsb bits which will consumed within the page.
      */
+    new_tid = ((unsigned int)stack_lo) & (stack_lo_mask);
+    lprintf("[DBG_%s]: stack_lo: %p, Generated new tid I : %x\n", __FUNCTION__, stack_lo, new_tid);
+
+    /*
+     * Generate a 12 bit random number & append it to new_tid.
+     */
+    rand_num = (genrand() % (PAGE_SIZE));
+
+    new_tid = new_tid | rand_num;
+
+    lprintf("[DBG_%s]: Generated new tid : %x\n", __FUNCTION__, new_tid);
+
     return (new_tid);
 }
 
@@ -594,7 +740,44 @@ thr_int_search_tcb_by_stk(char *stack_lo)
     if (!skip_list)
         return NULL;
 
+    lprintf("[DBG_%s], searching stack ptr : %p \n", __FUNCTION__, stack_lo);
     tcb = skip_list_find(skip_list, 0, ((uint32_t)(stack_lo)));
 
+    if (!tcb) {
+
+        /*
+         * Check if address represents the main thread.
+         */
+        if ((stack_lo >= thr_get_main_stackL()) && 
+                (stack_lo <= thr_get_main_stackH())) {
+
+            tcb = THR_GLB_GET_MAIN_TCB_PTR(&thread_glbl);
+
+        } else {
+
+            skip_list_dbg_dump_all(skip_list);
+        }
+    }
+
     return (tcb);
+}
+
+tcb_t* 
+thr_int_search_tcb_by_tid(tid_t tid)
+{
+    unsigned int stack_lo_mask = 0;
+    char *stack_lo = NULL;
+    tcb_t *ret_tcb = NULL;
+
+    stack_lo_mask = (~(PAGE_SIZE - 1));
+
+    /*
+     * We'll fetch the stack address from tid, mask out
+     * the lsbs.
+     */
+    stack_lo = (char *)(tid & stack_lo_mask);
+
+    ret_tcb = thr_int_search_tcb_by_stk(stack_lo);
+
+    return (ret_tcb);
 }

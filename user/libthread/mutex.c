@@ -72,8 +72,13 @@ mutex_destroy( mutex_t *mp )
  */
 void mutex_lock( mutex_t *mp )
 {
-	if( mp == NULL || !mp -> initd)
+	if (mp == NULL || !mp -> initd) {
+        /*
+         * TODO: Check if initd has to be atomic.
+         * Also mutex_lock MUST never return for invalid input.
+         */
 		return;
+    }
 
 	/* 
      * If the current thread is holding the lock ?? what to do 
@@ -82,15 +87,12 @@ void mutex_lock( mutex_t *mp )
      */
     while (xchg( &mp -> lock, 0) == 0) {
 
-        lprintf("Well i did not get the lock \n");
-
         yield ( -1 );
     }
 
     /*
      * Gets the lock.
      */
-    lprintf("Well i got the lock \n");
 
     return;
 }

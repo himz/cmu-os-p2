@@ -62,16 +62,12 @@ thr_int_exit_asm_wrapper:
  * Save caller saved registers.
  */
     push %ecx
-
-    movl %edx, (%esp)
+    push %edx
     call remove_pages
 
-/*
-    pop  %ecx
-
-    movl %ecx, (%esp)
+    pop %edx
     call mutex_unlock
-    */
+
 /*
  * Now we cann not use the reserve stack,
  * Hence just jump to vanish.

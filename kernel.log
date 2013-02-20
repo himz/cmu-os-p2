@@ -1,29 +1,81 @@
-46384921 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
-34795321939 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
+47327117 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
+54253322539 udbg: [DBG_install_autostack], Parent stack, high: 0xffffffff, lo: 0xffff7000
 
-34795330546 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+54253331164 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
 
-34795336603 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+54253337221 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
 
-34795340367 udbg: [APP_main],  after thr_init  rc = 0, thread_run: 0x01000000
+54253340985 udbg: [APP_main],  after thr_init  rc = 0, thread_run: 0x010000e0
 
-34795341248 udbg: [DBG_thr_create], Enter
+54253341866 udbg: [DBG_thr_create], Enter
 
-34795341923 udbg: Well i got the lock 
+54253353893 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr : 0xffff3000 
 
-34795357646 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+54253360893 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
 
-34795361532 udbg: [DBG_thr_int_fork_c_wrapper], Child stack_hi: 0xffff3ffc 
+54253377992 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid : ffff3af5
 
-34795380918 udbg: [APP_main],  after thr_create  tid = 0
+54253385357 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
 
-34795383281 udbg: Inside thread_run, input: 0
+54253389239 udbg: [DBG_thr_int_fork_c_wrapper], Child stack_hi: 0xffff3ffc 
 
-34795386509 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+54253409773 udbg: [APP_main],  after thr_create  tid = -50443
 
-34795387180 udbg: Well i got the lock 
+54253410654 udbg: [DBG_thr_create], Enter
 
-34795390948 udbg: [DBG_thr_exit], search based on stk: 0xffff3000 failed 
+54253417595 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr : 0xffff2000 
 
-34795392799 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack 
+54253424450 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff2000, Generated new tid I : ffff2000
+
+54253428430 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid : ffff2482
+
+54253435795 udbg: [DBG_thr_create], stack_hi: 0xffff2ffc, stack_lo: 0xffff2000, cstack_size: 4096 
+
+54253439677 udbg: [DBG_thr_int_fork_c_wrapper], Child stack_hi: 0xffff2ffc 
+
+54253460213 udbg: [APP_main],  after thr_create  tid = -56190
+
+54253461353 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+54253465466 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+54253469644 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+54253470944 udbg: [DBG_skip_list_find], list_glb NULL 
+
+54253472014 udbg: [DBG_thr_join], B4 self mutex 
+
+54253473168 udbg: [DBG_thr_join], After self mutex 
+
+54264418728 udbg: [DBG_thr_exit], stack_lo: 0xffff2000 
+
+54264419855 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+54264423961 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff2000 
+
+54264425889 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack 
+
+54264440793 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+54264441920 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+54264446026 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+54264447968 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack 
+
+54264456193 udbg: [DBG_thr_join], After self mutex II
+
+54264460998 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+54264465111 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff2000 
+
+54264466383 udbg: [DBG_skip_list_find], list_glb NULL 
+
+54264467105 udbg: Head: 0x00000000
+
+54264467951 udbg: Curr_num_buckets: 0
+
+54264468770 udbg: Max_num_buckets: 0
+
+54264469535 udbg: Max_num_nodes: 0
 

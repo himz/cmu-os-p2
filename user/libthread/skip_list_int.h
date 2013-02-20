@@ -62,7 +62,7 @@ typedef struct skip_list_bucket_s {
 #define SLIST_NODE_SET_NEXT(_node_, _val_)        (((_node_)->next = _val_))
 #define SLIST_NODE_SET_PREV(_node_, _val_)        (((_node_)->prev = _val_))
 #define SLIST_NODE_SET_KEY(_node_, _val_)         (((_node_)->node_key = _val_))
-#define SLIST_NODE_SET_DATA(_node_, _val_)        (((_glb_)->data = _val_))
+#define SLIST_NODE_SET_DATA(_node_, _val_)        (((_node_)->data = _val_))
 
 /*
  * INC Macros.

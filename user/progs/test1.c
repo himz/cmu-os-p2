@@ -10,8 +10,11 @@ thread_run(void *input_args)
 
     input = *((int *)(input_args));
 
-    lprintf("Inside thread_run, input: %d\n", input);
+    sleep(5);
 
+    printf("Inside thread_run, input: %d\n", input);
+
+    //while(1);
     return (NULL);
 }
 
@@ -19,23 +22,34 @@ thread_run(void *input_args)
 int main()
 {
     int rc = 0;
-    int tid = 0;
-    int args = 1;
+    int tid1 = 0;
+    int tid2 = 0;
+
+    int args1 = 1;
+    int args2 = 2;
 
     rc = thr_init(10);
 
     lprintf("[APP_%s],  after thr_init  rc = %d, thread_run: %p\n", __FUNCTION__, rc, thread_run);
 
-    tid = thr_create(thread_run, (void *)(&(args)));
+    tid1 = thr_create(thread_run, (void *)(&(args1)));
 
-    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
+    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid1);
 
-#if 0
+    tid2 = thr_create(thread_run, (void *)(&(args2)));
 
-    tid = thr_create(thread_run, (void *)(&(args)));
+    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid2);
 
-    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
-#endif
+    thr_join(tid1, NULL);
+
+    printf("Done with thread 1 \n");
+
+    thr_join(tid2, NULL);
+
+    printf("Done with thread 2 \n");
+
+
+    //sleep(100);
 
     //while(1);
 
