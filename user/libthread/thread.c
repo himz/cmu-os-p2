@@ -525,6 +525,7 @@ thr_yield(int tid)
         }
 
         tid = THR_TCB_GET_KTID(other_tcb);
+        printf("[DBG_%s], saved_tid: %d, actual_tid: %d \n", __FUNCTION__, tid, gettid());
         mutex_unlock(glb_mutex);
     }
 
