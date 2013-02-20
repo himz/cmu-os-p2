@@ -109,7 +109,7 @@ void cond_wait( cond_t *cv, mutex_t *mp )
 
 	/* deschedule the current thread */
 	deschedule( &reject );
-	mutx_lock(mp);
+	mutex_lock(mp);
 }
 
 /**

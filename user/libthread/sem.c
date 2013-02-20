@@ -22,6 +22,7 @@
 #include "mutex_internals.h"
 #include <thread.h> 
 #include <cond.h> 
+ #include <sem.h>
 
 
 int sem_init( sem_t *sem, int count )
@@ -31,7 +32,7 @@ int sem_init( sem_t *sem, int count )
 		return -1;
 
 	/* Initialize the mutex first */
-	if( mutex_init( &sv -> mp ) )
+	if( mutex_init( &sem -> mp ) )
 		return -1;
 
 
@@ -70,10 +71,9 @@ void sem_wait( sem_t *sem )
 		/* Put the thread in the queue */
 		push ( &sem -> head, &new_thread);
 		deschedule( &reject );
-	mutex_unlock( &sem -> mp );
-	
-	
+	mutex_unlock( &sem -> mp );	
 }
+
 void sem_signal( sem_t *sem )
 {
 	int tid;
@@ -100,8 +100,6 @@ void sem_signal( sem_t *sem )
 			yield(tid);
 
 	mutex_unlock( &sem -> mp );
-
-
 }
 
 
