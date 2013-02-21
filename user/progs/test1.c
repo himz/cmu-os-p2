@@ -7,14 +7,14 @@ void *
 thread_run(void *input_args)
 {
     int input = 0;
-    int tid = thr_getid();
 
     input = *((int *)(input_args));
 
-    //sleep(5);
+    sleep(5);
 
-    printf("Inside thread_run, input: %d, tid: %d\n", input, tid);
-
+    printf("Inside thread_run before deschedule, input: %d\n", input);
+    deschedule(0);
+    printf("Inside thread_run after deschedule, input: %d\n", input);
     //while(1);
     return (NULL);
 }
@@ -27,7 +27,8 @@ int main()
     int tid2 = 0;
 
     int args1 = 1;
-    int args2 = 2;
+    int args2 = 2; 
+    set_term_color(2);
 
     rc = thr_init(10);
 
@@ -41,6 +42,13 @@ int main()
 
     lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid2);
 
+     /* Deschedule and makerunnable tests*/
+    /* does thr_create return kernel thread id , or user level */
+    while(make_runnable(tid1))
+        yield(tid1);
+    while(make_runnable(tid2))
+        yield(tid2);
+
     thr_join(tid1, NULL);
 
     printf("Done with thread 1 \n");
@@ -48,6 +56,11 @@ int main()
     thr_join(tid2, NULL);
 
     printf("Done with thread 2 \n");
+
+    /* Check make runnable */
+
+    
+
 
 
     //sleep(100);

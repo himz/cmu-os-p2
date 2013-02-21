@@ -34,7 +34,10 @@ void push ( struct node ** headref, struct node* new_thread )
 	struct node *q =  *headref ;
 	/* If list is empty */
 	if ( q == NULL ){
-		q = new_thread ;
+		lprintf("here");
+		*headref = new_thread;
+		q = *headref;
+		lprintf("%d----", q->tid);
 	} else {
 		while( q -> next != NULL )
 			q = q -> next ;
@@ -95,15 +98,20 @@ void cond_destroy( cond_t *cv )
 
 void cond_wait( cond_t *cv, mutex_t *mp )
 {
-	struct node new_thread ;
+
+	struct node * new_thread = malloc(sizeof(struct node));
 	int reject = 0 ;
 	/* @ToDo Function to get thread id - yet to be defined */
-	new_thread.tid =  thr_getid();
-	new_thread.next = NULL;
-
+	new_thread -> tid =  thr_getid();
+	new_thread -> next = NULL;
+	lprintf("threda nu: %d", new_thread -> tid );
 	/* Put the thread in the queue */
 	mutex_lock( &cv -> mp );
-		push ( &cv -> head, &new_thread);
+		push ( &cv -> head, new_thread);
+		if( cv -> head != NULL)
+			lprintf("threda nu: %d", cv -> head -> tid);
+		else
+			lprintf("wait in .. ....... head null");
 		mutex_unlock(mp);
 	mutex_unlock( &cv -> mp );
 
@@ -118,23 +126,29 @@ void cond_wait( cond_t *cv, mutex_t *mp )
  */
 void cond_signal( cond_t *cv )
 {
-	int tid;
-	if( cv -> head == NULL )
+	lprintf("------cp1\n");
+	
+	unsigned int tid;
+	if( cv -> head == NULL ){
+		lprintf("------ head null" )	;
 		return;
+	}
+		
 
 	/* Dequeue a thread */
 	mutex_lock( &cv -> mp ) ;
-
+	lprintf("------cp2\n");
 		tid = pop( &cv -> head ) ;
 		if( tid < 0 ) {
 			/* This check is not necessary, due to implementation of pop, but still kept it, wats ur thought ?*/
 			mutex_unlock( &cv -> mp );
 			return;	
 		}
+		lprintf("------cp3\n");
 		/* Make the popped thread runnable */
 		while ( make_runnable( tid ) <  0 )
-			yield(tid);
-
+			thr_yield(tid);
+		lprintf("signal done\n");
 	mutex_unlock( &cv -> mp );
 }
 

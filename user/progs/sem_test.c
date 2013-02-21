@@ -20,7 +20,8 @@ sem_t sem;
 int main() {
     // initialize semaphore to 2
     sem_init(&sem, 2);
-    int args1 = 1;
+    int args1 = 1, rc =0;
+    rc = thr_init(10);
     int thread1, thread2, thread3;
 
     thread1 = thr_create(doSomething1, (void *)(&(args1)));
