@@ -9,5 +9,6 @@
  */
 char* util_get_esp();
 char* util_get_ebp();
+int   util_get_msb(void *num); /* num is opaque data */
 
 #endif

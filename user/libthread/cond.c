@@ -14,6 +14,7 @@
 #include <syscall_int.h>
 #include <thr_internals.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "common.h"
 #include "thread_common.h"
@@ -77,9 +78,9 @@ cond_init( cond_t *cv )
 	if ( cv -> initd == 1 )
 		return -1;
 
-	/* Initialize the mutex */
-	if( mutex_init( &cv -> mp ))
-		return -1;
+    /* Initialize the mutex */
+    if (mutex_init( &(cv -> mp )))
+        return -1;
 
 	/* Mutex is initialized, time to initialize the condvar */
 	cv -> initd = 1;
@@ -102,7 +103,7 @@ cond_destroy( cond_t *cv )
         return;
 
     /* Gracefully Destroy condvar now*/
-    mutex_destroy( &cv -> mp );
+    mutex_destroy( &(cv->mp));
 
     cv -> initd = 0;
 }
@@ -111,13 +112,14 @@ void
 cond_wait (cond_t *cv, mutex_t *mp)
 {
 	struct node * new_thread =	NULL;
-    int reject = 0 ;
+    int reject = 0;
+    int rc = 0;
 
     if (!cv) {
-
         /*
          * Incorrect input from application.
          */
+        lprintf("[DBG_%s], ERROR: input cv NULL\n", __FUNCTION__);
         return;
     }
 
@@ -137,17 +139,19 @@ cond_wait (cond_t *cv, mutex_t *mp)
 	new_thread -> next = NULL;
     new_thread->reject = &reject;
 
+    printf("[DBG_%s], Enter \n", __FUNCTION__);
 	/* Put the thread in the queue */
     mutex_lock(&(cv -> mp));
 
-    push (&cv -> head, new_thread);
+    push (&(cv -> head), new_thread);
 
     mutex_unlock(mp);
 
-    mutex_unlock( &cv -> mp );
-
+    mutex_unlock( &(cv -> mp ));
+    printf("[DBG_%s], Before deschedule, reject: %d\n", __FUNCTION__, reject);
 	/* deschedule the current thread */
-	deschedule( &reject );
+	rc = deschedule(&reject);
+    printf("[DBG_%s], After deschedule, rc: %d \n", __FUNCTION__, rc);
 
 	mutex_lock(mp);
 }
@@ -163,8 +167,8 @@ cond_signal(cond_t *cv )
     int rc = SUCCESS;
     struct node *node = NULL;
 
+    printf("[DBG:%s], Enter \n", __FUNCTION__);
     if (!cv) {
-
         /*
          * Invalid input.
          */
@@ -207,9 +211,10 @@ cond_signal(cond_t *cv )
          * This check is not necessary, due to implementation of pop, 
          * but still kept it, wats ur thought ?
          */
-        mutex_unlock( &cv -> mp );
+        mutex_unlock( &(cv->mp));
         return;	
     }
+    printf("[DBG_%s], Before make_runnable \n", __FUNCTION__);
 
     /* Make the popped thread runnable */
     rc = make_runnable(tid);
@@ -223,7 +228,11 @@ cond_signal(cond_t *cv )
                                              __FUNCTION__, tid);
     }
 
-    mutex_unlock(&cv -> mp );
+    printf("[DBG_%s], After make_runnable \n", __FUNCTION__);
+
+    mutex_unlock(&(cv-> mp));
+
+    printf("[DBG_%s], After UNLOCK \n", __FUNCTION__);
 
     return;
 }
@@ -241,7 +250,7 @@ void cond_broadcast( cond_t *cv )
     if ( cv -> head == NULL )
         return;
 
-    mutex_lock( &cv -> mp ) ;
+    mutex_lock( &(cv -> mp )) ;
 
     while (1) {
 
@@ -273,6 +282,7 @@ void cond_broadcast( cond_t *cv )
             continue;
         }
 
+        printf("[DBG_%s], Before make_runnable \n", __FUNCTION__);
         /* Make the popped thread runnable */
         rc = make_runnable( tid );
         if (rc != SUCCESS) {
@@ -285,5 +295,7 @@ void cond_broadcast( cond_t *cv )
         }
     }
 
-    mutex_unlock( &cv -> mp );	
+    mutex_unlock( &(cv -> mp ));
+    
+    printf("[DBG_%s], After unlock \n", __FUNCTION__);	
 }
