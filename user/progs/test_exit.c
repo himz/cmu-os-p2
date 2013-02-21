@@ -29,7 +29,7 @@ int main()
     int args1 = 1;
     //int args2 = 2;
 
-    rc = thr_init(10);
+    rc = thr_init(8192);
 
     lprintf("[APP_%s],  after thr_init  rc = %d, thread_run: %p\n", __FUNCTION__, rc, thread_run);
 
@@ -40,10 +40,6 @@ int main()
     //tid2 = thr_create(thread_run, (void *)(&(args2)));
 
     //lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid2);
-
-    thr_join(tid1, NULL);
-
-    printf("Done with thread 1 \n");
 
     //thr_join(tid2, NULL);
 
@@ -60,6 +56,8 @@ int main()
 
     lprintf("Inside main, after new_pages, rc: %d\n", rc);
 #endif
+
+    while(1);
 
     return 0;
 }

@@ -8,7 +8,8 @@ typedef struct skip_list_node_s {
 
     struct skip_list_node_s *next;
     struct skip_list_node_s *prev;
-    uint32_t node_key;
+    uint32_t node_key_lo;
+    uint32_t node_key_hi;
     void *data;
 
 } skip_list_node_t;
@@ -47,7 +48,8 @@ typedef struct skip_list_bucket_s {
 
 #define SLIST_NODE_GET_NEXT(_node_)   ((_node_)->next)
 #define SLIST_NODE_GET_PREV(_node_)   ((_node_)->prev)
-#define SLIST_NODE_GET_KEY(_node_)    ((_node_)->node_key)
+#define SLIST_NODE_GET_KEYL(_node_)    ((_node_)->node_key_lo)
+#define SLIST_NODE_GET_KEYH(_node_)    ((_node_)->node_key_hi)
 #define SLIST_NODE_GET_DATA(_node_)   ((_node_)->data)
 
 /*
@@ -61,7 +63,8 @@ typedef struct skip_list_bucket_s {
 
 #define SLIST_NODE_SET_NEXT(_node_, _val_)        (((_node_)->next = _val_))
 #define SLIST_NODE_SET_PREV(_node_, _val_)        (((_node_)->prev = _val_))
-#define SLIST_NODE_SET_KEY(_node_, _val_)         (((_node_)->node_key = _val_))
+#define SLIST_NODE_SET_KEYL(_node_, _val_)        (((_node_)->node_key_lo = _val_))
+#define SLIST_NODE_SET_KEYH(_node_, _val_)        (((_node_)->node_key_hi = _val_))
 #define SLIST_NODE_SET_DATA(_node_, _val_)        (((_node_)->data = _val_))
 
 /*

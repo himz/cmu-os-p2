@@ -85,7 +85,7 @@ UPDATE_METHOD = afs
 # A list of the test programs you want compiled in from the 410user/progs
 # directory
 #
-410TESTS =
+410TESTS = cyclone excellent
 
 ###########################################################################
 # Test programs you have written which you wish to run
@@ -93,11 +93,8 @@ UPDATE_METHOD = afs
 # A list of the test programs you want compiled in from the user/progs
 # directory
 #
-<<<<<<< HEAD
-STUDENTTESTS = test1 skip_list_test test2 mutex_test sleep_test thread_join_test thread_yield_test
-=======
-STUDENTTESTS = test1 skip_list_test test2 mutex_test sleep_test thread_join_test cond_test sem_test
->>>>>>> d83e781a213df8f6f00630b9239ab4dbcb7402bf
+
+STUDENTTESTS = test1 test2 mutex_test sleep_test thread_join_test cond_test sem_test thread_yield_test excellence_temp test_exit
 
 ###########################################################################
 # Object files for your thread library

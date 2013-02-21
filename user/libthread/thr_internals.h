@@ -23,6 +23,7 @@ typedef struct thread_reuse_stack_s {
 
 } thread_reuse_stack_t;
 
+
 /*
  * Thread control block.
  */
@@ -41,6 +42,14 @@ typedef struct tcb_s {
 
 } tcb_t;
 
+typedef struct tcb_zombie_s {
+
+    tid_t tid;
+    void *tcb_data;
+    struct tcb_zombie_s *next;
+    
+} tcb_zombie_t;
+
 /*
  * Thread globals.
  */
@@ -57,6 +66,7 @@ typedef struct thread_glbl_s {
     mutex_t glb_mutex;
     skip_list_global_t skip_list;
     tcb_t main_tcb;
+    tcb_zombie_t *zombie_threads;
 
 } thread_glbl_t;
 
@@ -161,5 +171,7 @@ void thr_int_deallocate_tid(tid_t tid);
 tid_t thr_int_fork_asm_wrapper(char *child_stack_hi);
 tcb_t* thr_int_search_tcb_by_stk(char *stack_lo);
 tcb_t* thr_int_search_tcb_by_tid(tid_t tid);
+void tcb_int_push_zombie_thread(tcb_t *tcb, void *tcb_data);
+tcb_zombie_t * tcb_int_rem_zombie_thread(tid_t tid);
 
 #endif /* THR_INTERNALS_H */
