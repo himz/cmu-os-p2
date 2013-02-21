@@ -7,9 +7,11 @@
 
 
 typedef struct cond {
+
 	mutex_t mp;
 	int initd;
 	struct node *head; 
+
 } cond_t;
 
 #endif /* _COND_TYPE_H */

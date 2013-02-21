@@ -53,53 +53,63 @@ int sem_init( sem_t *sem, int count )
  */
 void sem_wait( sem_t *sem )
 {
-	struct node new_thread ;
-	int reject = 0 ;
-	/* @ToDo Function to get thread id - yet to be defined */
-	new_thread.tid =  thr_getid();
-	new_thread.next = NULL;
-	
-	/* Get lock of mp for decrementing the count */
+    struct node new_thread;
+    int reject = 0 ;
+    /* @ToDo Function to get thread id - yet to be defined */
+    new_thread.tid =  thr_getid();
+    new_thread.next = NULL;
 
-	mutex_lock( &sem -> mp );
-		sem -> count --;
-		if( sem -> count >= 0){
-			mutex_unlock( &sem -> mp );		
-			return;
-		}
+    /* Get lock of mp for decrementing the count */
 
-		/* Put the thread in the queue */
-		push ( &sem -> head, &new_thread);
-		deschedule( &reject );
-	mutex_unlock( &sem -> mp );	
+    mutex_lock( &sem -> mp );
+    sem -> count --;
+    if( sem -> count >= 0){
+        mutex_unlock( &sem -> mp );		
+        return;
+    }
+
+    /* Put the thread in the queue */
+    push ( &sem -> head, &new_thread);
+    deschedule( &reject );
+    mutex_unlock( &sem -> mp );	
 }
 
 void sem_signal( sem_t *sem )
 {
 	int tid;
+    struct node *node;
+
 	if( sem -> head == NULL )
 		return;
 
 	/* Dequeue a thread */
-	mutex_lock( &sem -> mp ) ;
-		
-		sem -> count++;
-		if( sem -> count >= 0){
-			mutex_unlock( &sem -> mp );		
-			return;
-		}
-		/* Make a thread runnable from the queue */
-		tid = pop( &sem -> head ) ;
-		if( tid < 0 ) {
-			/* This check is not necessary, due to implementation of pop, but still kept it, wats ur thought ?*/
-			mutex_unlock( &sem -> mp );
-			return;	
-		}
-		/* Make the popped thread runnable */
-		while ( make_runnable( tid ) <  0 )
-			yield(tid);
+    mutex_lock( &sem -> mp ) ;
 
-	mutex_unlock( &sem -> mp );
+    sem -> count++;
+    if( sem -> count >= 0){
+        mutex_unlock( &sem -> mp );		
+        return;
+    }
+
+    /* Make a thread runnable from the queue */
+    node = pop( &sem -> head );
+
+    if (!node)
+        return;
+
+    tid = node->tid;
+
+    if( tid < 0 ) {
+        /* This check is not necessary, due to implementation of pop, but still kept it, wats ur thought ?*/
+        mutex_unlock( &sem -> mp );
+        return;	
+    }
+
+    /* Make the popped thread runnable */
+    while ( make_runnable( tid ) <  0 )
+        yield(tid);
+
+    mutex_unlock( &sem -> mp );
 }
 
 

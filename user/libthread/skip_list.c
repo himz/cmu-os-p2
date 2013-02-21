@@ -27,8 +27,8 @@ skip_list_init(skip_list_global_t *skip_list_global,
 
 int
 skip_list_insert(skip_list_global_t *skip_list_glb, 
-                uint32_t bucket_index, uint32_t node_index, 
-                void *data)
+                uint32_t bucket_index, uint32_t node_index_lo, 
+                uint32_t node_index_hi, void *data)
 {
     int rc = SUCCESS;
     skip_list_bucket_t *list_bucket = NULL;
@@ -62,7 +62,8 @@ skip_list_insert(skip_list_global_t *skip_list_glb,
     }
 
     list_node = calloc(1, sizeof(skip_list_node_t));
-    SLIST_NODE_SET_KEY(list_node, node_index);
+    SLIST_NODE_SET_KEYL(list_node, node_index_lo);
+    SLIST_NODE_SET_KEYH(list_node, node_index_hi);
     SLIST_NODE_SET_DATA(list_node, data); 
 
     /*
@@ -153,7 +154,7 @@ skip_list_find(skip_list_global_t *skip_list_glb,
         /*
          * Bucket is NULL.
          */
-        lprintf("[DBG_%s], list_glb NULL \n", __FUNCTION__);
+        lprintf("[DBG_%s], Bucket NULL \n", __FUNCTION__);
         return (NULL);
     }
 
@@ -162,7 +163,7 @@ skip_list_find(skip_list_global_t *skip_list_glb,
         /*
          * Bucket is NULL.
          */
-        lprintf("[DBG_%s], list_glb NULL \n", __FUNCTION__);
+        lprintf("[DBG_%s], Node NULL \n", __FUNCTION__);
         return (NULL);
     }
 
@@ -231,7 +232,8 @@ skip_list_get_node(skip_list_bucket_t *input_bucket,
 {
     skip_list_node_t *node = NULL;
     skip_list_node_t *ret_node = NULL;
-    uint32_t node_key = 0;
+    uint32_t node_key_lo = 0;
+    uint32_t node_key_hi = 0;
 
     if (!(input_bucket)) {
 
@@ -253,9 +255,11 @@ skip_list_get_node(skip_list_bucket_t *input_bucket,
 
     while (node) {
 
-        node_key = SLIST_NODE_GET_KEY(node);
+        node_key_lo = SLIST_NODE_GET_KEYL(node);
+        node_key_hi = SLIST_NODE_GET_KEYH(node);
 
-        if (node_key == input_key) {
+
+        if ((input_key >= node_key_lo) && (input_key <= node_key_hi)) {
 
             /*
              * Found the matching bucket, break.
@@ -264,7 +268,7 @@ skip_list_get_node(skip_list_bucket_t *input_bucket,
             break;
         }
 
-        if (node_key < input_key) {
+        if (node_key_hi < input_key) {
             /*
              * we have moved fwd from where the bucket should have been,
              * break.
@@ -476,7 +480,7 @@ skip_list_insert_node(skip_list_bucket_t *input_bucket,
         return (rc);
     }
 
-    input_key = SLIST_NODE_GET_KEY(input_node);
+    input_key = SLIST_NODE_GET_KEYL(input_node);
     head = SLIST_BKT_GET_HEAD(input_bucket);
 
     if (!head) {
@@ -501,7 +505,7 @@ skip_list_insert_node(skip_list_bucket_t *input_bucket,
             if (!node_iter)
                 break;
 
-            if (SLIST_NODE_GET_KEY(node_iter) == input_key) {
+            if (SLIST_NODE_GET_KEYL(node_iter) == input_key) {
 
                 /*
                  * DUP Key, invalid scenario
@@ -513,7 +517,7 @@ skip_list_insert_node(skip_list_bucket_t *input_bucket,
                 rc = ERROR;
                 return (rc);
 
-            } else if (SLIST_NODE_GET_KEY(node_iter) > input_key) {
+            } else if (SLIST_NODE_GET_KEYL(node_iter) > input_key) {
 
                 /*
                  * Move further down.
@@ -525,7 +529,7 @@ skip_list_insert_node(skip_list_bucket_t *input_bucket,
             } else {
 
                 /*
-                 * 1st bucket whose key is greater than input.
+                 * 1st bucket whose key is less than input.
                  */
                 break;
             }
@@ -566,6 +570,8 @@ skip_list_remove_node(skip_list_bucket_t *input_bucket, uint32_t input_key)
     skip_list_node_t *node_iter = NULL;
     skip_list_node_t *prev_node = NULL;
     skip_list_node_t *next_node = NULL;
+    uint32_t node_key_lo = 0;
+    uint32_t node_key_hi = 0;
 
     if (!input_bucket) {
 
@@ -594,13 +600,17 @@ skip_list_remove_node(skip_list_bucket_t *input_bucket, uint32_t input_key)
      */
     while (1) {
 
-        if (SLIST_NODE_GET_KEY(node_iter) == input_key) {
+        node_key_lo = SLIST_NODE_GET_KEYL(node_iter);
+        node_key_hi = SLIST_NODE_GET_KEYH(node_iter);
+
+
+        if ((input_key >= node_key_lo) && (input_key <= node_key_hi)) {
 
             search_node = node_iter;
             break;
         }
 
-        if (SLIST_NODE_GET_KEY(node_iter) < input_key) {
+        if (node_key_hi < input_key) {
 
             /*
              * we have crossed the place where node should have been.
@@ -656,7 +666,9 @@ skip_list_dbg_dump_node(skip_list_node_t *input_node)
         return;
 
     lprintf("\t\tSelf: %p\n", input_node);
-    lprintf("\t\tNode_Key: %lu\n", SLIST_NODE_GET_KEY(input_node));
+    lprintf("\t\tNode_KeyL: %lu\n", SLIST_NODE_GET_KEYL(input_node));
+    lprintf("\t\tNode_KeyH: %lu\n", SLIST_NODE_GET_KEYH(input_node));
+
     lprintf("\t\tNext: %p\n", SLIST_NODE_GET_NEXT(input_node));
     lprintf("\t\tPrev: %p\n", SLIST_NODE_GET_PREV(input_node));
 
