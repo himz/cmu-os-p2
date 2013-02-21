@@ -12,6 +12,12 @@ struct node {
      */
     int waiting;
     struct node *next;
+
+    /*
+     * This value will be 0 by default & 
+     * will be udpated by thread doing con_signal.
+     */
+    int *reject;
 };
 
 int xchg(int *lock, int value);
@@ -22,6 +28,6 @@ int xchg(int *lock, int value);
 void push ( struct node ** headref, struct node* new_thread );
 
 /* Pop a thread from the queue of condvar*/
-int pop ( struct node **headref );
+struct node * pop ( struct node **headref );
 
 #endif

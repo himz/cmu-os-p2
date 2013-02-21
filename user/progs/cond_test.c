@@ -19,45 +19,52 @@ int tid2 = 0;
 
 void decrement_count() 
 { 
+	printf("***********Thread decrement in \n");
 	mutex_lock(&count_lock); 
 	 while (count == 0) 
 	    cond_wait(&count_nonzero, &count_lock); 
 	 count = count - 1; 
 	mutex_unlock(&count_lock); 
+	printf("Thread decrement out \n");
 } 
 
 void increment_count() 
-{ mutex_lock(&count_lock); 
+{ 
+	printf("***********Thread increment in \n");
+	mutex_lock(&count_lock); 
      if (count == 0)
        cond_signal(&count_nonzero); 
      count = count + 1;
      mutex_unlock(&count_lock); 
+     printf("Thread increment out \n");
 }
 
 void *thread1(void *input_args) 
 {
-	mutex_lock(&count_lock); 
+	printf("***********Thread 1 in \n");
 		decrement_count();
 		printf("Decrement count = %d\n",count);
-	mutex_unlock(&count_lock);
+	printf("Thread 1 out \n");
 	return (NULL);
 }
 
 
 void * thread2(void *input_args) 
-{
-	mutex_lock(&count_lock); 
+{	
+	printf("***********Thread 2 in \n");
+
 		increment_count();
 		printf("Increment count = %d\n",count);	
-	mutex_unlock(&count_lock);
 
+	printf("Thread 2 out \n");
 	return (NULL);
 }
 int main() {
 
-	int rm = 0;
+	int rm = 0, rc =0 ;
 	int args1 = 1;
     int args2 = 2;
+    rc = thr_init(10);
     rm = mutex_init(&count_lock);
 
     tid1 = thr_create(thread1, (void *)(&(args1)));

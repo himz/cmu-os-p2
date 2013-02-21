@@ -48,6 +48,8 @@ mutex_init( mutex_t *mp )
      */
     mp -> lock = 1;
 
+    mp -> count = 0;
+
     return (rc);
 }
 
@@ -61,9 +63,17 @@ mutex_destroy( mutex_t *mp )
 {
     if ( mp == NULL || (!(mp->initd)))
         return;
-
-    mp -> initd = 0;
-    mp -> lock = 1;
+    /* 
+     * We can use count value without worrying about the count value as wrong
+     * due to race conditions. Value of count will only be zero, if there is 
+     * no waiting thread, and all of them have been unlocked. Order of that 
+     * happening does not matter.  
+     */
+    if( mp -> count == 0 ) {
+        mp -> initd = 0;
+        mp -> lock = 1;    
+    }
+    
 }
 
 /**
@@ -76,7 +86,7 @@ void mutex_lock( mutex_t *mp )
         /*
          * TODO: Check if initd has to be atomic.
          * Also mutex_lock MUST never return for invalid input.
-         */
+         */ 
 		return;
     }
 
@@ -85,6 +95,8 @@ void mutex_lock( mutex_t *mp )
      *
      * if, its locked, yield the current thread, else continue 
      */
+    /* It does not need to be an atomic operation */
+    mp -> count++ ;
     while (xchg( &mp -> lock, 0) == 0) {
 
         yield ( -1 );
@@ -106,7 +118,8 @@ void mutex_unlock( mutex_t *mp )
 {
     if (mp == NULL || !mp -> initd)
         return;
-
+    /* Unlock it. Reduce the count of lock waiting */
+    mp -> count-- ;
     xchg(&(mp->lock), 1);
 
     return;
