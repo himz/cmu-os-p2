@@ -9,45 +9,70 @@ thread_run(void *input_args)
     int input = 0;
 
     input = *((int *)(input_args));
-    
-    lprintf("Inside thread_run, input: %d\n", input);
 
-    while(1);
-    
-    return (NULL); 
 
+    //printf("Inside thread_run, input: %d, tid: %d\n", input, tid);
+
+    //thr_exit(NULL);
+
+    sleep(5);
+
+    printf("Inside thread_run before deschedule, input: %d\n", input);
+    deschedule(0);
+    printf("Inside thread_run after deschedule, input: %d\n", input);
+    //while(1);
+    return (NULL);
 }
 
 
 int main()
 {
     int rc = 0;
-    int tid = 0;
-    int args = 1;
-    int sleep_return =100;
+    int tid1 = 0;
+    int tid2 = 0;
+
+    int args1 = 1;
+    //int args2 = 2;
+    set_term_color(2);
 
     rc = thr_init(10);
 
     lprintf("[APP_%s],  after thr_init  rc = %d, thread_run: %p\n", __FUNCTION__, rc, thread_run);
 
-    tid = thr_create(thread_run, (void *)(&(args)));
+    tid1 = thr_create(thread_run, (void *)(&(args1)));
 
-    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid);
+    lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid1);
 
-    sleep_return = sleep(10);
-    lprintf("sleep over, sleep_return: %d\n", sleep_return);
-    
+    //tid2 = thr_create(thread_run, (void *)(&(args2)));
 
+    //lprintf("[APP_%s],  after thr_create  tid = %d\n", __FUNCTION__, tid2);
 
-    while(1);
-    #if 0
-        int rc = 0;
-        char *base_ptr = (char *)(0xffff3ffc);
+     /* Deschedule and makerunnable tests*/
+    /* does thr_create return kernel thread id , or user level */
+    while(make_runnable(tid1))
+        yield(tid1);
+    while(make_runnable(tid2))
+        yield(tid2);
 
-        rc = new_pages(base_ptr, 4096);
+    thr_join(tid1, NULL);
 
-        lprintf("Inside main, after new_pages, rc: %d\n", rc);
-    #endif
+    printf("Done with thread 1 \n");
+
+    //thr_join(tid2, NULL);
+
+    //printf("Done with thread 2 \n");
+    /* Check make runnable */
+
+    //sleep(10);
+
+#if 0
+    int rc = 0;
+    char *base_ptr = (char *)(0xffff3ffc);
+
+    rc = new_pages(base_ptr, 4096);
+
+    lprintf("Inside main, after new_pages, rc: %d\n", rc);
+#endif
 
     return 0;
 }
