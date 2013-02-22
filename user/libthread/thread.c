@@ -1253,6 +1253,8 @@ thr_int_swexn_handler(void *arg, ureg_t *ureg)
     stack_lo = (char *)(((unsigned int)curr_stack_ptr) & stack_lo_mask);
 
     glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+
+    printf("Enter thr_int_swexn_handler: rc: %d\n", rc);
     
     /*
      * No need to check anything.

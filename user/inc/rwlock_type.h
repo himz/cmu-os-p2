@@ -14,7 +14,11 @@ typedef struct rwlock {
 	mutex_t mp;
 
     cond_t read, write;
-    unsigned int count_readers, count_writers, count_read_queue, count_write_queue;
+    unsigned int count_readers;
+    unsigned int count_writers;
+    unsigned int count_read_queue;
+    unsigned int count_write_queue;
+
 } rwlock_t;
 
 #endif /* _RWLOCK_TYPE_H */

@@ -12,7 +12,6 @@ install_autostack(void *stack_high, void *stack_low)
     /*
      * Install main thread's stack_high & stack low.
      */
-    lprintf("[DBG_%s], Parent stack, high: %p, lo: %p\n", __FUNCTION__, stack_high, stack_low);
     thr_set_main_stackH(stack_high);
     thr_set_main_stackL(stack_low);
 

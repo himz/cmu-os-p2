@@ -1,0 +1,501 @@
+62418818 kdbg: pathos v1(Feb  6 2013 18:41:35), Elly Jones and Michael Sullivan
+450187351200 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450187358165 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450188844537 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450188851502 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450188854965 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450188863633 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450188869868 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450188870975 udbg: [DBG_thr_create], Enter
+
+450188881216 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450188885629 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450188892202 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450188898801 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450188916009 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450188923375 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450188942102 udbg: RWlock_downgrade Enter 
+
+450188942857 udbg: RWlock_downgrade Exit 
+
+450188945220 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450188947417 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450188948613 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450188952396 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450188956503 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450188960692 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450188961888 udbg: [DBG_skip_list_find], Node NULL 
+
+450188966236 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450188972640 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450188974358 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450190869859 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450190872132 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450190875417 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450190876544 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450190880651 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450190884933 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450190895092 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450192504389 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450192511354 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450192514817 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450192523485 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450192529542 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450192530649 udbg: [DBG_thr_create], Enter
+
+450192540890 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450192545303 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450192551876 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450192558475 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450192575683 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450192583049 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450192601776 udbg: RWlock_downgrade Enter 
+
+450192602531 udbg: RWlock_downgrade Exit 
+
+450192604894 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450192607091 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450192608287 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450192612070 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450192616177 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450192620366 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450192621562 udbg: [DBG_skip_list_find], Node NULL 
+
+450192625910 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450192632314 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450192634032 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450192869739 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450192872012 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450192875297 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450192876424 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450192880531 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450192884813 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450192911674 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450194521008 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450194527973 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450194531436 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450194540104 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450194546161 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450194547268 udbg: [DBG_thr_create], Enter
+
+450194557509 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450194561922 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450194568495 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450194575094 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450194592302 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450194599668 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450194618395 udbg: RWlock_downgrade Enter 
+
+450194619150 udbg: RWlock_downgrade Exit 
+
+450194621513 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450194623710 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450194624906 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450194628689 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450194632796 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450194636985 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450194638181 udbg: [DBG_skip_list_find], Node NULL 
+
+450194642529 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450194648933 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450194650651 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450194869591 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450194871864 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450194875149 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450194876276 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450194880383 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450194884665 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450194911686 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450196520983 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450196527948 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450196531411 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450196540079 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450196546136 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450196547243 udbg: [DBG_thr_create], Enter
+
+450196557484 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450196561897 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450196568470 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450196575069 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450196592277 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450196599643 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450196618370 udbg: RWlock_downgrade Enter 
+
+450196619125 udbg: RWlock_downgrade Exit 
+
+450196621488 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450196623685 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450196624881 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450196628664 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450196632771 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450196636960 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450196638156 udbg: [DBG_skip_list_find], Node NULL 
+
+450196642504 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450196648908 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450196650626 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450196869457 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450196871730 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450196875015 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450196876142 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450196880249 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450196884531 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450196911356 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450198520690 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450198527655 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450198531118 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450198539786 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450198545843 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450198546950 udbg: [DBG_thr_create], Enter
+
+450198557191 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450198561604 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450198568177 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450198574776 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450198591984 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450198599350 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450198618077 udbg: RWlock_downgrade Enter 
+
+450198618832 udbg: RWlock_downgrade Exit 
+
+450198621195 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450198623392 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450198624588 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450198628371 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450198632478 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450198636667 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450198637863 udbg: [DBG_skip_list_find], Node NULL 
+
+450198642211 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450198648615 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450198650333 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450198869323 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450198871596 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450198874881 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450198876008 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450198880115 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450198884397 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450198893917 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450200521263 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450200528228 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450200531691 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450200540359 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450200546416 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450200547523 udbg: [DBG_thr_create], Enter
+
+450200557764 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450200562177 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450200568750 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450200575349 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450200592557 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450200599923 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450200618650 udbg: RWlock_downgrade Enter 
+
+450200619405 udbg: RWlock_downgrade Exit 
+
+450200621768 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450200623965 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450200625161 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450200628944 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450200633051 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450200637240 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450200638436 udbg: [DBG_skip_list_find], Node NULL 
+
+450200642784 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450200649188 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450200650906 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450200869189 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450200871462 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450200874747 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450200875874 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450200879981 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450200884263 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450200911364 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450202520698 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450202527663 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450202531126 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450202539794 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450202545851 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450202546958 udbg: [DBG_thr_create], Enter
+
+450202557199 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450202561612 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450202568185 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450202574784 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450202591992 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450202599358 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450202618085 udbg: RWlock_downgrade Enter 
+
+450202618840 udbg: RWlock_downgrade Exit 
+
+450202621203 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450202623400 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450202624596 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450202628379 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450202632486 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450202636675 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450202637871 udbg: [DBG_skip_list_find], Node NULL 
+
+450202642219 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450202648623 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450202650341 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450202869055 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450202871328 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450202874613 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450202875740 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450202879847 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450202884129 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450202893623 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450204520969 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450204527934 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450204531397 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450204540065 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450204546122 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450204547229 udbg: [DBG_thr_create], Enter
+
+450204557470 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450204561883 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450204568456 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450204575055 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450204592263 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450204599629 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450204618356 udbg: RWlock_downgrade Enter 
+
+450204619111 udbg: RWlock_downgrade Exit 
+
+450204621474 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450204623671 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450204624867 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450204628650 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450204632757 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450204636946 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450204638142 udbg: [DBG_skip_list_find], Node NULL 
+
+450204642490 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450204648894 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450204650612 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+
+450204868921 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450204871194 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450204874479 udbg: [DBG_thr_exit], stack_lo: 0xffff3000 
+
+450204875606 udbg: [DBG_thr_exit], INSIDE THR_EXIT 
+
+450204879713 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450204883995 udbg: [DBG_thr_int_deallocate_stack], Inside deallocate stack, :0xffff3000 
+
+450204911040 udbg: (^_^)_rwlock_downgrade_read_test: END__SUCCESS
+450206520047 udbg: [DBG_thr_mutex_mem_lock], dont do lock
+
+450206527012 udbg: [DBG_thr_mutex_mem_unlock], dont do unlock
+
+450206530475 udbg: (^_^)_rwlock_downgrade_read_test: START__TYPE_COMPLETE
+450206539143 udbg: [DBG_thr_init], resv_stack_hi: 0xffff4ffc, resv_stack_lo: 0xffff4000 
+
+450206545200 udbg: [DBG_thr_init], free_stack_hi: 0xffff3ffc, free_stack_lo: 0xffff3000 
+
+450206546307 udbg: [DBG_thr_create], Enter
+
+450206556548 udbg: [DBG_thr_int_allocate_stack], Inserting stack ptr_l : 0xffff3000, stack_ptr_h: 0xffff3ffc 
+
+450206560961 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo_mask: fffff800
+
+450206567534 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid I : ffff3000
+
+450206574133 udbg: [DBG_thr_int_allocate_new_tid]: stack_lo: 0xffff3000, Generated new tid II : ffff9800
+
+450206591341 udbg: [DBG_thr_int_allocate_new_tid]: Generated new tid III : 7fff9af5
+
+450206598707 udbg: [DBG_thr_create], stack_hi: 0xffff3ffc, stack_lo: 0xffff3000, cstack_size: 4096 
+
+450206619952 udbg: (^_^)_rwlock_downgrade_read_test:all mimsy were the reader threads
+450206621163 udbg: 22----
+450206621757 udbg: getting out of push
+450206623294 udbg: RWlock_downgrade Enter 
+
+450206624049 udbg: RWlock_downgrade Exit 
+
+450206626412 udbg: (^_^)_rwlock_downgrade_read_test:and the mome raths downgrade
+450206628609 udbg: (^_^)_rwlock_downgrade_read_test:Incrementing read_count
+450206629805 udbg: [DBG_thr_join], INSIDE THR_JOIN 
+
+450206633588 udbg: [DBG_thr_int_search_tcb_by_tid], stack_lo: 0xffff3000 
+
+450206637695 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffff3000 
+
+450206641884 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 
+
+450206643080 udbg: [DBG_skip_list_find], Node NULL 
+
+450206647428 udbg: [DBG_thr_int_search_tcb_by_stk], searching stack ptr : 0xffffe000 , failed 
+
+450206653832 udbg: [DBG_thr_int_search_tcb_by_stk], stack_hi : 0xffffffff , stack_lo: 0xffff7000 
+
+450206655550 udbg: [DBG_thr_int_search_tcb_by_stk], Its a main thread 
+

@@ -59,91 +59,96 @@ void rwlock_destroy( rwlock_t *rwlock )
 
 void rwlock_lock( rwlock_t *rwlock, int type )
 {
-    if( type == RWLOCK_WRITE ) {
+    mutex_lock( &rwlock -> mp );
 
-        mutex_lock( &rwlock -> mp );
+    if ( type == RWLOCK_WRITE ) {
+   
+        if ((rwlock->count_readers) + (rwlock->count_writers) > 0) {
 
-            if ((rwlock->count_readers) + (rwlock->count_writers > 0)) {
+            rwlock -> count_write_queue++;
 
-                rwlock -> count_write_queue++;
+            cond_wait( &rwlock -> write, &rwlock -> mp );
 
-                while ((rwlock -> count_readers) + (rwlock -> count_writers) > 0)
-                    cond_wait( &rwlock -> write, &rwlock -> mp );
+            rwlock -> count_write_queue--;
+        }
 
-                rwlock -> count_write_queue--;
-            }
-
-            rwlock -> count_writers = 1;
-            rwlock -> mode = 1;
-
-            mutex_unlock( &rwlock -> mp );
+        rwlock -> count_writers = 1;
+        rwlock -> mode = 1;
 
     } else if ( type == RWLOCK_READ ) {
 
-        mutex_lock( &rwlock -> mp );
+        if ((rwlock -> count_writers) + (rwlock -> count_write_queue) > 0) {
 
-            if ((rwlock -> count_writers) + (rwlock -> count_write_queue) > 0){
+            rwlock -> count_read_queue++;
 
-                rwlock -> count_read_queue++;
+            cond_wait( &rwlock -> read, &rwlock -> mp );
 
-                /* This condition will prevent writer's starvation */
-                while ((rwlock->count_writers)+(rwlock->count_write_queue > 0))
-                    cond_wait( &rwlock -> read, &rwlock -> mp );
+            rwlock -> count_read_queue--;
+        }
 
-                rwlock -> count_read_queue--;
-            }
+        rwlock -> count_readers++;
+        rwlock -> mode = 0;
+    }
 
-            rwlock -> count_readers++;
-            rwlock -> mode = 0;
-            mutex_unlock( &rwlock -> mp );    
-    } 
+    mutex_unlock( &rwlock -> mp );    
+
 }
 
 void rwlock_unlock( rwlock_t *rwlock )
 {
-    if (rwlock -> mode == 1) {
-        /* Writer mode */
-        mutex_lock( &rwlock -> mp);
+    /* Writer mode */
+    mutex_lock( &rwlock -> mp);
 
+    if (rwlock -> mode == 1) {
             rwlock -> count_writers = 0;
 
-            if( rwlock -> count_writers > 0 ) {
+            if(rwlock -> count_write_queue > 0 ) {
 
                 cond_signal( &rwlock -> write) ;
 
-            } else if( rwlock -> count_read_queue > 0 ){
+            } else if( rwlock -> count_read_queue > 0 ) {
 
                 cond_broadcast( &rwlock -> read ) ;
             }
 
             rwlock -> mode = -1 ;
-            mutex_unlock( &rwlock -> mp );
 
-    } else if( rwlock -> mode == 0 ) {
+    } else if ( rwlock -> mode == 0 ) {
 
         /* Readers Mode*/
-        mutex_lock( &rwlock -> mp );
         rwlock -> count_readers--;
 
         /* If reader count is now zero, signal write queue. */
 
-        if( rwlock -> count_readers == 0 &&  rwlock -> count_write_queue > 0 ){
+        if (rwlock -> count_readers == 0 &&  
+            rwlock -> count_write_queue > 0 ) {
+
             cond_signal( &rwlock -> write ) ;
         }
-        mutex_unlock( &rwlock -> mp );
-    }    
-    
+
+    }  
+     
+    mutex_unlock( &rwlock -> mp );
+
     return;
 }
 
 void rwlock_downgrade( rwlock_t *rwlock)
 {
+    lprintf("RWlock_downgrade Enter \n");
     /* Writers Mode */
-    if( rwlock -> mode == 1) {
+    mutex_lock( &rwlock -> mp );
+
+    if (rwlock -> mode == 1) {
+
         rwlock -> mode = 0;
         rwlock -> count_readers++ ;
         rwlock -> count_writers = 0 ;
         /* @ToDo -- check this solution for degrade for any race issues */
     }
+
+    mutex_unlock( &rwlock -> mp );
+    lprintf("RWlock_downgrade Exit \n");
+
 }
 
