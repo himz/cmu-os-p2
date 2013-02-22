@@ -82,6 +82,11 @@ cond_init( cond_t *cv )
     if (mutex_init( &(cv -> mp )))
         return -1;
 
+    /* Initialize the mutex */
+    if (mutex_init( &(cv -> mp )))
+        return -1;
+
+
 	/* Mutex is initialized, time to initialize the condvar */
 	cv -> initd = 1;
 
@@ -112,8 +117,6 @@ void
 cond_wait (cond_t *cv, mutex_t *mp)
 {
 	struct node * new_thread =	NULL;
-    int reject = 0;
-    int rc = 0;
 
     if (!cv) {
         /*
@@ -123,12 +126,16 @@ cond_wait (cond_t *cv, mutex_t *mp)
         return;
     }
 
+    /* Put the thread in the queue */
+    mutex_lock(&(cv -> mp));
+
     new_thread = malloc(sizeof(struct node));
     if (!new_thread) {
         /*
          * We are out of memory.
          * log it & return.
          */
+        mutex_unlock(&(cv -> mp));
         lprintf("[DBG_%s], malloc failed \n", __FUNCTION__);
         return;
     }
@@ -137,23 +144,39 @@ cond_wait (cond_t *cv, mutex_t *mp)
 
 	new_thread -> tid =  gettid();
 	new_thread -> next = NULL;
-    new_thread->reject = &reject;
+    
+    /* Initialize the mutex */
+    if (mutex_init(&(new_thread -> reject_mutex))) {
 
-    printf("[DBG_%s], Enter \n", __FUNCTION__);
-	/* Put the thread in the queue */
-    mutex_lock(&(cv -> mp));
+        mutex_unlock(&(cv -> mp));
+        return;
+    }
+        
+    /*
+     * By default i'll take this lock.
+     */
+    mutex_lock(&(new_thread->reject_mutex));
 
     push (&(cv -> head), new_thread);
 
     mutex_unlock(mp);
 
     mutex_unlock( &(cv -> mp ));
-    printf("[DBG_%s], Before deschedule, reject: %d\n", __FUNCTION__, reject);
-	/* deschedule the current thread */
-	rc = deschedule(&reject);
-    printf("[DBG_%s], After deschedule, rc: %d \n", __FUNCTION__, rc);
 
-	mutex_lock(mp);
+    /*
+     * Try to acquire my own mutex.
+     * If i am here before cond_signal then that means i'll wait
+     * else i'll be able to acuire the lock & move fwd.
+     */
+    mutex_lock(&(new_thread->reject_mutex));
+
+    /*
+     * Time to clean up the node.
+     */
+    mutex_destroy(&(new_thread->reject_mutex));
+    free(new_thread);
+
+    mutex_lock(mp);
 }
 
 /**
@@ -163,11 +186,8 @@ cond_wait (cond_t *cv, mutex_t *mp)
 void 
 cond_signal(cond_t *cv )
 {
-	int tid;
-    int rc = SUCCESS;
     struct node *node = NULL;
 
-    printf("[DBG:%s], Enter \n", __FUNCTION__);
     if (!cv) {
         /*
          * Invalid input.
@@ -184,7 +204,7 @@ cond_signal(cond_t *cv )
     }
 
 	/* Dequeue a thread */
-	mutex_lock( &(cv->mp));
+	mutex_lock(&(cv->mp));
 
     node = pop( &(cv -> head ));
 
@@ -196,43 +216,12 @@ cond_signal(cond_t *cv )
         return;
     }
 
-    tid = node->tid;
-
     /*
-     * Set the reject variable to 1 a non zero value
-     * so that deschedule fails now.
+     * Unlock the thread.
      */
-    *(node->reject) = 1;
-
-    free(node);
-
-    if (tid < 0) {
-        /* 
-         * This check is not necessary, due to implementation of pop, 
-         * but still kept it, wats ur thought ?
-         */
-        mutex_unlock( &(cv->mp));
-        return;	
-    }
-    printf("[DBG_%s], Before make_runnable \n", __FUNCTION__);
-
-    /* Make the popped thread runnable */
-    rc = make_runnable(tid);
-
-    if (rc != SUCCESS) {
-
-        /*
-         * Should not have happened, but we'll log the event.
-         */
-        lprintf("[DBG_%s], make_runnable failed for tid: %d \n",
-                                             __FUNCTION__, tid);
-    }
-
-    printf("[DBG_%s], After make_runnable \n", __FUNCTION__);
+    mutex_unlock(&(node->reject_mutex));
 
     mutex_unlock(&(cv-> mp));
-
-    printf("[DBG_%s], After UNLOCK \n", __FUNCTION__);
 
     return;
 }
@@ -243,9 +232,7 @@ cond_signal(cond_t *cv )
  */
 void cond_broadcast( cond_t *cv )
 {
-    int tid = -1;
     struct node *node = NULL;
-    int rc = SUCCESS;
 
     if ( cv -> head == NULL )
         return;
@@ -263,39 +250,9 @@ void cond_broadcast( cond_t *cv )
             break;
         }
 
-        /* Dequeue a thread */
-        tid = node->tid;
-        
-        /*
-         * Set the reject variable to 1 a non zero value
-         * so that deschedule fails now.
-         */
-        *(node->reject) = 1;
-
-        free(node);
-
-        if( tid < 0 ) {
-            /* 
-             * This check is not necessary, due to implementation of pop, 
-             * but still kept it, wats ur thought ?
-             */
-            continue;
-        }
-
-        printf("[DBG_%s], Before make_runnable \n", __FUNCTION__);
-        /* Make the popped thread runnable */
-        rc = make_runnable( tid );
-        if (rc != SUCCESS) {
-
-            /*
-             * Should not have happened, but we'll log the event.
-             */
-            lprintf("[DBG_%s], make_runnable failed for tid: %d \n",
-                                                 __FUNCTION__, tid);
-        }
+        mutex_unlock(&(node -> reject_mutex));
     }
 
     mutex_unlock( &(cv -> mp ));
     
-    printf("[DBG_%s], After unlock \n", __FUNCTION__);	
 }

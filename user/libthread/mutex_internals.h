@@ -1,23 +1,19 @@
 
 #ifndef _MUTEX_INTERNALS_H
 #define _MUTEX_INTERNALS_H
+
+#include <mutex_type.h>
+
 struct node {
-    /**
-     * Thread ID
-     */
-    int tid;
+
+    int tid; /* Thread id. */
 
     /*
      * Wait flag, 1 = thread is waiting, 0 = not waiting.
      */
     int waiting;
     struct node *next;
-
-    /*
-     * This value will be 0 by default & 
-     * will be udpated by thread doing con_signal.
-     */
-    int *reject;
+    mutex_t reject_mutex; /* Mutex for accessing reject. */
 };
 
 int xchg(int *lock, int value);
