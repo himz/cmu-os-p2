@@ -8,6 +8,8 @@
 #include <types.h>
 #include <rand.h>
 #include <mutex.h>
+#include <ureg.h>
+#include <syscall.h>
 #include "common.h"
 #include "thread_common.h"
 #include "util.h"
@@ -28,49 +30,18 @@ thr_init( unsigned int inp_size )
     char *free_stack_lo = NULL;
     char *resv_stack_hi = NULL;
     char *resv_stack_lo = NULL;
-    tcb_t *main_tcb = NULL;
-    mutex_t *self_mutex = NULL;
-    mutex_t *mem_mutex = NULL;
     int msb_pos = 0;
     uint32_t bucket_key_mask = ~(0x0);
     int temp = 0;
-
     unsigned int child_stack_size = 0;
     mutex_t *mutex = NULL;
+    mutex_t *mem_mutex = NULL;
     skip_list_global_t *skip_list = NULL;
 
-    /*
-     * At this stage we expect that only main thread
-     * would be running hence no need for mutex protection
-     * while access thread_global.
-     */
-   
+    skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
+
     main_stack_hi = thr_get_main_stackH();
     main_stack_lo = thr_get_main_stackL();
-
-    if (!(main_stack_hi) || (!main_stack_lo)) {
-        /*
-         * Should not have happened, log it & return.
-         */
-        lprintf("[DBG_%s], PANIC: stack_hi: %p or stack_lo: %p "
-                "invalid \n", __FUNCTION__, main_stack_hi, main_stack_lo);
-
-        rc = ERROR;
-        return (rc);
-    }
-   
-    /*
-     * We have stack values now, lets initialize the main tcb.
-     * i.e TCB used to represent the main thread.
-     */
-    main_tcb = THR_GLB_GET_MAIN_TCB_PTR(&(thread_glbl));
-    THR_TCB_SET_STKH(main_tcb, main_stack_hi);
-    THR_TCB_SET_STKL(main_tcb, main_stack_lo);
-
-    self_mutex = THR_TCB_GET_MUTEX_PTR(main_tcb);
-    mutex_init(self_mutex);
-
-    skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
 
     /*
      * Calculate child stack size.
@@ -79,8 +50,6 @@ thr_init( unsigned int inp_size )
      */
     child_stack_size = ((inp_size / PAGE_SIZE) * PAGE_SIZE) + 
                         ((inp_size % PAGE_SIZE) ? PAGE_SIZE : 0);
-
-    child_stack_size += (EXCP_STACK_NUM_PAGES * PAGE_SIZE);
 
     THR_GLB_SET_TSSIZE((&thread_glbl), child_stack_size);
 
@@ -127,6 +96,9 @@ thr_init( unsigned int inp_size )
     mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
     mutex_init(mutex);
 
+    /*
+     * Initialize mytex related to thread safe malloc.
+     */
     mem_mutex = THR_GLB_GET_MEM_MUTEX_PTR((&thread_glbl));
     mutex_init(mem_mutex);
 
@@ -326,6 +298,7 @@ thr_exit(void *status)
     /*
      * Free up the TCB memory.
      */
+    free(my_tcb->tcb_excp_stack_lo);
     free(my_tcb);
     my_tcb= NULL;
 
@@ -750,7 +723,8 @@ thr_int_allocate_stack(int stack_size, void *list_data)
      * Stack ptr should already have 12 lsbs as zero since it is page
      * alligned.
      */
-    lprintf("[DBG_%s], Inserting stack ptr_l : %p, stack_ptr_h: %p \n", __FUNCTION__, stack_ptr_lo, stack_ptr_hi);
+    lprintf("[DBG_%s], Inserting stack ptr_l : %p, stack_ptr_h: %p \n", 
+                             __FUNCTION__, stack_ptr_lo, stack_ptr_hi);
     skip_list_insert(skip_list, bucket_key_index, 
                     ((uint32_t)(stack_ptr_lo)), ((uint32_t)(stack_ptr_hi)), 
                     list_data);
@@ -801,11 +775,6 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
     char *child_stack_hi = NULL;
     tcb_t *new_tcb = *input_tcb;
 
-#if 0
-    char *temp_sp = NULL;
-    char *temp_bp = NULL;
-#endif
-
     /*
      * Child thread's callback.
      */
@@ -821,7 +790,6 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
     }
 
     child_stack_hi = THR_TCB_GET_STKH(new_tcb);
-    lprintf("[DBG_%s], Child stack_hi: %p \n", __FUNCTION__, child_stack_hi);
 
     child_tid = thr_int_fork_asm_wrapper(child_stack_hi - WSIZE);
 
@@ -841,6 +809,10 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
 
         func = THR_TCB_GET_FUNC(new_tcb);
         args = THR_TCB_GET_ARGS(new_tcb);
+
+        /*
+         * Lets install the exception handler.
+         */
 
         /*
          * Time to call the child function.
@@ -864,9 +836,17 @@ thr_int_create_tcb(char *stack_hi, char *stack_lo,
 {
     tcb_t *new_tcb = NULL;
     mutex_t *self_mutex = NULL;
+    char *tcb_excp_stack_lo = NULL;
+    char *tcb_excp_stack_hi = NULL;
 
     new_tcb = malloc(sizeof(tcb_t));
     memset(new_tcb, 0, sizeof(tcb_t));
+
+    /*
+     * Create Exception stack on heap.
+     */
+    tcb_excp_stack_lo = calloc(1, EXCP_STACK_SIZE);
+    tcb_excp_stack_hi = tcb_excp_stack_lo + EXCP_STACK_SIZE;
 
     /*
      * Set TCB parameters.
@@ -875,6 +855,8 @@ thr_int_create_tcb(char *stack_hi, char *stack_lo,
     THR_TCB_SET_STKL(new_tcb, stack_lo);
     THR_TCB_SET_FUN(new_tcb, func);
     THR_TCB_SET_ARG(new_tcb, arg);
+    THR_TCB_SET_EXC_STKH(new_tcb, tcb_excp_stack_hi);
+    THR_TCB_SET_EXC_STKL(new_tcb, tcb_excp_stack_lo);
 
     /*
      * Initialize the per TCB mutex.
@@ -1191,6 +1173,219 @@ thr_int_search_reuse_stack(char *base)
 
         head = head->next;
     }
+
+    return (rc);
+}
+
+void 
+thr_int_add_main_tcb(char *stack_hi, char *stack_lo)
+{
+    tcb_t *main_tcb = NULL;
+    mutex_t *self_mutex = NULL;
+    char *tcb_excp_stack_lo = NULL;
+    char *tcb_excp_stack_hi = NULL;
+
+    /*
+     * At this stage we expect that only main thread
+     * would be running hence no need for mutex protection
+     * while access thread_global.
+     */
+
+    /*
+     * We have stack values now, lets initialize the main tcb.
+     * i.e TCB used to represent the main thread.
+     */
+    main_tcb = THR_GLB_GET_MAIN_TCB_PTR(&(thread_glbl));
+    THR_TCB_SET_STKH(main_tcb, stack_hi);
+    THR_TCB_SET_STKL(main_tcb, stack_lo);
+
+    self_mutex = THR_TCB_GET_MUTEX_PTR(main_tcb);
+    mutex_init(self_mutex);
+
+    tcb_excp_stack_lo = calloc(1, EXCP_STACK_SIZE);
+    tcb_excp_stack_hi = tcb_excp_stack_lo + EXCP_STACK_SIZE;
+    
+    THR_TCB_SET_EXC_STKH(main_tcb, tcb_excp_stack_hi);
+    THR_TCB_SET_EXC_STKL(main_tcb, tcb_excp_stack_lo);
+
+    thr_int_install_excp_handler(tcb_excp_stack_hi, 
+                                 thr_int_swexn_handler,
+                                 NULL, NULL);
+
+    return;
+}
+
+int 
+thr_int_install_excp_handler(void *esp3, swexn_handler_t eip,
+                                  void *arg, ureg_t *newureg)
+{
+    int rc = SUCCESS;
+    rc = swexn(esp3, eip, arg, newureg);
+    return (rc);
+}
+
+void 
+thr_int_swexn_handler(void *arg, ureg_t *ureg)
+{
+    boolean_t is_multi_thr = FALSE;
+    int rc = 0;
+    tcb_t *main_tcb = NULL;
+    int extd_stack_size = PAGE_SIZE;
+    char *tcb_excp_stack_hi = NULL;
+    char *stack_lo = NULL;
+    char *curr_stack_ptr = NULL;
+    unsigned int stack_lo_mask = 0;
+    tcb_t *my_tcb = NULL;
+    mutex_t *glb_mutex = NULL;
+    char *main_stack_lo = NULL;
+    char *resv_stack_hi = NULL;
+
+    rc = ureg->cause;
+
+    is_multi_thr = THR_GLB_GET_IS_MULTI_THR((&(thread_glbl)));
+    main_tcb = THR_GLB_GET_MAIN_TCB_PTR(&thread_glbl);
+
+    main_stack_lo = THR_TCB_GET_STKL(main_tcb);
+    resv_stack_hi = THR_GLB_GET_RSTKH(&(thread_glbl));
+    
+    curr_stack_ptr = util_get_esp();
+    stack_lo_mask = (~(PAGE_SIZE - 1));
+    stack_lo = (char *)(((unsigned int)curr_stack_ptr) & stack_lo_mask);
+
+    glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
+    
+    /*
+     * No need to check anything.
+     */
+    if (rc != SWEXN_CAUSE_PAGEFAULT) {
+
+        /*
+         * As of now we handle only page fault.
+         */
+        vanish();
+    }
+
+    if (is_multi_thr == FALSE) {
+
+        rc = thr_int_expand_stack(main_tcb, extd_stack_size);
+        tcb_excp_stack_hi = THR_TCB_GET_EXC_STKH(main_tcb);
+
+        if (rc != SUCCESS) {
+            /*
+             * Stack expansion has failed, vanish.
+             */
+            vanish();
+        }
+
+        /*
+         * Install the handler again.
+         */
+        thr_int_install_excp_handler(tcb_excp_stack_hi,
+                                     thr_int_swexn_handler,
+                                     NULL, ureg);
+    } else {
+
+        /*
+         * If i am main thread then we'll allow main thread to extend for
+         * MAIN_STACK_EXTRA_PAGES, if i receive exception for child thread
+         * then i'll just call thr_exit to clean up the acquired resources.
+         */
+
+        mutex_lock(glb_mutex);
+
+        /*
+         * Search TCB.
+         */
+        my_tcb = thr_int_search_tcb_by_stk(stack_lo);
+
+        if (!my_tcb) {
+            /*
+             * Search failed.
+             * Data structure corruption.
+             * Log the event but the thread should be killed anyways.
+             */
+            lprintf("[DBG_%s], search based on stk: %p failed \n",
+                                           __FUNCTION__, stack_lo);
+            mutex_unlock(glb_mutex);
+            vanish();
+        }
+
+        if ((THR_TCB_GET_TID(my_tcb)) == (THR_TCB_GET_TID(main_tcb))) {
+
+            /*
+             * I am the main thread, see if i can expand.
+             */
+            if ((main_stack_lo - resv_stack_hi) == WSIZE) {
+                /*
+                 * Main stack cannot expand, vanish
+                 */
+                vanish();
+            }
+
+            /*
+             * Expand the main stack by one page.
+             */
+            rc = thr_int_expand_stack(main_tcb, extd_stack_size);
+            tcb_excp_stack_hi = THR_TCB_GET_EXC_STKH(main_tcb);
+
+            if (rc != SUCCESS) {
+                /*
+                 * Stack expansion has failed, vanish.
+                 */
+                vanish();
+            }
+
+            /*
+             * Install the handler again.
+             */
+            thr_int_install_excp_handler(tcb_excp_stack_hi,
+                                     thr_int_swexn_handler,
+                                                NULL, ureg);
+
+        } else {
+            /*
+             * I am a child thread, exit.
+             */
+            thr_exit(NULL);
+        }
+
+    }
+
+    return;
+}
+
+int 
+thr_int_expand_stack(tcb_t *tcb, int size)
+{
+    int rc = SUCCESS;
+    char *curr_lo = NULL;
+    char *new_lo = NULL;
+
+    curr_lo = THR_TCB_GET_STKL(tcb);
+
+    /*
+     * Increment the stack space by size.
+     */
+    new_lo = curr_lo - size;
+
+    rc = new_pages(new_lo, size);
+
+    if (rc < 0) {
+        /*
+         * Page allocation failed.
+         */
+        lprintf("[DBG_%s], Page allocation failed with rc: %d \n",
+                __FUNCTION__, rc);
+        /*
+         * Cannot expand the stack inform the caller.
+         */
+        return (rc);
+    }
+
+    /*
+     * Update it in s/w.
+     */
+    THR_TCB_SET_STKL(tcb, new_lo);
 
     return (rc);
 }

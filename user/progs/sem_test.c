@@ -19,7 +19,7 @@ sem_t sem;
 
 int main() {
     // initialize semaphore to 2
-    sem_init(&sem, 2);
+    sem_init(&sem, 1);
     int args1 = 1, rc =0;
     rc = thr_init(10);
     int thread1, thread2, thread3;
@@ -28,10 +28,10 @@ int main() {
     thread2 = thr_create(doSomething2, (void *)(&(args1)));
     thread3 = thr_create(doSomething3, (void *)(&(args1)));
 
-    thr_join(thread1, NULL);
+    /*thr_join(thread1, NULL);
     thr_join(thread2, NULL);
     thr_join(thread3, NULL);
-
+*/
     return 0;
 }
 
@@ -43,7 +43,7 @@ void doSomething(char c) {
         sem_wait(&sem);
 
             // generate random amount of time (< 30 seconds)
-            time =  5 ;//(int) ((double) rand() / RAND_MAX * 30);
+            time =  2 ;//(int) ((double) rand() / RAND_MAX * 30);
 
             printf("Thread %c enters and sleeps for %d seconds...\n", c, time);
 
@@ -52,7 +52,7 @@ void doSomething(char c) {
             printf("Thread %c leaves the critical section\n", c);
 
             // V operation
-            sem_signal(&sem);
+        sem_signal(&sem);
         
     }
 }

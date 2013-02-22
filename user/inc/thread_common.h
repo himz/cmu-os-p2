@@ -10,5 +10,6 @@ inline char * thr_get_main_stackH();
 inline char * thr_get_main_stackL();
 void thr_mutex_mem_lock();
 void thr_mutex_mem_unlock();
+void thr_int_add_main_tcb(char *stack_hi, char *stack_lo);
 
 #endif

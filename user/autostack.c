@@ -16,5 +16,7 @@ install_autostack(void *stack_high, void *stack_low)
     thr_set_main_stackH(stack_high);
     thr_set_main_stackL(stack_low);
 
+    thr_int_add_main_tcb(stack_high, stack_low);
+
     return;
 }

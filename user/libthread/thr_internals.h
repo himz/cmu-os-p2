@@ -8,6 +8,8 @@
 
 #include <mutex_type.h>
 #include <types.h>
+#include <syscall.h>
+#include <ureg.h>
 #include "skip_list_common.h"
 /*
  * =====================
@@ -32,7 +34,7 @@ typedef struct tcb_s {
     char *tcb_stack_hi;
     char *tcb_stack_lo;
     char *tcb_excp_stack_hi;
-    char *tcb_stack_lo;
+    char *tcb_excp_stack_lo;
     tid_t tid;
     tid_t kern_tid;
     void *func;
@@ -86,7 +88,7 @@ typedef struct thread_glbl_s {
 #define MAIN_STACK_EXTRA_PAGES     2
 #define RESV_STACK_NUM_PAGES       1
 #define TID_NUM_INVALID            0
-#define EXCP_STACK_NUM_PAGES       1
+#define EXCP_STACK_SIZE            1024 /* Size of exception stack */
 
 /*
  * Thread specific error codes.
@@ -103,6 +105,10 @@ typedef struct thread_glbl_s {
  */
 #define THR_TCB_GET_STKH(_tcb_)      ((_tcb_) ? ((_tcb_)->tcb_stack_hi) : NULL)
 #define THR_TCB_GET_STKL(_tcb_)      ((_tcb_) ? ((_tcb_)->tcb_stack_lo) : NULL)
+#define THR_TCB_GET_EXC_STKH(_tcb_)  ((_tcb_) ? ((_tcb_)->tcb_excp_stack_hi) \
+                                     : NULL)
+#define THR_TCB_GET_EXC_STKL(_tcb_)  ((_tcb_) ? ((_tcb_)->tcb_excp_stack_lo) \
+                                     : NULL)
 #define THR_TCB_GET_TID(_tcb_)       ((_tcb_) ? ((_tcb_)->tid) : 0)
 #define THR_TCB_GET_KTID(_tcb_)      ((_tcb_) ? ((_tcb_)->kern_tid) : 0)
 #define THR_TCB_GET_FUNC(_tcb_)      ((_tcb_) ? ((_tcb_)->func) : NULL)
@@ -118,6 +124,14 @@ typedef struct thread_glbl_s {
 
 #define THR_TCB_SET_STKL(_tcb_, _val_)   ((_tcb_) ? ((_tcb_)->tcb_stack_lo) \
                                          = _val_ : NULL)
+
+#define THR_TCB_SET_EXC_STKH(_tcb_, _val_) ((_tcb_) ?                       \
+                                           ((_tcb_)->tcb_excp_stack_hi)     \
+                                            = _val_ : NULL)
+
+#define THR_TCB_SET_EXC_STKL(_tcb_, _val_) ((_tcb_) ?                       \
+                                           ((_tcb_)->tcb_excp_stack_lo)     \
+                                            = _val_ : NULL)
 
 #define THR_TCB_SET_TID(_tcb_, _val_)    ((_tcb_) ? ((_tcb_)->tid) = _val_ : 0)
 
@@ -187,5 +201,8 @@ tcb_zombie_t * tcb_int_rem_zombie_thread(tid_t tid);
 int thr_int_push_reuse_stack(char *base);
 char * thr_int_pop_reuse_stack();
 boolean_t thr_int_search_reuse_stack(char *input_addr);
+int thr_int_install_excp_handler(void *esp3, swexn_handler_t eip, void *arg, ureg_t *newureg);
+void thr_int_swexn_handler(void *arg, ureg_t *ureg);
+int thr_int_expand_stack(tcb_t *tcb, int size);
 
 #endif /* THR_INTERNALS_H */
