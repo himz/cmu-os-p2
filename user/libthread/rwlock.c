@@ -14,6 +14,7 @@
 #include <thr_internals.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "common.h"
 #include "thread_common.h"
 #include "util.h"
@@ -68,7 +69,6 @@ void rwlock_lock( rwlock_t *rwlock, int type )
             rwlock -> count_write_queue++;
 
             cond_wait( &rwlock -> write, &rwlock -> mp );
-
             rwlock -> count_write_queue--;
         }
 
@@ -82,7 +82,6 @@ void rwlock_lock( rwlock_t *rwlock, int type )
             rwlock -> count_read_queue++;
 
             cond_wait( &rwlock -> read, &rwlock -> mp );
-
             rwlock -> count_read_queue--;
         }
 
@@ -124,8 +123,11 @@ void rwlock_unlock( rwlock_t *rwlock )
             rwlock -> count_write_queue > 0 ) {
 
             cond_signal( &rwlock -> write ) ;
-        }
 
+        } else if (rwlock -> count_read_queue > 0) {
+
+            cond_broadcast( &rwlock -> read ) ;
+        }
     }  
      
     mutex_unlock( &rwlock -> mp );
@@ -135,7 +137,6 @@ void rwlock_unlock( rwlock_t *rwlock )
 
 void rwlock_downgrade( rwlock_t *rwlock)
 {
-    lprintf("RWlock_downgrade Enter \n");
     /* Writers Mode */
     mutex_lock( &rwlock -> mp );
 
@@ -147,8 +148,9 @@ void rwlock_downgrade( rwlock_t *rwlock)
         /* @ToDo -- check this solution for degrade for any race issues */
     }
 
-    mutex_unlock( &rwlock -> mp );
-    lprintf("RWlock_downgrade Exit \n");
+    cond_broadcast( &rwlock -> read ) ;
 
+    mutex_unlock( &rwlock -> mp );
+    return;
 }
 
