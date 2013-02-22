@@ -80,6 +80,8 @@ thr_init( unsigned int inp_size )
     child_stack_size = ((inp_size / PAGE_SIZE) * PAGE_SIZE) + 
                         ((inp_size % PAGE_SIZE) ? PAGE_SIZE : 0);
 
+    child_stack_size += (EXCP_STACK_NUM_PAGES * PAGE_SIZE);
+
     THR_GLB_SET_TSSIZE((&thread_glbl), child_stack_size);
 
     msb_pos = util_get_msb((void *)(child_stack_size));
@@ -541,7 +543,7 @@ thr_getid()
         return (ret_tid);
     }
 
-    ret_tid = THR_TCB_GET_TID(my_tcb); 
+    ret_tid = THR_TCB_GET_TID(my_tcb);
 
     mutex_unlock(glb_mutex);
 
@@ -693,14 +695,14 @@ thr_int_allocate_stack(int stack_size, void *list_data)
     char *stack_ptr_lo = NULL;
     char *stack_ptr_hi = NULL;
     int rc = 0;
-    thread_reuse_stack_t *reuse_stack = NULL;
+    char *reuse_stack = NULL;
     char *new_free_stack_lo = NULL;
     char *new_free_stack_hi = NULL;
     unsigned int child_stack_size = THR_GLB_GET_TSSIZE(&thread_glbl);
     skip_list_global_t *skip_list = NULL;
     uint32_t bucket_key_index = 0;
 
-    reuse_stack = THR_GLB_GET_RSTACK(&thread_glbl);
+    reuse_stack = thr_int_pop_reuse_stack();
 
     if (!reuse_stack) {
 
@@ -719,10 +721,7 @@ thr_int_allocate_stack(int stack_size, void *list_data)
 
     } else {
 
-        /*
-         * TODO: Add code here.
-         */
-
+        stack_ptr_lo = reuse_stack;
     }
 
     /*
@@ -764,6 +763,7 @@ thr_int_deallocate_stack(char *base)
 {
     skip_list_global_t *skip_list = NULL;
     uint32_t bucket_key_index = 0;
+    int rc = SUCCESS;
 
     lprintf("[DBG_%s], Inside deallocate stack, :%p \n", __FUNCTION__, base);
 
@@ -782,10 +782,14 @@ thr_int_deallocate_stack(char *base)
     skip_list_remove(skip_list, bucket_key_index, ((uint32_t)base));
 
     /*
+     * Insert this node in the reuse stack list.
+     */
+    rc = thr_int_push_reuse_stack(base);
+
+    /*
      * Deallocate does not remove the page, as it could be called
      * in the same thread's context.
      */
-    lprintf("[DBG_%s], Exit deallocate stack \n", __FUNCTION__);
 
     return;
 }
@@ -1119,4 +1123,74 @@ tcb_int_rem_zombie_thread(tid_t input_tid)
     tcb_ret_node->next = NULL;
 
     return (tcb_ret_node);
+}
+
+int
+thr_int_push_reuse_stack (char *stack_lo)
+{
+    thread_reuse_stack_t *head = NULL;
+    thread_reuse_stack_t *new_node = NULL;
+    int rc = SUCCESS;
+
+    new_node = calloc(1, sizeof(thread_reuse_stack_t));
+    new_node->stack_lo = stack_lo;
+
+    head = THR_GLB_GET_RSTACK(&(thread_glbl));
+
+    if (head) {
+
+        /*
+         * Not the 1st node.
+         */
+        new_node->next = head->next;
+    }
+
+    THR_GLB_SET_RSTACK((&(thread_glbl)), new_node);
+
+    return (rc);
+}
+
+char *
+thr_int_pop_reuse_stack (void)
+{
+    thread_reuse_stack_t *head = NULL;
+    thread_reuse_stack_t *next_node = NULL;
+    char *ret_ptr = NULL;
+
+    head = THR_GLB_GET_RSTACK(&(thread_glbl));
+
+    if (head) {
+
+        ret_ptr = head->stack_lo;
+        next_node = head->next;
+        free(head);
+        head = NULL;
+    }
+
+    THR_GLB_SET_RSTACK((&(thread_glbl)), next_node);
+
+    return (ret_ptr);
+}
+
+boolean_t
+thr_int_search_reuse_stack(char *base)
+{
+    thread_reuse_stack_t *head = NULL;
+    boolean_t rc = FALSE;
+    head = THR_GLB_GET_RSTACK(&(thread_glbl));
+
+    /*
+     * Search if this address is already present.
+     */
+    while (head) {
+
+        if (head->stack_lo == base) {
+            rc = TRUE;
+            break;
+        }
+
+        head = head->next;
+    }
+
+    return (rc);
 }

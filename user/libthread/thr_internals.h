@@ -31,6 +31,8 @@ typedef struct tcb_s {
 
     char *tcb_stack_hi;
     char *tcb_stack_lo;
+    char *tcb_excp_stack_hi;
+    char *tcb_stack_lo;
     tid_t tid;
     tid_t kern_tid;
     void *func;
@@ -84,6 +86,7 @@ typedef struct thread_glbl_s {
 #define MAIN_STACK_EXTRA_PAGES     2
 #define RESV_STACK_NUM_PAGES       1
 #define TID_NUM_INVALID            0
+#define EXCP_STACK_NUM_PAGES       1
 
 /*
  * Thread specific error codes.
@@ -181,5 +184,8 @@ tcb_t* thr_int_search_tcb_by_stk(char *stack_lo);
 tcb_t* thr_int_search_tcb_by_tid(tid_t tid);
 void tcb_int_push_zombie_thread(tcb_t *tcb, void *tcb_data);
 tcb_zombie_t * tcb_int_rem_zombie_thread(tid_t tid);
+int thr_int_push_reuse_stack(char *base);
+char * thr_int_pop_reuse_stack();
+boolean_t thr_int_search_reuse_stack(char *input_addr);
 
 #endif /* THR_INTERNALS_H */
