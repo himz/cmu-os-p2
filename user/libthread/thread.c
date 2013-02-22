@@ -30,12 +30,14 @@ thr_init( unsigned int inp_size )
     char *resv_stack_lo = NULL;
     tcb_t *main_tcb = NULL;
     mutex_t *self_mutex = NULL;
+    mutex_t *mem_mutex = NULL;
+    int msb_pos = 0;
+    uint32_t bucket_key_mask = ~(0x0);
+    int temp = 0;
 
     unsigned int child_stack_size = 0;
     mutex_t *mutex = NULL;
-    skip_list_global_t *skip_list = NULL;;
-
-    //lprintf("[DBG_%s], Enter\n", __FUNCTION__);
+    skip_list_global_t *skip_list = NULL;
 
     /*
      * At this stage we expect that only main thread
@@ -68,9 +70,6 @@ thr_init( unsigned int inp_size )
     self_mutex = THR_TCB_GET_MUTEX_PTR(main_tcb);
     mutex_init(self_mutex);
 
-    //lprintf("[DBG_%s], main_stack_hi: %p, main_stack_lo: %p \n", 
-    //                __FUNCTION__, main_stack_hi, main_stack_lo);
-
     skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
 
     /*
@@ -83,9 +82,23 @@ thr_init( unsigned int inp_size )
 
     THR_GLB_SET_TSSIZE((&thread_glbl), child_stack_size);
 
-    //lprintf("[DBG_%s], child_stack_size: %u\n", 
-    //            __FUNCTION__, child_stack_size);
-    //
+    msb_pos = util_get_msb((void *)(child_stack_size));
+    temp = util_get_msb((void *)(~0x0));
+
+    /*
+     * Mask generation algo.
+     * A single page consumes 12 bits, now say a thread uses 2 pages
+     * then additional 1 bit will be used, as a result 32 - (12 + 1)
+     * these many bits will be availabe for any thread allocated stack
+     * to begin/end. We'll divide these bits in half & use 1 half as 
+     * bucket key. I.e say if we are left with 20 bits then 10 bits will 
+     * indicate bucket key, we'll have 1024 buckets, where each bucket can 
+     * hold 1024 tcbs.
+     */
+    temp = (((temp - msb_pos)/2) + msb_pos);
+    bucket_key_mask = ((~0x0) << (temp));
+    THR_GLB_SET_BKT_KEY_MASK((&(thread_glbl)), bucket_key_mask);
+
     resv_stack_hi = main_stack_lo - 
                     (MAIN_STACK_EXTRA_PAGES * PAGE_SIZE) 
                     - WSIZE;
@@ -100,21 +113,22 @@ thr_init( unsigned int inp_size )
      */
     new_pages(resv_stack_lo, (PAGE_SIZE * RESV_STACK_NUM_PAGES));
 
-#if 0
-    free_stack_hi = main_stack_lo - 
-                    (MAIN_STACK_EXTRA_PAGES * PAGE_SIZE) 
-                    - WSIZE;
-    free_stack_lo = (free_stack_hi - child_stack_size + WSIZE);
-#endif
-
     free_stack_hi = resv_stack_lo - WSIZE;
     free_stack_lo = (free_stack_hi - child_stack_size + WSIZE);
 
     THR_GLB_SET_FSTKH((&thread_glbl), free_stack_hi);
     THR_GLB_SET_FSTKL((&thread_glbl), free_stack_lo);
 
+    /*
+     * Initialize global mutexes.
+     */
     mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
     mutex_init(mutex);
+
+    mem_mutex = THR_GLB_GET_MEM_MUTEX_PTR((&thread_glbl));
+    mutex_init(mem_mutex);
+
+    THR_GLB_SET_IS_MULTI_THR((&thread_glbl), TRUE);
 
     /*
      * TODO: Change it.
@@ -365,7 +379,7 @@ thr_join(int tid, void **statusp)
 
     if (!thr_tcb) {
         /*
-         * Either thread has already been removed or this tid never exited.
+         * Either thread has already been removed or this tid never existed.
          */
         zombie_tcb = tcb_int_rem_zombie_thread(tid);
 
@@ -382,7 +396,11 @@ thr_join(int tid, void **statusp)
             /*
              * Get the status from zombie thread & free up the memory.
              */
-            *statusp = zombie_tcb->tcb_data;
+
+            if (statusp) {
+                *statusp = zombie_tcb->tcb_data;
+            }
+
             free(zombie_tcb);
             zombie_tcb = NULL;
         }
@@ -392,18 +410,38 @@ thr_join(int tid, void **statusp)
     }
 
     stack_lo = THR_TCB_GET_STKL(thr_tcb);
-
     thr_tid = THR_TCB_GET_TID(thr_tcb);
 
     if (thr_tid != tid) {
 
         /*
-         * Not sure if this can happen, but still handle the
-         * scenario.
+         * Not sure if this can happen, still we'll handle it the
+         * same way we handled the non existing tcb scenario.
          */
-        mutex_unlock(glb_mutex);
+        zombie_tcb = tcb_int_rem_zombie_thread(tid);
+        if (!zombie_tcb) {
 
-        rc = ERROR;
+            /*
+             * This tid never existed, return error.
+             */
+
+            rc = ERROR;
+
+        } else {
+
+            /*
+             * Get the status from zombie thread & free up the memory.
+             */
+
+            if (statusp) {
+                *statusp = zombie_tcb->tcb_data;
+            }
+
+            free(zombie_tcb);
+            zombie_tcb = NULL;
+        }
+
+        mutex_unlock(glb_mutex);
         return (rc);
     }
 
@@ -437,13 +475,9 @@ thr_join(int tid, void **statusp)
      * a. Acquire the self lock.
      * b. Notify child tcb about waiting parent tcb.
      */
-
-    lprintf("[DBG_%s], B4 self mutex \n", __FUNCTION__);
-
     mutex_lock(self_mutex);
 
     THR_TCB_SET_WAIT_TCB(thr_tcb, my_tcb);
-    lprintf("[DBG_%s], After self mutex \n", __FUNCTION__);
 
     mutex_unlock(glb_mutex);
 
@@ -461,8 +495,6 @@ thr_join(int tid, void **statusp)
          */
         *statusp = THR_TCB_GET_RET_VAL(my_tcb); 
     }
-
-    lprintf("[DBG_%s], After self mutex II\n", __FUNCTION__);
 
     mutex_unlock(self_mutex);
 
@@ -557,7 +589,6 @@ thr_yield(int tid)
         }
 
         tid = THR_TCB_GET_KTID(other_tcb);
-        printf("[DBG_%s], saved_tid: %d, actual_tid: %d \n", __FUNCTION__, tid, gettid());
         mutex_unlock(glb_mutex);
     }
 
@@ -567,7 +598,10 @@ thr_yield(int tid)
 }
 
 /*
- * Set/Get APIs which will be called by other files.
+ * ====================================
+ * APIS exposed to other library modules, but not to
+ * user. 
+ * ====================================
  */
 void 
 thr_set_main_stackH(char *input) 
@@ -595,6 +629,59 @@ thr_get_main_stackL()
     return (thread_glbl.main_stack_lo);
 }
 
+void
+thr_mutex_mem_lock()
+{
+    mutex_t *mem_mutex = NULL;
+
+    if (THR_GLB_GET_IS_MULTI_THR((&thread_glbl)) == FALSE) {
+
+        /*
+         * No need to take any lock since application
+         * is single threaded.
+         */
+        lprintf("[DBG_%s], dont do lock\n", __FUNCTION__);
+        return;
+    }
+
+    mem_mutex = THR_GLB_GET_MEM_MUTEX_PTR((&(thread_glbl)));
+
+    if (!mem_mutex) {
+        /*
+         * Invalid input.
+         */
+        return;
+    }
+
+    mutex_lock(mem_mutex);
+    return;
+}
+
+void
+thr_mutex_mem_unlock()
+{
+    mutex_t *mem_mutex = NULL;
+    mem_mutex = THR_GLB_GET_MEM_MUTEX_PTR((&thread_glbl));
+
+    if (THR_GLB_GET_IS_MULTI_THR((&thread_glbl)) == FALSE) {
+        /*
+         * No need to do anything, just return.
+         */
+        lprintf("[DBG_%s], dont do unlock\n", __FUNCTION__);
+        return;
+    }
+
+    if (!mem_mutex) {
+        /*
+         * Invalid input.
+         */
+        return;
+    }
+
+    mutex_unlock(mem_mutex);
+    return;
+}
+
 /*
  * ====================================
  * Thread specifc internal APIS.
@@ -611,6 +698,7 @@ thr_int_allocate_stack(int stack_size, void *list_data)
     char *new_free_stack_hi = NULL;
     unsigned int child_stack_size = THR_GLB_GET_TSSIZE(&thread_glbl);
     skip_list_global_t *skip_list = NULL;
+    uint32_t bucket_key_index = 0;
 
     reuse_stack = THR_GLB_GET_RSTACK(&thread_glbl);
 
@@ -657,16 +745,16 @@ thr_int_allocate_stack(int stack_size, void *list_data)
 
     skip_list = THR_GLB_GET_SKPLST_PTR((&thread_glbl));
 
-    /*
-     * TODO: change the bucket index.
-     */
+    bucket_key_index = ((uint32_t)(stack_ptr_lo) & 
+                       (THR_GLB_GET_BKT_KEY_MASK(&(thread_glbl))));
     /*
      * Stack ptr should already have 12 lsbs as zero since it is page
      * alligned.
      */
     lprintf("[DBG_%s], Inserting stack ptr_l : %p, stack_ptr_h: %p \n", __FUNCTION__, stack_ptr_lo, stack_ptr_hi);
-    skip_list_insert(skip_list, 0, ((uint32_t)(stack_ptr_lo)), 
-                        ((uint32_t)(stack_ptr_hi)), list_data);
+    skip_list_insert(skip_list, bucket_key_index, 
+                    ((uint32_t)(stack_ptr_lo)), ((uint32_t)(stack_ptr_hi)), 
+                    list_data);
 
     return (stack_ptr_lo);
 }
@@ -675,6 +763,7 @@ void
 thr_int_deallocate_stack(char *base)
 {
     skip_list_global_t *skip_list = NULL;
+    uint32_t bucket_key_index = 0;
 
     lprintf("[DBG_%s], Inside deallocate stack, :%p \n", __FUNCTION__, base);
 
@@ -687,10 +776,10 @@ thr_int_deallocate_stack(char *base)
      * Remove the node from skip list..
      */
 
-    /*
-     * TODO: change the bucket index.
-     */
-    skip_list_remove(skip_list, 0, ((uint32_t)base));
+    bucket_key_index = ((uint32_t)(base) & 
+                       (THR_GLB_GET_BKT_KEY_MASK(&(thread_glbl))));
+
+    skip_list_remove(skip_list, bucket_key_index, ((uint32_t)base));
 
     /*
      * Deallocate does not remove the page, as it could be called
@@ -878,6 +967,7 @@ thr_int_search_tcb_by_stk(char *stack_lo)
 {
     tcb_t *tcb = NULL;
     skip_list_global_t *skip_list = NULL;
+    uint32_t bucket_key_index = 0;
 
     skip_list = THR_GLB_GET_SKPLST_PTR(&(thread_glbl));
 
@@ -885,7 +975,11 @@ thr_int_search_tcb_by_stk(char *stack_lo)
         return NULL;
 
     lprintf("[DBG_%s], searching stack ptr : %p \n", __FUNCTION__, stack_lo);
-    tcb = skip_list_find(skip_list, 0, ((uint32_t)(stack_lo)));
+
+    bucket_key_index = ((uint32_t)(stack_lo) & 
+                       (THR_GLB_GET_BKT_KEY_MASK(&(thread_glbl))));
+
+    tcb = skip_list_find(skip_list, bucket_key_index, ((uint32_t)(stack_lo)));
 
     if (!tcb) {
 
@@ -903,7 +997,7 @@ thr_int_search_tcb_by_stk(char *stack_lo)
 
         } else {
 
-            skip_list_dbg_dump_all(skip_list);
+            //skip_list_dbg_dump_all(skip_list);
         }
     }
 

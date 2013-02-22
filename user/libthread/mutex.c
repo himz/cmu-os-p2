@@ -96,10 +96,8 @@ void mutex_lock( mutex_t *mp )
      * if, its locked, yield the current thread, else continue 
      */
     /* It does not need to be an atomic operation */
-    mp -> count++ ;
-    while (xchg( &mp -> lock, 0) == 0) {
-
-        yield ( -1 );
+    while (xchg( &(mp -> lock), 0) == 0) {
+        yield(-1);
     }
 
     /*
@@ -118,8 +116,8 @@ void mutex_unlock( mutex_t *mp )
 {
     if (mp == NULL || !mp -> initd)
         return;
+
     /* Unlock it. Reduce the count of lock waiting */
-    mp -> count-- ;
     xchg(&(mp->lock), 1);
 
     return;

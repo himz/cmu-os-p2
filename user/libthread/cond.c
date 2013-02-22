@@ -14,6 +14,7 @@
 #include <syscall_int.h>
 #include <thr_internals.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "common.h"
 #include "thread_common.h"
@@ -77,9 +78,9 @@ cond_init( cond_t *cv )
 	if ( cv -> initd == 1 )
 		return -1;
 
-	/* Initialize the mutex */
-	if( mutex_init( &cv -> mp ))
-		return -1;
+    /* Initialize the mutex */
+    if (mutex_init( &(cv -> mp )))
+        return -1;
 
 	/* Mutex is initialized, time to initialize the condvar */
 	cv -> initd = 1;
@@ -102,7 +103,7 @@ cond_destroy( cond_t *cv )
         return;
 
     /* Gracefully Destroy condvar now*/
-    mutex_destroy( &cv -> mp );
+    mutex_destroy( &(cv->mp));
 
     cv -> initd = 0;
 }
@@ -111,13 +112,14 @@ void
 cond_wait (cond_t *cv, mutex_t *mp)
 {
 	struct node * new_thread =	NULL;
-    int reject = 0 ;
+    int reject = 0;
+    int rc = 0;
 
     if (!cv) {
-
         /*
          * Incorrect input from application.
          */
+        lprintf("[DBG_%s], ERROR: input cv NULL\n", __FUNCTION__);
         return;
     }
 
@@ -140,14 +142,21 @@ cond_wait (cond_t *cv, mutex_t *mp)
 	/* Put the thread in the queue */
     mutex_lock(&(cv -> mp));
 
-    push (&cv -> head, new_thread);
+    push (&(cv -> head), new_thread);
 
     mutex_unlock(mp);
 
-    mutex_unlock( &cv -> mp );
-
+    mutex_unlock( &(cv -> mp ));
 	/* deschedule the current thread */
-	deschedule( &reject );
+	rc = deschedule(&reject);
+
+
+    /*
+     * Dummy mutexes to handle the scenario where, reject is changed & before
+     * make runnable cond_wait is scheduled again.
+     */
+    mutex_lock(&(cv -> mp));
+    mutex_unlock(&(cv -> mp));
 
 	mutex_lock(mp);
 }
@@ -164,7 +173,6 @@ cond_signal(cond_t *cv )
     struct node *node = NULL;
 
     if (!cv) {
-
         /*
          * Invalid input.
          */
@@ -207,7 +215,7 @@ cond_signal(cond_t *cv )
          * This check is not necessary, due to implementation of pop, 
          * but still kept it, wats ur thought ?
          */
-        mutex_unlock( &cv -> mp );
+        mutex_unlock( &(cv->mp));
         return;	
     }
 
@@ -223,7 +231,7 @@ cond_signal(cond_t *cv )
                                              __FUNCTION__, tid);
     }
 
-    mutex_unlock(&cv -> mp );
+    mutex_unlock(&(cv-> mp));
 
     return;
 }
@@ -241,7 +249,7 @@ void cond_broadcast( cond_t *cv )
     if ( cv -> head == NULL )
         return;
 
-    mutex_lock( &cv -> mp ) ;
+    mutex_lock( &(cv -> mp )) ;
 
     while (1) {
 
@@ -285,5 +293,6 @@ void cond_broadcast( cond_t *cv )
         }
     }
 
-    mutex_unlock( &cv -> mp );	
+    mutex_unlock( &(cv -> mp ));
+    
 }

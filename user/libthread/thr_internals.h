@@ -55,6 +55,7 @@ typedef struct tcb_zombie_s {
  */
 typedef struct thread_glbl_s {
 
+    boolean_t is_multi_thrd;
     char *main_stack_hi;
     char *main_stack_lo;
     char *free_stack_hi;
@@ -64,9 +65,11 @@ typedef struct thread_glbl_s {
     unsigned int tstack_size;
     thread_reuse_stack_t *reuse_stacks;
     mutex_t glb_mutex;
+    mutex_t mem_mutex;
     skip_list_global_t skip_list;
     tcb_t main_tcb;
     tcb_zombie_t *zombie_threads;
+    uint32_t bucket_key_mask;
 
 } thread_glbl_t;
 
@@ -140,8 +143,11 @@ typedef struct thread_glbl_s {
 #define THR_GLB_GET_TSSIZE(_glb_)         ((_glb_)->tstack_size)
 #define THR_GLB_GET_RSTACK(_glb_)         ((_glb_)->reuse_stacks)
 #define THR_GLB_GET_MUTEX_PTR(_glb_)      ((&((_glb_)->glb_mutex)))
+#define THR_GLB_GET_MEM_MUTEX_PTR(_glb_)  ((&((_glb_)->mem_mutex)))
 #define THR_GLB_GET_SKPLST_PTR(_glb_)     ((&((_glb_)->skip_list)))
 #define THR_GLB_GET_MAIN_TCB_PTR(_glb_)   (&((_glb_)->main_tcb))
+#define THR_GLB_GET_BKT_KEY_MASK(_glb_)   (((_glb_)->bucket_key_mask))
+#define THR_GLB_GET_IS_MULTI_THR(_glb_)   (_glb_->is_multi_thrd)
 
 
 #define THR_GLB_SET_FSTKH(_glb_, _val_)     (((_glb_)->free_stack_hi) = _val_)
@@ -150,7 +156,9 @@ typedef struct thread_glbl_s {
 #define THR_GLB_SET_RSTKL(_glb_, _val_)     (((_glb_)->resv_stack_lo) = _val_)
 #define THR_GLB_SET_TSSIZE(_glb_, _val_)    (((_glb_)->tstack_size) = _val_)
 #define THR_GLB_SET_RSTACK(_glb_, _val_)    (((_glb_)->reuse_stacks) = _val_)
-
+#define THR_GLB_SET_BKT_KEY_MASK(_glb_, _val_)   (((_glb_)->bucket_key_mask) \
+                                                 = _val_)
+#define THR_GLB_SET_IS_MULTI_THR(_glb_, _val_)   (_glb_->is_multi_thrd = _val_)
 
 /*
  * =====================
