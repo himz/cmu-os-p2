@@ -25,7 +25,11 @@
 #include <sem.h>
 #include <rwlock.h>
 
-
+/**
+ * @brief   
+ * @param  rwlock [description]
+ * @return        [description]
+ */
 int rwlock_init( rwlock_t *rwlock )
 {
     if( rwlock -> initd != 0)
@@ -80,9 +84,7 @@ void rwlock_lock( rwlock_t *rwlock, int type )
             rwlock -> count_readers++;
             rwlock -> mode = 0;
         mutex_unlock( &rwlock -> mp );    
-    }
-
-    
+    }    
 }
 
 void rwlock_unlock( rwlock_t *rwlock )
@@ -101,22 +103,16 @@ void rwlock_unlock( rwlock_t *rwlock )
     } else if( rwlock -> mode == 0 ) {
         /* Readers Mode*/
         mutex_lock( &rwlock -> mp );
-            rwlock -> count_readers++;
+            rwlock -> count_readers--;
             /* If reader count is now zero, signal write queue. */
             if( rwlock -> count_readers == 0 &&  rwlock -> count_write_queue > 0 ){
                 cond_signal( &rwlock -> write ) ;
             }
         mutex_unlock( &rwlock -> mp );
-    }
-
-
+    }    
     
+    return;
 }
-
-
-
-
-
 
 void rwlock_downgrade( rwlock_t *rwlock)
 {

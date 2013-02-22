@@ -47,7 +47,7 @@ push (struct node ** headref, struct node* new_thread)
 
         q -> next = new_thread ;	
     }
-
+        lprintf("getting out of push");
     return;
 }
 
@@ -135,7 +135,7 @@ cond_wait (cond_t *cv, mutex_t *mp)
 
 	new_thread -> tid =  gettid();
 	new_thread -> next = NULL;
-    new_thread->reject = &reject;
+    new_thread -> reject = &reject;
 
 	/* Put the thread in the queue */
     mutex_lock(&(cv -> mp));

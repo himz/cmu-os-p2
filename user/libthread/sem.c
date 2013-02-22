@@ -53,14 +53,28 @@ int sem_init( sem_t *sem, int count )
  */
 void sem_wait( sem_t *sem )
 {
-    struct node new_thread;
+    struct node *new_thread;
     int reject = 0 ;
     /* @ToDo Function to get thread id - yet to be defined */
-    new_thread.tid =  thr_getid();
-    new_thread.next = NULL;
+    new_thread = malloc(sizeof(struct node));
+    if (!new_thread) {
+        /*
+         * We are out of memory.
+         * log it & return.
+         */
+        lprintf("[DBG_%s], malloc failed \n", __FUNCTION__);
+        return;
+    }
+
+    memset(new_thread, 0, sizeof(struct node));
+
+    new_thread -> tid =  gettid();
+    new_thread -> next = NULL;
+    new_thread -> reject = &reject;
+
 
     /* Get lock of mp for decrementing the count */
-
+    lprintf("[DBG_%s], tid = %d \n", __FUNCTION__, new_thread -> tid );
     mutex_lock( &sem -> mp );
     sem -> count --;
     if( sem -> count >= 0){
@@ -69,47 +83,74 @@ void sem_wait( sem_t *sem )
     }
 
     /* Put the thread in the queue */
-    push ( &sem -> head, &new_thread);
+    push ( &sem -> head, new_thread);
+    mutex_unlock( &sem -> mp ); 
     deschedule( &reject );
-    mutex_unlock( &sem -> mp );	
+    lprintf("[DBG_%s], deschedule done \n", __FUNCTION__);
+    
 }
 
 void sem_signal( sem_t *sem )
 {
 	int tid;
     struct node *node;
-
-	if( sem -> head == NULL )
-		return;
-
+    int rc = SUCCESS;
+    lprintf("[DBG_%s], enter sem signal \n", __FUNCTION__);
+	if( sem -> head == NULL ){
+        lprintf("[DBG_%s], Head Null\n", __FUNCTION__);
+    }
+		
+    //mutex_unlock( &sem -> mp );
 	/* Dequeue a thread */
     mutex_lock( &sem -> mp ) ;
 
     sem -> count++;
-    if( sem -> count >= 0){
+    if( sem -> count > 0){
+        lprintf("[DBG_%s],here   kkkkkk\n", __FUNCTION__);
         mutex_unlock( &sem -> mp );		
         return;
     }
 
     /* Make a thread runnable from the queue */
     node = pop( &sem -> head );
-
-    if (!node)
+    lprintf("[DBG_%s], lin 112 \n", __FUNCTION__);
+    if (!node) {
+        mutex_unlock( &sem -> mp );
         return;
-
+    }
+        
+    lprintf("[DBG_%s], lin 118 \n", __FUNCTION__);
     tid = node->tid;
+    /*
+     * Set the reject variable to 1 a non zero value
+     * so that deschedule fails now.
+     */
+    *(node->reject) = 1;
 
-    if( tid < 0 ) {
+    free(node);    if( tid < 0 ) {
         /* This check is not necessary, due to implementation of pop, but still kept it, wats ur thought ?*/
         mutex_unlock( &sem -> mp );
         return;	
     }
 
     /* Make the popped thread runnable */
-    while ( make_runnable( tid ) <  0 )
+    lprintf("[DBG_%s], lin 133 \n", __FUNCTION__);
+    while( ( rc = make_runnable(tid) )< 0)
         yield(tid);
 
+    if (rc != SUCCESS) {
+
+        /*
+         * Should not have happened, but we'll log the event.
+         */
+        lprintf("[DBG_%s], make_runnable failed for tid: %d \n",
+                                             __FUNCTION__, tid);
+    }
+
+
     mutex_unlock( &sem -> mp );
+
+    return;
 }
 
 

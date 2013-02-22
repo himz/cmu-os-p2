@@ -3,7 +3,7 @@
 #include <mutex_type.h>
 #include <mutex.h>
 #include <cond.h>
-#include <sem.h>
+#include <rwlock.h>
 #include <simics.h>
 #include <syscall.h>
 
@@ -15,14 +15,17 @@ void *doSomething1();
 void *doSomething2();
 void *doSomething3();
 
-sem_t sem;
+rwlock_t rwlock;
+
+char * str = " I am awesome ";
+int thread1, thread2, thread3;
 
 int main() {
-    // initialize semaphore to 2
-    sem_init(&sem, 1);
+    // initialize rwlockaphore to 2
+    rwlock_init(&rwlock);
     int args1 = 1, rc =0;
     rc = thr_init(10);
-    int thread1, thread2, thread3;
+    
 
     thread1 = thr_create(doSomething1, (void *)(&(args1)));
     thread2 = thr_create(doSomething2, (void *)(&(args1)));
@@ -40,22 +43,47 @@ void doSomething(char c) {
     for (i = 0; i < 3; i++) {
 
         // P operation
-        sem_wait(&sem);
+        rwlock_lock(&rwlock, RWLOCK_READ);
+
+            
+            time =  2 ;
+
+            printf("Thread %c enters and str= %s seconds...\n", c, str);
+
+            
+
+            printf("Thread %c leaves the critical section\n", c);
+
+            // V operation
+        rwlock_unlock(&rwlock);
+        
+    }
+}
+
+
+void doWrite(char c) {
+    int i, time;
+    for (i = 0; i < 3; i++) {
+
+        // P operation
+        rwlock_lock(&rwlock,RWLOCK_WRITE);
 
             // generate random amount of time (< 30 seconds)
             time =  2 ;//(int) ((double) rand() / RAND_MAX * 30);
 
             printf("Thread %c enters and sleeps for %d seconds...\n", c, time);
 
-            sleep(time);
+            str = "AsDFSDAfasdf";
 
             printf("Thread %c leaves the critical section\n", c);
 
             // V operation
-        sem_signal(&sem);
+        rwlock_unlock(&rwlock);
+        thr_yield(thread3);
         
     }
 }
+
 
 void *doSomething1() {
     // thread A
@@ -67,13 +95,13 @@ void *doSomething1() {
 void *doSomething2() {
     // thread B
     doSomething('B');
-
+    
     return 0;
 }
 
 void *doSomething3() {
     // thread C
-    doSomething('C');
-
+    doWrite('C');
+    doSomething('D');
     return 0;
 }

@@ -94,7 +94,7 @@ UPDATE_METHOD = afs
 # directory
 #
 
-STUDENTTESTS = test1 test2 mutex_test sleep_test thread_join_test cond_test sem_test thread_yield_test excellence_temp test_exit
+STUDENTTESTS = test1 test2 mutex_test sleep_test thread_join_test cond_test sem_test thread_yield_test excellence_temp test_exit rw_test
 
 ###########################################################################
 # Object files for your thread library
