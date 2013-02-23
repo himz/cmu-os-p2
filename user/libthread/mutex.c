@@ -23,8 +23,9 @@
 #include <mutex.h>
 
 /**
- * @brief	Initialize the mutex variable. It should be called before any mutex locks are asked.
- * @param  mp mutex variable 
+ * @brief	  Initialize the mutex variable. It should be called before 
+ *            any mutex locks are asked.
+ * @param     mp mutex variable 
  * @return    0 on succes, -1 on error
  */
 int 
@@ -48,8 +49,6 @@ mutex_init( mutex_t *mp )
      */
     mp -> lock = 1;
 
-    mp -> count = 0;
-
     return (rc);
 }
 
@@ -61,19 +60,11 @@ mutex_init( mutex_t *mp )
 void 
 mutex_destroy( mutex_t *mp )
 {
-    if ( mp == NULL || (!(mp->initd)))
+    if (mp == NULL)
         return;
-    /* 
-     * We can use count value without worrying about the count value as wrong
-     * due to race conditions. Value of count will only be zero, if there is 
-     * no waiting thread, and all of them have been unlocked. Order of that 
-     * happening does not matter.  
-     */
-    if( mp -> count == 0 ) {
-        mp -> initd = 0;
-        mp -> lock = 1;    
-    }
-    
+
+    mp -> initd = 0;
+    mp -> lock = 1;    
 }
 
 /**
@@ -82,12 +73,18 @@ mutex_destroy( mutex_t *mp )
  */
 void mutex_lock( mutex_t *mp )
 {
-	if (mp == NULL || !mp -> initd) {
+    if (mp == NULL || !(mp->initd)) {
+
         /*
-         * TODO: Check if initd has to be atomic.
-         * Also mutex_lock MUST never return for invalid input.
-         */ 
-		return;
+         * We can access initd without xchg, since it will
+         * be changed only by destroy & calling destroy when mutex
+         * is still in use is invalid. 
+         *
+         * We'll not allow thread to get into criticals section
+         * if mutex is invalid.
+         */
+
+        deschedule(0);
     }
 
 	/* 
@@ -106,7 +103,6 @@ void mutex_lock( mutex_t *mp )
 
     return;
 }
-
 
 /**
  * @brief	Unlock the mutex variable.

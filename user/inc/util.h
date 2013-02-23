@@ -1,3 +1,11 @@
+/** @file   util.h
+ *
+ *  @brief  This file is used to declare the util functions made available
+ *          to other modules in library.
+ *
+ *  @Author Ankur Kumar Sharma (ankursha)
+ */
+
 #ifndef _UTIL_H_
 #define _UTIL_H_
 

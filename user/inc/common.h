@@ -1,3 +1,10 @@
+/** @file   common.h
+ *
+ *  @brief  This file is used to declare the data types, functions
+ *          Macros etc which are to be used by all the modules.
+ *
+ *  @Author Ankur Kumar Sharma (ankursha)
+ */
 #ifndef _COMMON_H_
 #define _COMMON_H_
 

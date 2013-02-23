@@ -1,3 +1,14 @@
+/** @file  thread.c
+ *
+ *  @brief Main implementation of thread APIs.
+ *
+ *  This file imeplements all the APIS (internal/external) of thread module.
+ *
+ *  @bugs refer to docx file for design related issues.
+ *
+ *  @author Ankur Kumar Sharma(ankursha)
+ */
+
 #include <stdio.h>
 #include <simics.h>
 #include <syscall.h>
@@ -20,6 +31,26 @@
  */
 static thread_glbl_t  thread_glbl;
 
+/*
+ * ======================================
+ * Application exposed functions.
+ * ======================================
+ */
+
+/** @brief  Initializes the thread library.
+ *
+ *  This function does following
+ *  a. Calculates the stack space needed by each child thread.
+ *  b. Genrated bucket key mas based on stack size for tcb 
+ *     distribution in skip list.
+ *  c. Allocate reserve stack.
+ *  d. Initialize global mutexes.
+ *  e. Initialize skip list
+ *
+ *  @param  inp_size: Stack space needed by each thread.
+ *
+ *  @return ERROR if anythign wrong, SUCCESS otherwise.
+ */
 int 
 thr_init( unsigned int inp_size )
 {
@@ -105,19 +136,26 @@ thr_init( unsigned int inp_size )
     THR_GLB_SET_IS_MULTI_THR((&thread_glbl), TRUE);
 
     /*
-     * TODO: Change it.
+     * we need not woryr about per node count for our currrent 
+     * implementation, hence initialize it as zero.
      */
     skip_list_init(skip_list, 0, 0);
-    
-    lprintf("[DBG_%s], resv_stack_hi: %p, resv_stack_lo: %p \n", 
-                    __FUNCTION__, resv_stack_hi, resv_stack_lo);
-
-    lprintf("[DBG_%s], free_stack_hi: %p, free_stack_lo: %p \n", 
-                    __FUNCTION__, free_stack_hi, free_stack_lo);
-
     return (rc);
 }
 
+/** @brief  Spwans a new thread.
+ *
+ *  This function does following
+ *  a. Creates TCB.
+ *  b. Allocates stack space.
+ *  c. Allocates TID.
+ *  d. Calls the c_wrapper for spawning new thread.
+ *
+ *  @param  func: Thread callback.
+ *  @param  arg: Thread callback argument.
+ *
+ *  @return ERROR if anythign wrong, SUCCESS otherwise.
+ */
 int
 thr_create(void * (*func)(void *), void *arg)
 {
@@ -128,8 +166,6 @@ thr_create(void * (*func)(void *), void *arg)
     tid_t new_tid = TID_NUM_INVALID;
     unsigned int child_stack_size = 0;
     mutex_t *mutex = NULL;
-
-    lprintf("[DBG_%s], Enter\n", __FUNCTION__);
 
     /*
      * Do some basic verification.
@@ -187,26 +223,6 @@ thr_create(void * (*func)(void *), void *arg)
     THR_TCB_SET_STKH(new_tcb, stack_hi);
     THR_TCB_SET_STKL(new_tcb, stack_lo);
 
-    lprintf("[DBG_%s], stack_hi: %p, stack_lo: %p, cstack_size: %u \n", __FUNCTION__, stack_hi, stack_lo, child_stack_size);
-
-    /*
-     * After following stage there is no reason for thread create to fail.
-     */
-    rc = thr_int_insert_tcb(new_tcb);
-
-    if (rc != THR_SUCCESS) {
-
-        /*
-         * TCB insertion failed for some reason.
-         * Log the event & return;
-         */
-        mutex_unlock(mutex);
-        lprintf("[DBG_%s], TCB insertion failed with rc: %d \n", 
-                                              __FUNCTION__, rc);
-        rc = ERROR;
-        return (rc);
-    }
-
     /*
      * Done with all tcb handling,
      * time to spawn a new thread.
@@ -220,6 +236,18 @@ thr_create(void * (*func)(void *), void *arg)
     return (new_tid);
 }
 
+/** @brief  Exits the thread.
+ *
+ *  This function does following
+ *  a. Deallocates TCb
+ *  b. Deallocates stack space.
+ *  c. Calls the c_wrapper for vanishing the current thread
+ *     by moving to reserve stack space.
+ *
+ *  @param  status: User input to be passed to joining thread.
+ *
+ *  @return NA.
+ */
 void
 thr_exit(void *status)
 {
@@ -236,15 +264,11 @@ thr_exit(void *status)
     stack_lo_mask = (~(PAGE_SIZE - 1));
     stack_lo = (char *)(((unsigned int)curr_stack_ptr) & stack_lo_mask);
 
-    lprintf("[DBG_%s], stack_lo: %p \n", __FUNCTION__, stack_lo);
-    
     glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
     resv_stack_hi = THR_GLB_GET_RSTKH(&thread_glbl);
 
     mutex_lock(glb_mutex);
      
-    lprintf("[DBG_%s], INSIDE THR_EXIT \n", __FUNCTION__);
-
     /*
      * Search TCB.
      */
@@ -310,6 +334,19 @@ thr_exit(void *status)
     return;
 }
 
+/** @brief  Makes the calling thread join the input tid.
+ *
+ *  This function does following
+ *  a. Validate if operations is valid.
+ *  b. Waits on target tcb (if its active).
+ *  c. Returns the exit status in statusp.
+ *
+ *  @param  tid: Thread on which caller wants to join.
+ *  @param  statusp: Pointer to memory lcoation where 
+ *                   we need to put thr_exit status.
+ *
+ *  @return ERROR if validation fails, SUCCESS otherwise.
+ */
 int
 thr_join(int tid, void **statusp)
 {
@@ -344,8 +381,6 @@ thr_join(int tid, void **statusp)
     }
 
     mutex_lock(glb_mutex);
-
-    lprintf("[DBG_%s], INSIDE THR_JOIN \n", __FUNCTION__);
 
     /*
      * Lets get the TCB 1st.
@@ -476,6 +511,14 @@ thr_join(int tid, void **statusp)
     return (rc);
 }
 
+/** @brief  Returns tid of current thread.
+ *
+ *  @param  tid: Thread on which caller wants to join.
+ *  @param  statusp: Pointer to memory lcoation where 
+ *                   we need to put thr_exit status.
+ *
+ *  @return ERROR if validation fails, SUCCESS otherwise.
+ */
 int
 thr_getid()
 {
@@ -490,8 +533,8 @@ thr_getid()
 
     if (!glb_mutex) {
         /*
-         *          * Should not have happened.
-         *                   */
+         * Should not have happened.
+         */
         lprintf("[DBG_%s], Glb mutex is NULL \n", __FUNCTION__);
         return (ret_tid);
     }
@@ -523,6 +566,12 @@ thr_getid()
     return (ret_tid);
 }
 
+/** @brief  Yields the control to another thread.
+ *
+ *  @param  tid: Thread to which caller wntes to yield to.
+ *
+ *  @return ERROR if validation fails, SUCCESS otherwise.
+ */
 int
 thr_yield(int tid)
 {
@@ -563,6 +612,9 @@ thr_yield(int tid)
             return (rc);
         }
 
+        /*
+         * Get kernel TID.
+         */
         tid = THR_TCB_GET_KTID(other_tcb);
         mutex_unlock(glb_mutex);
     }
@@ -578,6 +630,14 @@ thr_yield(int tid)
  * user. 
  * ====================================
  */
+
+/** @brief  Sets the stack hi for main thread.
+ *
+ *  @param  input: stack hi value
+ *
+ *  @return NA
+ */
+
 void 
 thr_set_main_stackH(char *input) 
 {
@@ -585,6 +645,12 @@ thr_set_main_stackH(char *input)
     return;
 }
 
+/** @brief  Sets the stack lo for main thread..
+ *
+ *  @param  input: stack lo value
+ *
+ *  @return NA
+ */
 void 
 thr_set_main_stackL(char *input) 
 {
@@ -592,18 +658,36 @@ thr_set_main_stackL(char *input)
     return;
 }
 
+/** @brief  Gets the stack hi from main thread..
+ *
+ *  @param  NA
+ *
+ *  @return stack hi address
+ */
 char *
 thr_get_main_stackH() 
 {
     return (thread_glbl.main_stack_hi);
 }
 
+/** @brief  Gets the stack lo from main thread..
+ *
+ *  @param  NA
+ *
+ *  @return stack lo address
+ */
 char *
 thr_get_main_stackL() 
 {
     return (thread_glbl.main_stack_lo);
 }
 
+/** @brief  Takes the mem mutex lock.
+ *
+ *  @param  NA
+ *
+ *  @return NA
+ */
 void
 thr_mutex_mem_lock()
 {
@@ -615,7 +699,6 @@ thr_mutex_mem_lock()
          * No need to take any lock since application
          * is single threaded.
          */
-        lprintf("[DBG_%s], dont do lock\n", __FUNCTION__);
         return;
     }
 
@@ -632,6 +715,12 @@ thr_mutex_mem_lock()
     return;
 }
 
+/** @brief  Releases the mem mutex lock.
+ *
+ *  @param  NA
+ *
+ *  @return NA
+ */
 void
 thr_mutex_mem_unlock()
 {
@@ -642,7 +731,6 @@ thr_mutex_mem_unlock()
         /*
          * No need to do anything, just return.
          */
-        lprintf("[DBG_%s], dont do unlock\n", __FUNCTION__);
         return;
     }
 
@@ -661,6 +749,19 @@ thr_mutex_mem_unlock()
  * ====================================
  * Thread specifc internal APIS.
  * ====================================
+ */
+
+/** @brief  Allocates a new stack space.
+ *  
+ *  This function allocates stack space.
+ *  It first check the free pool, & if its empty & then takes the next
+ *  possible free page from stack address space. It also updates the skip
+ *  list with allocated stack space.
+ *
+ *  @param  stack_size: Size of the stack we want to allcoate.
+ *  @param  list_data: The data which we want to insert in skip list node data.
+ *
+ *  @return stack_lo of allocated address.
  */
 char *
 thr_int_allocate_stack(int stack_size, void *list_data)
@@ -723,8 +824,6 @@ thr_int_allocate_stack(int stack_size, void *list_data)
      * Stack ptr should already have 12 lsbs as zero since it is page
      * alligned.
      */
-    lprintf("[DBG_%s], Inserting stack ptr_l : %p, stack_ptr_h: %p \n", 
-                             __FUNCTION__, stack_ptr_lo, stack_ptr_hi);
     skip_list_insert(skip_list, bucket_key_index, 
                     ((uint32_t)(stack_ptr_lo)), ((uint32_t)(stack_ptr_hi)), 
                     list_data);
@@ -732,14 +831,23 @@ thr_int_allocate_stack(int stack_size, void *list_data)
     return (stack_ptr_lo);
 }
 
+/** @brief  Deallcoates stack space.
+ *  
+ *  This function deallocates stack space.
+ *  It adds the node to reuse list & removes corrsponding node
+ *  from skip_list. It does nto free the page as caller may still be 
+ *  in the stack's context.
+ *
+ *  @param  base: Address of stack spce we want to free.
+ *
+ *  @return NA.
+ */
 void
 thr_int_deallocate_stack(char *base)
 {
     skip_list_global_t *skip_list = NULL;
     uint32_t bucket_key_index = 0;
     int rc = SUCCESS;
-
-    lprintf("[DBG_%s], Inside deallocate stack, :%p \n", __FUNCTION__, base);
 
     if (!base)
         return;
@@ -768,6 +876,19 @@ thr_int_deallocate_stack(char *base)
     return;
 }
 
+/** @brief  Spwans a new thread.
+ *  
+ *  This function spanws a new thread by doing following.
+ *  a. Calls asm_wrapper, which updates the esp (& restores it for main thread)
+ *     & spawns a new thread, returning twice.
+ *  b. Sets the kernel returned tid.
+ *  c. Calls the thread's registered callback.
+ *  d. Handles the case where thread returns without calling thr_exit. 
+ *
+ *  @param  base: Address of stack spce we want to free.
+ *
+ *  @return NA.
+ */
 void
 thr_int_fork_c_wrapper(tcb_t **input_tcb)
 {
@@ -830,6 +951,15 @@ thr_int_fork_c_wrapper(tcb_t **input_tcb)
     return; 
 }
 
+/** @brief  Creates a new tcb
+ *  
+ *  @param  stack_hi: stack_hi of its allcoated stack.
+ *  @param  stack_lo: stack_lo of its allcoated stack.
+ *  @param  func: Thread callback
+ *  @param  arg: Callback's argument
+ *
+ *  @return NA.
+ */
 tcb_t *
 thr_int_create_tcb(char *stack_hi, char *stack_lo, 
                    void * (*func)(void *), void *arg)
@@ -872,13 +1002,14 @@ thr_int_create_tcb(char *stack_hi, char *stack_lo,
     return (new_tcb);
 }
 
-int
-thr_int_insert_tcb(tcb_t *tcb)
-{
-    int rc = THR_SUCCESS;
-    return (rc);
-}
-
+/** @brief  Allocates a new tid from stack address.
+ *
+ *  Fetches tid from stack address.
+ *  
+ *  @param  stack_lo: stack_lo of its allcoated stack.
+ *
+ *  @return tid: Generated tid.
+ */
 tid_t 
 thr_int_allocate_new_tid(char *stack_lo)
 {
@@ -887,20 +1018,17 @@ thr_int_allocate_new_tid(char *stack_lo)
     tid_t new_tid = TID_NUM_INVALID;
 
     stack_lo_mask = (~((PAGE_SIZE/2) - 1));
-    lprintf("[DBG_%s]: stack_lo_mask: %x\n", __FUNCTION__, stack_lo_mask);
 
     /*
      * Mask out the 12 lsb bits which will consumed within the page.
      */
     new_tid = ((unsigned int)stack_lo) & (stack_lo_mask);
-    lprintf("[DBG_%s]: stack_lo: %p, Generated new tid I : %x\n", __FUNCTION__, stack_lo, new_tid);
 
     /*
      * Right shift this new tid by 1 so that we can have a 
      * +ve return value & reset the MSB.
      */
     new_tid = (new_tid >> 1);
-    lprintf("[DBG_%s]: stack_lo: %p, Generated new tid II : %x\n", __FUNCTION__, stack_lo, new_tid);
 
     /*
      * Generate a 11 bit random number & append it to new_tid.
@@ -912,42 +1040,15 @@ thr_int_allocate_new_tid(char *stack_lo)
      */
     new_tid = ((new_tid | rand_num) & (0x7fffffff));
 
-    lprintf("[DBG_%s]: Generated new tid III : %x\n", __FUNCTION__, new_tid);
-
     return (new_tid);
 }
 
-#if 0
-char *
-thr_int_get_reuse_node(thread_reuse_stack_t **input)
-{
-    char *ret_ptr = NULL;
-    thread_reuse_stack_t *reuse_node_head = *input;
-
-    if (!reuse_node_head) {
-
-        /*
-         * Why am i being called with NULL header.
-         * Should not have happened, log it & return NULL.
-         */
-        lprintf("[DBG_%s], ERR: function called"
-               " with NULL header\n", __FUNCTION__);
-
-        return (NULL);
-    }
-
-    ret_ptr = reuse_head_node->stack_lo;
-
-    /*
-     * Free up the node & move head pointer fwd.
-     */
-    THR_GLB_SET_RSTACK(&thread_glbl, reuse_head_node->head);
-    free(*input);
-
-    return (ret_ptr);
-}
-#endif
-
+/** @brief  Searches for a tcb in skip list using stack_lo as key.
+ *
+ *  @param  stack_lo: stack_lo of its allcoated stack.
+ *
+ *  @return tcb_t: Searched TCB.
+ */
 tcb_t *
 thr_int_search_tcb_by_stk(char *stack_lo)
 {
@@ -960,8 +1061,6 @@ thr_int_search_tcb_by_stk(char *stack_lo)
     if (!skip_list)
         return NULL;
 
-    lprintf("[DBG_%s], searching stack ptr : %p \n", __FUNCTION__, stack_lo);
-
     bucket_key_index = ((uint32_t)(stack_lo) & 
                        (THR_GLB_GET_BKT_KEY_MASK(&(thread_glbl))));
 
@@ -969,27 +1068,34 @@ thr_int_search_tcb_by_stk(char *stack_lo)
 
     if (!tcb) {
 
-        lprintf("[DBG_%s], searching stack ptr : %p , failed \n", __FUNCTION__, stack_lo);
-        lprintf("[DBG_%s], stack_hi : %p , stack_lo: %p \n", __FUNCTION__, thr_get_main_stackH(), thr_get_main_stackL());
-
         /*
          * Check if address represents the main thread.
          */
         if (((uint32_t)stack_lo >= (uint32_t)thr_get_main_stackL()) && 
                 ((uint32_t)stack_lo <= (uint32_t)thr_get_main_stackH())) {
 
-            lprintf("[DBG_%s], Its a main thread \n", __FUNCTION__);
             tcb = THR_GLB_GET_MAIN_TCB_PTR(&thread_glbl);
 
         } else {
 
-            //skip_list_dbg_dump_all(skip_list);
+            /*
+             * Enable it for debugging.
+             */
+#if 0
+            skip_list_dbg_dump_all(skip_list);
+#endif
         }
     }
 
     return (tcb);
 }
 
+/** @brief  Searches for a tcb by tid.
+ *
+ *  @param  tid: tid of the tcb that we want to search.
+ *
+ *  @return tcb_t: Searched TCB.
+ */
 tcb_t* 
 thr_int_search_tcb_by_tid(tid_t tid)
 {
@@ -1005,13 +1111,19 @@ thr_int_search_tcb_by_tid(tid_t tid)
      */
     stack_lo = (char *)((tid & stack_lo_mask) << 1);
 
-    lprintf("[DBG_%s], stack_lo: %p \n", __FUNCTION__, stack_lo);
-
     ret_tcb = thr_int_search_tcb_by_stk(stack_lo);
 
     return (ret_tcb);
 }
 
+/** @brief  Adds a node to zombie list.
+ *
+ *  @param  tcb: tcb that we want to insert
+ *  @param  tcb_data: tcb related data that we want in each zombie node.
+ *                    for ex: status in case of thr_exit.
+ *
+ *  @return NA.
+ */
 void
 tcb_int_push_zombie_thread(tcb_t *tcb, void *tcb_data)
 {
@@ -1051,6 +1163,12 @@ tcb_int_push_zombie_thread(tcb_t *tcb, void *tcb_data)
     return;
 }
 
+/** @brief  remove a node from zombie list.
+ *
+ *  @param  tid: tid of the tcb for which i want to remove the zombie node.
+ *
+ *  @return zombie node.
+ */
 tcb_zombie_t *
 tcb_int_rem_zombie_thread(tid_t input_tid)
 {
@@ -1107,6 +1225,12 @@ tcb_int_rem_zombie_thread(tid_t input_tid)
     return (tcb_ret_node);
 }
 
+/** @brief  push a stack address to free pool.
+ *
+ *  @param  stack_lo: address that we want to add.
+ *
+ *  @return ERROR if insertion fails, SUCCESS otherwise
+ */
 int
 thr_int_push_reuse_stack (char *stack_lo)
 {
@@ -1132,6 +1256,12 @@ thr_int_push_reuse_stack (char *stack_lo)
     return (rc);
 }
 
+/** @brief  pops a stack address from free pool.
+ *
+ *  @param  NA
+ *
+ *  @return free stack address
+ */
 char *
 thr_int_pop_reuse_stack (void)
 {
@@ -1154,6 +1284,12 @@ thr_int_pop_reuse_stack (void)
     return (ret_ptr);
 }
 
+/** @brief  Searches if a particular address is in reuse pool.
+ *
+ *  @param  base: address to be searched.
+ *
+ *  @return TRUE: if present, FALSE: if not.
+ */
 boolean_t
 thr_int_search_reuse_stack(char *base)
 {
@@ -1177,6 +1313,13 @@ thr_int_search_reuse_stack(char *base)
     return (rc);
 }
 
+/** @brief  Creates the tcb for main thread.
+ *
+ *  @param  stack_hi: Stack hi for main thread.
+ *  @param  stack_lo: Stack lo for main thread.
+ *
+ *  @return NA
+ */
 void 
 thr_int_add_main_tcb(char *stack_hi, char *stack_lo)
 {
@@ -1215,6 +1358,15 @@ thr_int_add_main_tcb(char *stack_hi, char *stack_lo)
     return;
 }
 
+/** @brief  Installs an exception handler in invoking thread.
+ *
+ *  @param  esp3: Exception stack.
+ *  @param  eip:  Callback for exception handling.
+ *  @param  arg:  Argument thread wants to pass on to exc handler.
+ *  @param  newureg: set of register values
+ 
+ *  @return NA
+ */
 int 
 thr_int_install_excp_handler(void *esp3, swexn_handler_t eip,
                                   void *arg, ureg_t *newureg)
@@ -1224,6 +1376,13 @@ thr_int_install_excp_handler(void *esp3, swexn_handler_t eip,
     return (rc);
 }
 
+/** @brief  Registered callback fo s/w exception handling.
+ *
+ *  @param  arg:  Argument thread wants to pass on to exc handler.
+ *  @param  ureg: set of register values
+ 
+ *  @return NA
+ */
 void 
 thr_int_swexn_handler(void *arg, ureg_t *ureg)
 {
@@ -1254,8 +1413,6 @@ thr_int_swexn_handler(void *arg, ureg_t *ureg)
 
     glb_mutex = THR_GLB_GET_MUTEX_PTR(&thread_glbl);
 
-    printf("Enter thr_int_swexn_handler: rc: %d\n", rc);
-    
     /*
      * No need to check anything.
      */
@@ -1356,6 +1513,13 @@ thr_int_swexn_handler(void *arg, ureg_t *ureg)
     return;
 }
 
+/** @brief  Expands stack for calling thread.
+ *
+ *  @param  tcb:  tcb corresponding to calling thread.
+ *  @param  size: size by which we want to increment.
+ 
+ *  @return ERROR if expansion fails, SUCCESS otherwise
+ */
 int 
 thr_int_expand_stack(tcb_t *tcb, int size)
 {

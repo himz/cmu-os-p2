@@ -1,3 +1,12 @@
+/** @file   skip_list_common.h
+ *
+ *  @brief  This file is used to declare the data types, functions
+ *          Macros etc which are made available by skip list to 
+ *          other modules in the library.
+ *
+ *  @Author Ankur Kumar Sharma (ankursha)
+ */
+
 #ifndef _SKIP_LIST_COMMON_H_
 #define _SKIP_LIST_COMMON_H_
 

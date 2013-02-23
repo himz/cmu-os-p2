@@ -10,7 +10,6 @@ typedef struct mutex {
     int initd;			/* Whether this mutex initialized before*/
     int lock;			/* Locked = 0, unlocked = 1 */
     //int tid;			/* tid of Thread holding lock */
-    int count;
 } mutex_t;
 
 #endif /* _MUTEX_TYPE_H */

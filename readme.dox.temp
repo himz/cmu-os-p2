@@ -1,0 +1,34 @@
+/**
+
+@mainpage 15-410 Project 2
+
+@author Ankur Sharma (ankursha)
+
+===========================================
+THREAD LIBRARY
+==========================================
+
+A. Design
+
+A.1 Stack View
+
+This is how the user stack space looks like in a multithreaded program.
+
+|Header | Footer | Header => 32 bit value, contains size + alloc bit.
+|_______|________| Footer => 32 bit value, contains size + alloc bit
+|Prev   | Next   |                                 of previous block.
+|_______|________| Prev => 32 bts value, contains the offset of next
+|   Payload      |                          freeblock in free list.
+|________________| Next => 32 bit value, cotains the offset of previous
+                                             freeblock in free list.
+
+
+
+Besides the above mention points there were no major design considerations.
+
+Limitations:
+1. The library does not have enough validation to verify a corrupted stack.
+2. For a corrupted address range, the code dumps the start address as corrupted
+   instead of exact corrupted address.
+*/
+

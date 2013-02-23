@@ -1,9 +1,24 @@
 #include <simics.h>
 #include "thread_common.h"
 
-/* If you want to use assembly language instead of C,
- * delete this autostack.c and provide an autostack.S
- * instead.
+/** @file  autostack.c
+ *
+ *  @brief Defines install_autostack. 
+ *
+ *  @bugs  No Bugs.
+ *
+ *  @author Ankur Kumar Sharma(ankursha)
+ */
+
+
+/** @brief  
+ *
+ *  This function is called by process before calling main.
+ *
+ *  @param  stack_high: Stack high of main.
+ *  @param  stack_low: Stack low of main.
+ *
+ *  @return NA
  */
 
 void

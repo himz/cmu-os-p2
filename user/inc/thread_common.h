@@ -1,3 +1,11 @@
+/** @file   thr_internals.h
+ *
+ *  @brief  This file is used to declare the data types, functions
+ *          Macros etc which are made available by thread module to
+ *          other modules in library.
+ *
+ *  @Author Ankur Kumar Sharma (ankursha)
+ */
 #ifndef _THREAD_COMMON_H_
 #define _THREAD_COMMON_H_
 

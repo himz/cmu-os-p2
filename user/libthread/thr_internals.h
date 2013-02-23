@@ -1,7 +1,9 @@
-/** @file thr_internals.h
+/** @file   thr_internals.h
  *
- *  @brief This file may be used to define things
- *         internal to the thread library.
+ *  @brief  This file is used to declare the data types, functions
+ *          Macros etc which are to be used by thread module only.
+ *
+ *  @Author Ankur Kumar Sharma (ankursha)
  */
 #ifndef THR_INTERNALS_H
 #define THR_INTERNALS_H
@@ -188,7 +190,6 @@ void  thr_int_exit_asm_wrapper(mutex_t *mutex, char *new_stack_hi,
                                                char *old_stack_lo);
 tcb_t * thr_int_create_tcb(char *stack_hi, char *stack_lo, 
                            void * (*func)(void *), void *arg);
-int thr_int_insert_tcb(tcb_t *tcb);
 char * thr_int_allocate_stack(int stack_size, void *data);
 void thr_int_deallocate_stack(char *base);
 tid_t thr_int_allocate_new_tid(char *stack_lo);
@@ -201,7 +202,8 @@ tcb_zombie_t * tcb_int_rem_zombie_thread(tid_t tid);
 int thr_int_push_reuse_stack(char *base);
 char * thr_int_pop_reuse_stack();
 boolean_t thr_int_search_reuse_stack(char *input_addr);
-int thr_int_install_excp_handler(void *esp3, swexn_handler_t eip, void *arg, ureg_t *newureg);
+inline int thr_int_install_excp_handler(void *esp3, swexn_handler_t eip, 
+                                            void *arg, ureg_t *newureg);
 void thr_int_swexn_handler(void *arg, ureg_t *ureg);
 int thr_int_expand_stack(tcb_t *tcb, int size);
 

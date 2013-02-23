@@ -1,3 +1,18 @@
+/** @file  skip_list.c
+ *
+ *  @brief A partial implementation of skiplist. 
+ *
+ *
+ *  Partial because we are restricting the number of linked lists 
+ *  to two (& not LOGn), as a result complexity is not of order 
+ *  logn in all the scenarios. But still with wiser disribution 
+ *  of nodes in buckets (driver by application) this implementation 
+ *  will give much better results then normal linked list implementation.
+ *
+ *  @bugs Implementaion will not provide logn complexity in all the scenarios.
+ *
+ *  @author Ankur Kumar Sharma(ankursha)
+ */
 #include <stdio.h>
 #include <malloc.h>
 #include <simics.h>
@@ -5,6 +20,15 @@
 #include "skip_list_common.h"
 #include "util.h"
 
+/** @brief  Initializes the skip list with max num of buckets
+ *          & max node per bucket.
+ *
+ *  @param  skip_list_global: Provided by application.
+ *  @param  max_num_buckets: max number of buckets application needs.
+ *  @param  max_num_node: Number of nodes per bucket.
+ *
+ *  @return skip_list_global
+ */
 skip_list_global_t *
 skip_list_init(skip_list_global_t *skip_list_global, 
               uint32_t max_num_buckets, 
@@ -25,6 +49,16 @@ skip_list_init(skip_list_global_t *skip_list_global,
     return (skip_list_global);
 }
 
+/** @brief  Inserts a node in skip list.
+ *
+ *  @param  skip_list_glb: Provided by application.
+ *  @param  bucket_index: Bucket where node shoudl go.
+ *  @param  node_index_lo: Lower bound on range of keys node can hold.
+ *  @param  node_index_hi: Upper bound on range of keys node can hold.
+ *  @param  data: Opauqe user data
+ *
+ *  @return rc: If add was a success or not.
+ */
 int
 skip_list_insert(skip_list_global_t *skip_list_glb, 
                 uint32_t bucket_index, uint32_t node_index_lo, 
@@ -91,6 +125,14 @@ skip_list_insert(skip_list_global_t *skip_list_glb,
     return (rc);
 }
 
+/** @brief  Removes a node from skip list.
+ *
+ *  @param  skip_list_glb: Provided by application.
+ *  @param  bucket_index: Bucket where node shoudl go.
+ *  @param  node_index: It should be between, node_index_hi & node_index_lo.
+ *
+ *  @return None.
+ */
 void
 skip_list_remove(skip_list_global_t *skip_list_glb,
                  uint32_t bucket_index, uint32_t node_index)
@@ -132,6 +174,14 @@ skip_list_remove(skip_list_global_t *skip_list_glb,
     return;
 }
 
+/** @brief  Finds a node from skip list.
+ *
+ *  @param  skip_list_glb: Provided by application.
+ *  @param  bucket_index: Bucket where node shoudl be present.
+ *  @param  node_index: It should be between, node_index_hi & node_index_lo.
+ *
+ *  @return Opaque node data.
+ */
 void *
 skip_list_find(skip_list_global_t *skip_list_glb,
               uint32_t bucket_index, uint32_t node_index)
@@ -172,6 +222,13 @@ skip_list_find(skip_list_global_t *skip_list_glb,
     return (ret_data);
 }
 
+/** @brief  Returns a bucket based on bucket key.
+ *
+ *  @param  skip_list_glb: Skip list reference.
+ *  @param  input_key: Key for bucket we are trying to search.
+ *
+ *  @return ret_bucket if success,  NULL if failure .
+ */
 skip_list_bucket_t* 
 skip_list_get_bucket(skip_list_global_t *skip_list_glb,
                                    uint32_t input_key)
@@ -226,6 +283,13 @@ skip_list_get_bucket(skip_list_global_t *skip_list_glb,
     return (ret_bucket);
 }
 
+/** @brief  Returns a node from a bucket.
+ *
+ *  @param  input_bucket: Bucket where node should be.
+ *  @param  input_key: Key for node we are trying to search.
+ *
+ *  @return ret_bucket if success,  NULL if failure .
+ */
 skip_list_node_t* 
 skip_list_get_node(skip_list_bucket_t *input_bucket,
                                  uint32_t input_key)
@@ -283,6 +347,13 @@ skip_list_get_node(skip_list_bucket_t *input_bucket,
     return (ret_node);
 }
 
+/** @brief  Inserts a bucket in skip_list.
+ *
+ *  @param  skip_list_glb: Skip list reference
+ *  @param  list_bucket: Bucket which is to be inserted
+ *
+ *  @return rc: FAILURE if error happens, SUCCESS otherwise.
+ */
 int 
 skip_list_insert_bucket(skip_list_global_t *skip_list_glb, 
                           skip_list_bucket_t* list_bucket)
@@ -389,6 +460,13 @@ skip_list_insert_bucket(skip_list_global_t *skip_list_glb,
     return (rc);
 }
 
+/** @brief  Removes bucket from a skip list.
+ *
+ *  @param  skip_list_glb: Skip list reference
+ *  @param  input_bucket: Bucket which is to be removed.
+ *
+ *  @return N/A
+ */
 void
 skip_list_remove_bucket(skip_list_global_t *skip_list_glb, 
                        skip_list_bucket_t **input_bucket)
@@ -456,6 +534,13 @@ skip_list_remove_bucket(skip_list_global_t *skip_list_glb,
     return;
 }
 
+/** @brief  Inserts a node in bucket
+ *
+ *  @param  input_bucket: Bucket where node is to be inserted.
+ *  @param  input_node: Node to be inserted.
+ *
+ *  @return rc: FAILURE if error happens, SUCCESS otherwise.
+ */
 int 
 skip_list_insert_node(skip_list_bucket_t *input_bucket, 
                           skip_list_node_t* input_node)
@@ -563,6 +648,13 @@ skip_list_insert_node(skip_list_bucket_t *input_bucket,
     return (rc);
 }
 
+/** @brief  Removes a node from bucket
+ *
+ *  @param  input_bucket: Bucket where node is to be removed.
+ *  @param  input_node: Node to be removed.
+ *
+ *  @return N/A
+ */
 void
 skip_list_remove_node(skip_list_bucket_t *input_bucket, uint32_t input_key)
 {
@@ -659,6 +751,13 @@ skip_list_remove_node(skip_list_bucket_t *input_bucket, uint32_t input_key)
 /*
  * DBG APIS.
  */
+
+/** @brief  Dumps content of a node.
+ *
+ *  @param  input_node: Node to be dumped.
+ *
+ *  @return N/A
+ */
 void 
 skip_list_dbg_dump_node(skip_list_node_t *input_node)
 {
@@ -675,6 +774,12 @@ skip_list_dbg_dump_node(skip_list_node_t *input_node)
     return;
 }
 
+/** @brief  Dumps content of a bucket & corresponding nodes.
+ *
+ *  @param  input_bucket: Bucket to be dumped.
+ *
+ *  @return N/A
+ */
 void 
 skip_list_dbg_dump_bucket(skip_list_bucket_t *input_bucket)
 {
@@ -702,6 +807,12 @@ skip_list_dbg_dump_bucket(skip_list_bucket_t *input_bucket)
     return;
 }
 
+/** @brief  Dumps content of a skip list.
+ *
+ *  @param  input_global: skip list reference.
+ *
+ *  @return N/A
+ */
 void 
 skip_list_dbg_dump_all(skip_list_global_t *input_global)
 {

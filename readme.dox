@@ -1,0 +1,46 @@
+/**
+
+@mainpage 15-410 Project 2
+
+@author Ankur Sharma (ankursha)
+
+===========================================
+THREAD LIBRARY
+==========================================
+
+A. Design
+
+A.1 Stack View
+
+This is how the user stack space looks like in a multithreaded program.
+ _______________
+|Main thrd      | 
+|_______________| 
+|Main thrd extd |  
+|_______________| 
+|Main thrd extd |   
+|_______________| 
+|Resv Stack     |  
+|_______________| 
+|Child stack 1  |   
+|_______________| 
+|Child stack 2  |   
+|_______________| 
+       |
+       |
+       |
+       |
+ _______________
+|Child stack n  |   
+|_______________| 
+ 
+
+
+Besides the above mention points there were no major design considerations.
+
+Limitations:
+1. The library does not have enough validation to verify a corrupted stack.
+2. For a corrupted address range, the code dumps the start address as corrupted
+   instead of exact corrupted address.
+*/
+
