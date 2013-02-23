@@ -1,0 +1,4 @@
+user/libthread/thread_utility.o: user/libthread/thread_utility.S \
+ spec/syscall_int.h
+
+spec/syscall_int.h:

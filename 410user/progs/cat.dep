@@ -1,0 +1,19 @@
+410user/progs/cat.o: 410user/progs/cat.c spec/syscall.h spec/ureg.h \
+ 410user/libstdlib/stdlib.h 410user/inc/stddef.h 410user/inc/types.h \
+ 410user/inc/malloc.h 410user/libstdio/stdio.h 410user/inc/stdarg.h
+
+spec/syscall.h:
+
+spec/ureg.h:
+
+410user/libstdlib/stdlib.h:
+
+410user/inc/stddef.h:
+
+410user/inc/types.h:
+
+410user/inc/malloc.h:
+
+410user/libstdio/stdio.h:
+
+410user/inc/stdarg.h:

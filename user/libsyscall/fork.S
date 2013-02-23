@@ -3,5 +3,5 @@
 .globl fork
 
 fork:
-    INT  $FORK_INT
-    RET
+    INT  $FORK_INT	/* interrupt */
+    ret

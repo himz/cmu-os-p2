@@ -1,0 +1,30 @@
+user/progs/thread_join_test.o: user/progs/thread_join_test.c \
+ 410user/libstdio/stdio.h 410user/inc/stddef.h 410user/inc/types.h \
+ 410user/inc/stdarg.h 410user/inc/thread.h user/libthread/thr_internals.h \
+ user/inc/mutex_type.h spec/syscall.h spec/ureg.h \
+ user/inc/skip_list_common.h 410user/inc/stdint.h \
+ 410user/libsimics/simics.h
+
+410user/libstdio/stdio.h:
+
+410user/inc/stddef.h:
+
+410user/inc/types.h:
+
+410user/inc/stdarg.h:
+
+410user/inc/thread.h:
+
+user/libthread/thr_internals.h:
+
+user/inc/mutex_type.h:
+
+spec/syscall.h:
+
+spec/ureg.h:
+
+user/inc/skip_list_common.h:
+
+410user/inc/stdint.h:
+
+410user/libsimics/simics.h:

@@ -1,0 +1,3 @@
+user/libsyscall/readfile.o: user/libsyscall/readfile.S spec/syscall_int.h
+
+spec/syscall_int.h:

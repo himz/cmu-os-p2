@@ -2,9 +2,58 @@
 
 @mainpage 15-410 Project 2
 
-@author Name1 (id1)
-@author Name2 (id2)
+@author Himanshu Pandey (himanshp)
+@author Ankur Sharma (ankursha)
 
 Same drill as last time.
 
 */
+
+## User level thread library
+
+
+* System call stub library
+
+
+* Mutex
+ The mutex structure has one initd variable to track the initialization and a 
+ lock variable . To wait for the lock, we just yield the thread which wants the
+ lock. When unlock is called we just change the value of lock to 1. This 
+ prevents destroy lock conditions, if some thread is holding the lock, mutex is 
+ not destroyed.
+
+* Condition Variables
+  The structure of condition variable consist of a mutex for critical section 
+  approach, an initialization variable and a linked list node. We wait on the 
+  condition till the thread gets the signal. The calling thread is added to 
+  a queue and descheduled. The called mutex is unlocked before the deschedule 
+  and then when the thread is again run, mutex is locked again. The queue 
+  node also stores the information about the reject value of thread. if its not 
+  0, the thread would not be descheduled. So at the time of cond_signal we, 
+  change the value of reject to 1 before making the thread runnable. 
+
+* Semaphore
+  We implement the semaphore with a structure including mutex pointer mp, count
+  of the semaphore, initialization variable and head pointer to a queue. 
+  The count of the semaphore variable is decreased. If the count is greater 
+  than 0, we return, else we add the calling thread is put in a queue and 
+  deschedule the calling thread. We increment the count of semaphore, on a
+  signal and if count is still negative, that means, there are threads in 
+  queue waiting to be scheduled. We make the node popped from queue runnable. 
+
+
+* Readers/writers locks
+  We implementd readers/writers lock with the help of a mutex and two condition
+  variables - one for read and other for write. We maintain the states of 
+  number of readers, read queue count, write queue count and number of writers(
+  which will at max be 1). To take care of which lock is to be unlocked, we 
+  store the state of the lock in mode variable. We have followed the approach
+  of no starvation for writers. If any writer wants a lock,  and no reader or 
+  writer is currently accessing the resource, we allocate it, else we wait on 
+  the write condition and put the writer in the wait queue. Similarly, if 
+  reader wants a lock, we give the lock, if there is no writer or writer waiting
+  in a queue ( writers are always given preference ). When we signal a write 
+  lock, if there are writers waiting in a queue, we signal to write lock, 
+  else we broadcast the message to all readers waiting. Similarly, when we 
+  get signal in read mode, we check if count of reader is 0 then we signal the 
+  write queue, else we broadcast the signal on read queue.

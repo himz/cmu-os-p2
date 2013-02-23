@@ -3,26 +3,28 @@
 @mainpage 15-410 Project 2
 
 @author Ankur Sharma (ankursha)
+@authos Himanshu Pandey (himanshp)
 
 ===========================================
 THREAD LIBRARY
-==========================================
+===========================================
 
 A. Design
 
 A.1 Stack View
 
 This is how the user stack space looks like in a multithreaded program.
+
  _______________
-|Main thrd      | 
+|Main thrd      |  Default stack allocated to main thread 
+|_______________|  
+|Main thrd extd |  Extra page we allowed main thread to extend to
 |_______________| 
-|Main thrd extd |  
+|Main thrd extd |  Extra page we allowed main thread to extend to
 |_______________| 
-|Main thrd extd |   
+|Resv Stack     |  Resv stack, used while thread are exiting
 |_______________| 
-|Resv Stack     |  
-|_______________| 
-|Child stack 1  |   
+|Child stack 1  |  Child thread stacks 
 |_______________| 
 |Child stack 2  |   
 |_______________| 
@@ -34,6 +36,109 @@ This is how the user stack space looks like in a multithreaded program.
 |Child stack n  |   
 |_______________| 
  
+A.1.1. Each child stack is allocated number of pages as per request in thread_init.
+A.1.2. We have a resv stack of size 1 page, this is teh stack a thread moves to when
+       ever it is exiting.
+
+A.2 TCBs
+
+A.2.1 What we do
+
+A.2.1.1 TCB management
+
+For each thread a tcb_t structure is used to hold its state.
+
+This data strucutre is saved in skip list (it is a partial implementation 
+of skip list, infact we can call it a normal hash table). Skip list
+has sorted bucket, where each bucket holds a number of nodes, which are sorted
+by node key, each node is a tcb.
+
+it looks like this
+
+ __________        _______        ______
+|Bucket    |=====>|  Node |----->| Node |
+|__________|      |_______|      |______|
+     |
+     |
+     |
+ __________        _______        ______
+|Bucket    |=====>|  Node |----->| Node |
+|__________|      |_______|      |______|
+     |
+     |
+
+
+If nodes can be distributed properly in this data structure then
+look up would be much more optimized then a normal linked list.
+
+A.2.1.2 TID Management
+
+Tid is genrated using the stack address, we do not use kernel returned tid
+as thread library tid, we do this because we want to use same data structure 
+to do the look up, our skip list above uses stack address as look up key, & since
+we use stack address in tid geenration, hence given a tid i can fetch the stack
+address & hence do the look up.
+
+This TID generation will also help if in future we plan to add support for
+M:N mapping in our library.
+ 
+A.2.2 What we dont (and why)
+
+A.2.2.1 Using same TID as what kernel returned:
+        We wanted to optimize the TCB lookup by both stack address & tid.
+        hence we are not using kernel returned tid (we save it though in tcb)
+        & section A.2.1.2 provides more details.
+
+A.2.2.2 We could have used stack to save the TCB i.e if i am a child thread
+        then i can use top of stack to save the tcb, & whenever i have to 
+        query tcb by stack i cna fetch it. Problem with this approach is that
+        is if somehow stack overwrite happens then we'll loose reference to tcb,
+        hence we loose any mode of recovery.
+
+
+A.3 Stack Allocation
+
+A.3.1 What we do?
+A.3.1.1 We use a reuse stack list to maintain a list of available stack slots.
+
+A.3.2 What we dont?
+A.3.2.1 We wanted to generate next possible empty stack location through our
+        skip list (another advantage of skip list), but could not do it because
+        of time crunch.
+
+A.4 Exception handler stack
+A.4.1 Instead of allcoating an extra page for exception hadnler stack per thread,
+      we allocate a stack space (of size 1024) on heap. This is done so that 
+      we need not allocate whole 4k sized page for exception stack.
+
+
+=============================
+Mutexes
+=============================
+
+The mutex structure has one initd variable to track the initialization and a 
+lock variable . To wait for the lock, we just yield the thread which wants the
+lock. When unlock is called we just change the value of lock to 1. This 
+prevents destroy lock conditions, if some thread is holding the lock, mutex is 
+not destroyed.
+
+=============================
+Condition Variables
+=============================
+
+The structure of condition variable consist of a mutex for critical section 
+approach, an initialization variable and a linked list node. We wait on the 
+condition till the thread gets the signal. The calling thread is added to 
+a queue and descheduled. The called mutex is unlocked before the deschedule 
+and then when the thread is again run, mutex is locked again. The queue 
+node also stores the information about the reject value of thread. if its not 
+0, the thread would not be descheduled. So at the time of cond_signal we, 
+change the value of reject to 1 before making the thread runnable.
+
+===========================
+Semaphore
+===========================
+
 
 
 Besides the above mention points there were no major design considerations.

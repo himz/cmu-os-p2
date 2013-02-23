@@ -1,0 +1,27 @@
+410user/progs/nibbles.o: 410user/progs/nibbles.c \
+ 410user/libstdlib/stdlib.h 410user/inc/stddef.h 410user/inc/types.h \
+ 410user/inc/malloc.h 410user/libstdio/stdio.h 410user/inc/stdarg.h \
+ spec/syscall.h spec/ureg.h spec/syscall_int.h 410user/inc/rand.h \
+ 410user/inc/assert.h
+
+410user/libstdlib/stdlib.h:
+
+410user/inc/stddef.h:
+
+410user/inc/types.h:
+
+410user/inc/malloc.h:
+
+410user/libstdio/stdio.h:
+
+410user/inc/stdarg.h:
+
+spec/syscall.h:
+
+spec/ureg.h:
+
+spec/syscall_int.h:
+
+410user/inc/rand.h:
+
+410user/inc/assert.h:

@@ -1,4 +1,5 @@
 /** @file cond.c
+ *  
  *  @brief Implemetation of Condition Variable
  *
  *  
@@ -29,8 +30,7 @@
  * @brief	Every condition variable(condvar) will have a 
  * queue of threads currently blocked on the condvar.
  */
-void 
-push (struct node ** headref, struct node* new_thread)
+void push (struct node ** headref, struct node* new_thread)
 {
     struct node *q =  *headref ;
 
@@ -53,8 +53,7 @@ push (struct node ** headref, struct node* new_thread)
 }
 
 /* Pop a thread from the queue of condvar*/
-struct node *
-pop (struct node **headref)
+struct node *pop (struct node **headref)
 {
 	struct node *q = *headref ;
 
@@ -71,8 +70,12 @@ pop (struct node **headref)
     return (q);
 }
 
-int 
-cond_init( cond_t *cv )
+/**
+ * @brief Initialize the condition variable to be used
+ * @param  cv condition variable
+ * @return    [description]
+ */
+int cond_init( cond_t *cv )
 {
 	/* If condvar has been initialized before, return -1 */
 	if ( cv -> initd == 1 )
@@ -91,8 +94,11 @@ cond_init( cond_t *cv )
 	return 0;
 }
 
-void 
-cond_destroy( cond_t *cv )
+/**
+ * @brief Destory or deactivate the condition variable pointed to be cv 
+ * @param cv Condition variable
+ */
+void cond_destroy( cond_t *cv )
 {
 	/* If condvar has been destroyed/uninitialized before, return -1 */
 	if ( cv -> initd == 0 )
@@ -108,8 +114,17 @@ cond_destroy( cond_t *cv )
     cv -> initd = 0;
 }
 
-void 
-cond_wait (cond_t *cv, mutex_t *mp)
+
+/**
+ * @brief It allows a thread to wait for a condition and release the associated
+ *        mutex that it needs to hold lock on . The calling threads, wait till 
+ *        they get the signal to continue. They can be awakened either by 
+ *        cond_signal or cond_broadcast. Upon return from the cond_wait, mutex 
+ *        mp is re-acquired. 
+ * @param cv Condition Variable
+ * @param mp Mutex current locked
+ */
+void cond_wait (cond_t *cv, mutex_t *mp)
 {
 	struct node * new_thread =	NULL;
     int reject = 0;
@@ -119,7 +134,6 @@ cond_wait (cond_t *cv, mutex_t *mp)
         /*
          * Incorrect input from application.
          */
-        lprintf("[DBG_%s], ERROR: input cv NULL\n", __FUNCTION__);
         return;
     }
 
@@ -129,7 +143,6 @@ cond_wait (cond_t *cv, mutex_t *mp)
          * We are out of memory.
          * log it & return.
          */
-        lprintf("[DBG_%s], malloc failed \n", __FUNCTION__);
         return;
     }
 
@@ -165,8 +178,7 @@ cond_wait (cond_t *cv, mutex_t *mp)
  * @brief	Wake up a thread from queue, blocked on condvar - if it exists
  * @param cv [description]
  */
-void 
-cond_signal(cond_t *cv )
+void cond_signal(cond_t *cv )
 {
 	int tid;
     int rc = SUCCESS;
@@ -293,6 +305,5 @@ void cond_broadcast( cond_t *cv )
         }
     }
 
-    mutex_unlock( &(cv -> mp ));
-    
+    mutex_unlock( &(cv -> mp ));    
 }

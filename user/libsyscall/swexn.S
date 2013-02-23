@@ -3,8 +3,8 @@
 .global swexn
 
 swexn:
-    pushl 	%esi
-	leal	8(%esp), %esi
-	int		$SWEXN_INT
-	popl 	%esi
+    pushl 	%esi			/* Save esi on stack */
+	leal	8(%esp), %esi	/* load esp + 8 address into esi */
+	int		$SWEXN_INT		/* interrupt */
+	popl 	%esi			/* Return from interrupt, restore save registers*/	
 	ret

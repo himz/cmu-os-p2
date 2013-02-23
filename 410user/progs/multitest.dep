@@ -1,0 +1,36 @@
+410user/progs/multitest.o: 410user/progs/multitest.c spec/syscall.h \
+ spec/ureg.h 410user/libsimics/simics.h 410user/inc/mutex.h \
+ user/inc/mutex_type.h 410user/libstdio/stdio.h 410user/inc/stddef.h \
+ 410user/inc/types.h 410user/inc/stdarg.h 410user/inc/thread.h \
+ user/libthread/thr_internals.h user/inc/skip_list_common.h \
+ 410user/inc/stdint.h 410user/inc/sem.h user/inc/sem_type.h
+
+spec/syscall.h:
+
+spec/ureg.h:
+
+410user/libsimics/simics.h:
+
+410user/inc/mutex.h:
+
+user/inc/mutex_type.h:
+
+410user/libstdio/stdio.h:
+
+410user/inc/stddef.h:
+
+410user/inc/types.h:
+
+410user/inc/stdarg.h:
+
+410user/inc/thread.h:
+
+user/libthread/thr_internals.h:
+
+user/inc/skip_list_common.h:
+
+410user/inc/stdint.h:
+
+410user/inc/sem.h:
+
+user/inc/sem_type.h:

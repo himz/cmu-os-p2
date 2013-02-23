@@ -3,5 +3,5 @@
 .globl vanish
 
 vanish:
-    INT  $VANISH_INT
+    INT  $VANISH_INT	/* interrupt */
     RET

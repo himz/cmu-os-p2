@@ -3,5 +3,5 @@
 .global gettid
 
 gettid:
-    int     $GETTID_INT
+    int     $GETTID_INT		/* interrupt */
     ret
