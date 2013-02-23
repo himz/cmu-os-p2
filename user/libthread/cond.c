@@ -121,8 +121,8 @@ void cond_destroy( cond_t *cv )
  *        they get the signal to continue. They can be awakened either by 
  *        cond_signal or cond_broadcast. Upon return from the cond_wait, mutex 
  *        mp is re-acquired. 
- * @param cv [description]
- * @param mp [description]
+ * @param cv Condition Variable
+ * @param mp Mutex current locked
  */
 void cond_wait (cond_t *cv, mutex_t *mp)
 {
@@ -134,7 +134,6 @@ void cond_wait (cond_t *cv, mutex_t *mp)
         /*
          * Incorrect input from application.
          */
-        lprintf("[DBG_%s], ERROR: input cv NULL\n", __FUNCTION__);
         return;
     }
 
@@ -144,7 +143,6 @@ void cond_wait (cond_t *cv, mutex_t *mp)
          * We are out of memory.
          * log it & return.
          */
-        lprintf("[DBG_%s], malloc failed \n", __FUNCTION__);
         return;
     }
 

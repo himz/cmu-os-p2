@@ -3,5 +3,5 @@
 .global getchar
 
 getchar:
-    int     $GETCHAR_INT
+    int     $GETCHAR_INT	/* interrupt */
 	ret

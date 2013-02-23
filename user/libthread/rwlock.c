@@ -1,9 +1,7 @@
 /** @file rwlock.c
  *  @brief Implemetation of Reader's Lock
- *
  *  
- *  Concept: 
- *  
+ *  @author Ankur Sharma (ankursha)
  *  @author Himanshu Pandey (himanshp)
  *  @bug No know bugs
  */
@@ -99,7 +97,7 @@ void rwlock_lock( rwlock_t *rwlock, int type )
     } else if ( type == RWLOCK_READ ) {
 
         count_wait = rwlock -> count_writers + rwlock -> count_write_queue;
-        
+
         if ( count_wait > 0) {
 
             rwlock -> count_read_queue++;
@@ -148,7 +146,6 @@ void rwlock_unlock( rwlock_t *rwlock )
         rwlock -> count_readers--;
 
         /* If reader count is now zero, signal write queue. */
-
         if (rwlock -> count_readers == 0 &&  
             rwlock -> count_write_queue > 0 ) {
 

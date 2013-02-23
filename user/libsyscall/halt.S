@@ -3,5 +3,5 @@
 .global halt
 
 halt:
-    int $HALT_INT
+    int $HALT_INT		/* interrupt */
     ret

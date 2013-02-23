@@ -3,5 +3,5 @@
 .globl yield
 
 yield:
-    INT  $YIELD_INT
+    INT  $YIELD_INT		/* interrupt */
     RET

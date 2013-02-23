@@ -3,8 +3,8 @@
 .globl sleep
 
 sleep:
-    push %esi
-    movl 8(%esp), %esi 
-    int  $SLEEP_INT
-    pop  %esi
+    push %esi			/* Save esi on stack */
+    movl 8(%esp), %esi 	/* Move address into esi */
+    int  $SLEEP_INT		/* interrupt */
+    pop  %esi		/* Return from interrupt, restore save registers*/
     ret

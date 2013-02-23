@@ -3,8 +3,8 @@
 .global print
 
 print:
-    pushl   %esi
-    leal	8(%esp), %esi 		/* %esi stores the address of arguments package */
-	int     $PRINT_INT
-    popl	%esi
+    pushl   %esi			/* Save esi on stack */
+    leal	8(%esp), %esi 	/* load esp + 8  into esi */	
+	int     $PRINT_INT		/* interrupt */
+    popl	%esi			/* Return from interrupt, restore save registers*/
 	ret
