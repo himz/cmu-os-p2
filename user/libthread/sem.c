@@ -70,7 +70,6 @@ void sem_wait( sem_t *sem )
          * We are out of memory.
          * log it & return.
          */
-        lprintf("[DBG_%s], malloc failed \n", __FUNCTION__);
         return;
     }
 
@@ -82,7 +81,6 @@ void sem_wait( sem_t *sem )
 
 
     /* Get lock of mp for decrementing the count */
-    lprintf("[DBG_%s], tid = %d \n", __FUNCTION__, new_thread -> tid );
     mutex_lock( &sem -> mp );
     sem -> count --;
 
