@@ -23,9 +23,10 @@
 #include <mutex.h>
 
 /**
- * @brief	Initialize the mutex variable. It should be called before any mutex locks are asked.
- * @param  mp mutex variable 
- * @return    0 on succes, -1 on error
+ * @brief Initialize the mutex variable. It should be called before any mutex 
+ * locks are asked.
+ * @param mp mutex variable 
+ * @return 0 on succes, -1 on error
  */
 int 
 mutex_init( mutex_t *mp )
@@ -48,8 +49,6 @@ mutex_init( mutex_t *mp )
      */
     mp -> lock = 1;
 
-    mp -> count = 0;
-
     return (rc);
 }
 
@@ -63,15 +62,9 @@ mutex_destroy( mutex_t *mp )
 {
     if ( mp == NULL || (!(mp->initd)))
         return;
-    /* 
-     * We can use count value without worrying about the count value as wrong
-     * due to race conditions. Value of count will only be zero, if there is 
-     * no waiting thread, and all of them have been unlocked. Order of that 
-     * happening does not matter.  
-     */
-    if( mp -> count == 0 ) {
+    if( mp -> lock != 0 ) {
         mp -> initd = 0;
-        mp -> lock = 1;    
+        mp -> lock = 1; 
     }
     
 }

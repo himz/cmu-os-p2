@@ -1,8 +1,7 @@
 /** @file sem.c
+
  *  @brief Implemetation of semaphore
- *
  *  
- *  Concept: 
  *  
  *  @author Ankur Sharma (ankursha)
  *  @author Himanshu Pandey (himanshp)
@@ -99,13 +98,11 @@ void sem_wait( sem_t *sem )
 
     mutex_lock( &sem -> mp );
     mutex_unlock( &sem -> mp );
-
-    lprintf("[DBG_%s], deschedule done \n", __FUNCTION__);
-
 }
 
 /**
- * @brief Signal the thread or free the lock on the resource. 
+ * @brief Signal the thread waiting on the semaphore pointed by sem to wake up 
+ * and continue.
  * @param sem Semaphore variable
  */
 void sem_signal( sem_t *sem )
@@ -145,22 +142,18 @@ void sem_signal( sem_t *sem )
     }
 
     /* Make the popped thread runnable */
-    lprintf("[DBG_%s], lin 133 \n", __FUNCTION__);
 
     rc = make_runnable(tid);
-    if (rc != SUCCESS) {
-        /*
-         * Should not have happened, but we'll log the event.
-         */
-        lprintf("[DBG_%s], make_runnable failed for tid: %d \n",
-                                             __FUNCTION__, tid);
-    }
+
     mutex_unlock( &sem -> mp );
 
     return;
 }
 
-
+/**
+ * @brief Destory or deactivate the condition variable pointed to by sem
+ * @param sem [description]
+ */
 void sem_destroy( sem_t *sem )
 {
 
